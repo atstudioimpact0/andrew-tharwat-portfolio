@@ -607,7 +607,7 @@ body.v10-home.ats-home-v2 .section-intro,
 body.v10-home.ats-home-v2 .v2-work-intro,
 body.v10-home.ats-home-v2 #contact .section-head > div > p {
   display: block !important;
-  font-size: 1rem;
+  font-size: 1rem !important;
   line-height: 1.65;
   max-width: 620px;
   color: var(--ats-v2-muted);

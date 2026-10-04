@@ -28,9 +28,10 @@
       const doc=frame.contentDocument,win=frame.contentWindow;
       if(!doc?.body){status.textContent='Waiting for homepage.';return;}
       const width=doc.documentElement.clientWidth,overflow=doc.documentElement.scrollWidth>width+1;
+      const left=doc.documentElement.clientLeft,right=left+width;
       const outside=[...doc.querySelectorAll('h1,h2,h3,a,button,input,textarea,article')].filter(el=>{
         const rect=el.getBoundingClientRect(),css=win.getComputedStyle(el);
-        return rect.width>0&&rect.height>0&&css.visibility!=='hidden'&&(rect.left < -1 || rect.right > width+1);
+        return rect.width>0&&rect.height>0&&rect.bottom>0&&css.visibility!=='hidden'&&(rect.left < left-1 || rect.right > right+1);
       });
       status.textContent=`${width}px · ${overflow?'PAGE OVERFLOW':'No page overflow'} · ${outside.length} clipped elements · ${doc.querySelectorAll('.v2-case-card').length} project cards`;
     }

@@ -22,7 +22,7 @@
   addCss('/v9/v9-home-first-impression.css?v=7');
   addCss('/v9/v9-brand-bilingual.css?v=1');
   addCss('/v9/v9-public-clean.css?v=1');
-  addCss('/v9/v9-home-v2.css?v=2');
+  addCss('/v9/v9-home-v2.css?v=3');
   addScript('/v9/v9-home-v10.js?v=18');
   addScript('/v9/v9-home-v2.js?v=2');
 
