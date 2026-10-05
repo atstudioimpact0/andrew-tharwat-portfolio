@@ -1,0 +1,23 @@
+{
+  "rewrites": [
+    {
+      "source": "/beauty-rozy",
+      "destination": "/beauty-rozy/index.html"
+    },
+    {
+      "source": "/beauty-rozy/:path*",
+      "destination": "/beauty-rozy/:path*/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/beauty-rozy/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
+    }
+  ]
+}
