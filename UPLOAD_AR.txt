@@ -1,0 +1,9 @@
+الرفع من الصفحة الرئيسية لمستودع ATS على الفرع main:
+1. افتح Add file ثم Upload files.
+2. افتح 01-pages على جهازك واسحب فولدر beauty-rozy نفسه إلى صفحة GitHub، ثم Commit changes.
+3. كرر الخطوة من الصفحة الرئيسية للمستودع، لكن افتح 02-assets واسحب فولدر beauty-rozy نفسه، ثم Commit changes.
+4. ارفع vercel.json من هذه الحزمة إلى الصفحة الرئيسية للمستودع؛ سيحدث ملف إعدادات ATS الحالي. الملف مبني على إعدادات ATS التي تمت مراجعتها يوم 5 أكتوبر، ويضيف مسار beauty-rozy فقط.
+5. بعد نجاح النشر على Vercel، افتح https://atstudioimpact.com/beauty-rozy
+
+يجب السحب والإفلات من مستكشف الملفات؛ نافذة choose your files لا تختار الفولدرات كاملة.
+لا ترفع فولدر 01-pages أو 02-assets نفسه: ارفع beauty-rozy الموجود داخلهما.
