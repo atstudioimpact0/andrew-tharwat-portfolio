@@ -200,10 +200,10 @@
       }
     };
 
-    const cards = $('.brandcard');
+    const cards = $$('.brandcard');
     const apply = () => {
       const preset = heroPresets[state.type] || heroPresets.all;
-      $('[data-filter]', filters).forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter] === c.dataset.value)));
+      $$('[data-filter]', filters).forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter] === c.dataset.value)));
       let n = 0;
       cards.forEach((card) => {
         const ok = state.type === 'all' || card.dataset.types.split(' ').includes(state.type);
@@ -233,7 +233,7 @@
       setText('[data-brand-hero-code]', preset.code);
 
       document.body.dataset.activeBrandType = state.type;
-      $('[data-nav-type]').forEach((link) => link.classList.toggle('is-active', link.dataset.navType === state.type));
+      $$('[data-nav-type]').forEach((link) => link.classList.toggle('is-active', link.dataset.navType === state.type));
       document.title = `${preset.pageTitle} | Beauty ROZY`;
       history.replaceState(null, '', state.type === 'all' ? location.pathname : `?type=${state.type}`);
     };
