@@ -23,6 +23,14 @@
       "destination": "/move-now/index.html"
     },
     {
+      "source": "/air",
+      "destination": "/air/index.html"
+    },
+    {
+      "source": "/air/:path*",
+      "destination": "/air/:path*"
+    },
+    {
       "source": "/",
       "destination": "/v9/index.html"
     },
@@ -101,6 +109,19 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex, nofollow"
+        }
+      ]
+    },
+    {
+      "source": "/air/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
         }
       ]
     }
