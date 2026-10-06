@@ -522,3 +522,722 @@ h2 { font-weight: 700; line-height: 1.3; }
 .ats-preview__note { position: absolute; inset-inline-end: max(1rem, calc((100% - 1200px) / 2)); top: 100%; width: min(380px, calc(100vw - 32px)); padding: 1.25rem; background: #101d2c; color: #fff; border-radius: 0 0 12px 12px; box-shadow: 0 12px 24px #0003; font-size: 1rem; line-height: 1.8; }
 .ats-preview__note p { margin-block-start: .5rem; }
 @media (max-width: 420px) { .ats-preview__row { gap: .5rem; } .ats-preview__row > span { font-size: .8125rem; } }
+
+
+/* =========================================================
+   Beauty ROZY — Premium brands catalogue / editorial layer
+   Scoped to .brands-premium so the rest of the preview stays intact.
+   ========================================================= */
+.brands-premium {
+  --lux-ink: #24171c;
+  --lux-wine: #5f1730;
+  --lux-wine-2: #7a2340;
+  --lux-cream: #f8f4f0;
+  --lux-paper: #fffdfb;
+  --lux-rose: #ead7d8;
+  --lux-line: rgba(36, 23, 28, .12);
+  --lux-muted: #76666c;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(138, 28, 60, .055), transparent 30rem),
+    var(--lux-cream);
+  color: var(--lux-ink);
+}
+
+.brands-premium .topbar {
+  background: #1f1519;
+  color: #ead9de;
+  letter-spacing: .015em;
+}
+
+.brands-premium .header {
+  background: rgba(255, 253, 251, .94);
+  border-bottom-color: rgba(36, 23, 28, .09);
+  backdrop-filter: blur(18px);
+}
+
+.brands-premium .header__row {
+  min-height: 66px;
+  padding-block: 8px;
+}
+
+.brands-premium .wordmark {
+  color: var(--lux-ink);
+  font-size: 32px;
+  letter-spacing: .035em;
+}
+
+.brands-premium .iconbtn {
+  color: var(--lux-ink);
+  border-radius: 999px;
+  transition: background-color .2s ease, transform .2s ease;
+}
+
+.brands-premium .iconbtn:hover {
+  background: #f2e9e6;
+  transform: translateY(-1px);
+}
+
+.brands-premium .desknav {
+  border-top: 1px solid rgba(36, 23, 28, .055);
+}
+
+.brands-premium .desknav a {
+  position: relative;
+  color: #5b4c52;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.brands-premium .desknav a::after {
+  content: "";
+  position: absolute;
+  inset-inline: 18px;
+  bottom: 2px;
+  height: 1px;
+  background: var(--lux-wine);
+  transform: scaleX(0);
+  transition: transform .2s ease;
+}
+
+.brands-premium .desknav a:hover,
+.brands-premium .desknav a[aria-current="page"] {
+  color: var(--lux-ink);
+}
+
+.brands-premium .desknav a:hover::after,
+.brands-premium .desknav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Editorial hero */
+.brands-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 16%, rgba(255,255,255,.12), transparent 24rem),
+    radial-gradient(circle at 86% 76%, rgba(154, 64, 91, .28), transparent 28rem),
+    linear-gradient(135deg, #22161b 0%, #391923 52%, #55172c 100%);
+  color: #fffaf7;
+  isolation: isolate;
+}
+
+.brands-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .22;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.65), transparent 88%);
+}
+
+.brands-hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 24px;
+  padding-block: 44px 42px;
+}
+
+.brands-hero__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
+  text-align: start;
+}
+
+.brands-hero__eyebrow,
+.brands-catalogue__eyebrow,
+.brands-request__eyebrow {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .21em;
+  text-transform: uppercase;
+}
+
+.brands-hero__eyebrow {
+  color: #e9cbd3;
+}
+
+.brands-hero__copy h1 {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 720px;
+  font-family: var(--font);
+  font-size: clamp(38px, 8vw, 74px);
+  font-weight: 500;
+  line-height: 1.03;
+  letter-spacing: -.035em;
+}
+
+.brands-hero__copy h1 em {
+  font-family: var(--serif);
+  font-size: .6em;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: .045em;
+  color: #e7c8cf;
+}
+
+.brands-hero__copy > p {
+  max-width: 42em;
+  color: #e9dfe1;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.brands-hero__signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding-top: 4px;
+  color: #dbc9cd;
+  font-size: 13px;
+}
+
+.brands-hero__signals span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.brands-hero__signals span + span::before {
+  content: "·";
+  margin-inline-end: 10px;
+  color: #a97886;
+}
+
+.brands-hero__signals b {
+  color: #fffaf7;
+  font-weight: 700;
+}
+
+.brands-hero__visual {
+  position: relative;
+  min-height: 330px;
+  border: 1px solid rgba(255,255,255,.13);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.095), rgba(255,255,255,.025)),
+    rgba(29, 15, 21, .28);
+  overflow: hidden;
+}
+
+.brands-hero__visual::before,
+.brands-hero__visual::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+}
+
+.brands-hero__visual::before {
+  width: 310px;
+  height: 310px;
+  inset-inline-end: -120px;
+  top: -120px;
+}
+
+.brands-hero__visual::after {
+  width: 180px;
+  height: 180px;
+  inset-inline-start: -70px;
+  bottom: -82px;
+}
+
+.brands-hero__halo {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  left: 50%;
+  top: 49%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,244,240,.24), rgba(255,244,240,.02) 64%, transparent 72%);
+  filter: blur(.2px);
+}
+
+.brands-hero__edition {
+  position: absolute;
+  top: 20px;
+  inset-inline-start: 22px;
+  color: #d8b7c0;
+  font-size: 10px;
+  letter-spacing: .24em;
+  font-weight: 700;
+}
+
+.brands-hero__mark {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56%;
+  min-height: 88px;
+  padding: 20px 24px;
+  background: rgba(255,253,251,.96);
+  border: 1px solid rgba(255,255,255,.45);
+  box-shadow: 0 24px 70px rgba(0,0,0,.22);
+  transform-origin: center;
+}
+
+.brands-hero__mark img {
+  width: auto;
+  max-width: 100%;
+  max-height: 42px;
+  object-fit: contain;
+}
+
+.brands-hero__mark--huda {
+  top: 76px;
+  inset-inline-start: 9%;
+  transform: rotate(-4deg);
+}
+
+.brands-hero__mark--elf {
+  top: 160px;
+  inset-inline-end: 7%;
+  width: 47%;
+  transform: rotate(4deg);
+}
+
+.brands-hero__mark--lavera {
+  bottom: 38px;
+  inset-inline-start: 17%;
+  width: 45%;
+  transform: rotate(-1.5deg);
+}
+
+.brands-hero__caption {
+  position: absolute;
+  inset-inline-end: 18px;
+  bottom: 14px;
+  color: rgba(255,255,255,.62);
+  font-size: 9px;
+  letter-spacing: .18em;
+}
+
+/* Catalogue */
+.brands-catalogue {
+  padding-top: 40px;
+}
+
+.brands-catalogue__head {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--lux-line);
+}
+
+.brands-catalogue__eyebrow {
+  color: var(--lux-wine);
+}
+
+.brands-catalogue__head h2 {
+  font-size: clamp(26px, 5vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.025em;
+  color: var(--lux-ink);
+}
+
+.brands-catalogue__head p {
+  max-width: 44em;
+  color: var(--lux-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.brands-premium .filters {
+  padding-block: 18px 10px;
+}
+
+.brands-premium .filters__label {
+  display: none;
+}
+
+.brands-premium .chips {
+  gap: 4px;
+  padding-bottom: 4px;
+}
+
+.brands-premium .chip {
+  position: relative;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #7c6c72;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color .2s ease;
+}
+
+.brands-premium .chip::after {
+  content: "";
+  position: absolute;
+  inset-inline: 14px;
+  bottom: 3px;
+  height: 1px;
+  background: var(--lux-wine);
+  transform: scaleX(0);
+  transition: transform .2s ease;
+}
+
+.brands-premium .chip:hover {
+  color: var(--lux-ink);
+}
+
+.brands-premium .chip[aria-pressed="true"] {
+  background: transparent;
+  color: var(--lux-ink);
+}
+
+.brands-premium .chip[aria-pressed="true"]::after {
+  transform: scaleX(1);
+}
+
+.brands-premium .chip__icon {
+  width: 15px;
+  height: 15px;
+  opacity: .68;
+}
+
+.brands-premium .count {
+  padding-block: 6px 18px;
+  color: #928188;
+  font-size: 12px;
+}
+
+.brands-premium .brandgrid {
+  gap: 14px;
+  padding-bottom: 34px;
+}
+
+.brands-premium .brandcard {
+  position: relative;
+  min-height: 235px;
+  justify-content: space-between;
+  gap: 26px;
+  padding: 28px 24px 20px;
+  overflow: hidden;
+  background:
+    linear-gradient(150deg, rgba(255,255,255,.82), rgba(255,255,255,.98)),
+    var(--lux-paper);
+  border: 1px solid rgba(36,23,28,.095);
+  border-radius: 0;
+  transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+}
+
+.brands-premium .brandcard::before {
+  content: "ROZY SELECT";
+  position: absolute;
+  top: 17px;
+  inset-inline-end: 20px;
+  color: #9d8d92;
+  font-family: system-ui, sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.brands-premium .brandcard::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 1px solid rgba(95,23,48,.08);
+  border-radius: 50%;
+  inset-inline-start: -75px;
+  bottom: -85px;
+  pointer-events: none;
+}
+
+.brands-premium .brandcard:hover {
+  border-color: rgba(95,23,48,.28);
+  box-shadow: 0 24px 60px rgba(51,25,33,.09);
+  transform: translateY(-4px);
+}
+
+.brands-premium .brandcard__name.brandlogo {
+  --s: 62px;
+  min-height: 102px;
+  justify-content: center;
+  padding-inline: 12px;
+}
+
+.brands-premium .brandcard__name.brandlogo img {
+  max-height: 52px;
+  object-fit: contain;
+}
+
+.brands-premium .tags {
+  gap: 6px;
+}
+
+.brands-premium .tag {
+  border-color: rgba(36,23,28,.1);
+  color: #7a6b70;
+  background: rgba(248,244,240,.7);
+  font-size: 11px;
+  padding: 3px 10px;
+}
+
+.brands-premium .brandcard__foot {
+  position: relative;
+  z-index: 1;
+  padding-top: 14px;
+  border-top: 1px solid rgba(36,23,28,.08);
+  color: #85747a;
+  font-size: 12px;
+}
+
+.brands-premium .brandcard__foot .more {
+  min-height: 36px;
+  color: var(--lux-wine);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.brands-premium .brandcard__foot .more::after {
+  content: " ←";
+}
+
+.brands-premium .empty {
+  border-radius: 0;
+  background: var(--lux-paper);
+}
+
+.brands-request {
+  position: relative;
+  overflow: hidden;
+  margin-top: 14px;
+  margin-bottom: 42px;
+  padding: 34px 28px;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(138,28,60,.1), transparent 16rem),
+    #ede2df;
+}
+
+.brands-request::after {
+  content: "ROZY";
+  position: absolute;
+  inset-inline-end: -14px;
+  bottom: -48px;
+  font-family: var(--serif);
+  font-size: 150px;
+  line-height: 1;
+  color: rgba(95,23,48,.055);
+  direction: ltr;
+}
+
+.brands-request > * {
+  position: relative;
+  z-index: 1;
+}
+
+.brands-request__eyebrow {
+  color: var(--lux-wine);
+}
+
+.brands-request h2 {
+  max-width: 18em;
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.brands-request p {
+  max-width: 40em;
+  color: #66575c;
+}
+
+.brands-request .btn--primary {
+  background: var(--lux-ink);
+  border-radius: 0;
+  padding-inline: 26px;
+  font-size: 14px;
+}
+
+.brands-request .btn--primary:hover {
+  background: var(--lux-wine);
+}
+
+.brands-premium .footer {
+  background: #21161b;
+}
+
+@media (min-width: 640px) {
+  .brands-hero__grid {
+    padding-block: 58px 54px;
+  }
+
+  .brands-premium .brandgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .brands-premium .brandcard {
+    min-height: 270px;
+    padding: 34px 30px 22px;
+  }
+
+  .brands-premium .brandcard__name.brandlogo {
+    --s: 72px;
+  }
+}
+
+@media (min-width: 960px) {
+  .brands-premium .header__row {
+    min-height: 74px;
+  }
+
+  .brands-premium .wordmark {
+    font-size: 36px;
+  }
+
+  .brands-premium .desknav {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    padding-block: 4px;
+  }
+
+  .brands-premium .desknav a {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 18px;
+  }
+
+  .brands-hero__grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+    min-height: 560px;
+    align-items: center;
+    gap: 56px;
+    padding-block: 70px;
+  }
+
+  .brands-hero__visual {
+    min-height: 420px;
+  }
+
+  .brands-hero__mark {
+    min-height: 106px;
+  }
+
+  .brands-hero__mark--huda {
+    top: 92px;
+  }
+
+  .brands-hero__mark--elf {
+    top: 200px;
+  }
+
+  .brands-hero__mark--lavera {
+    bottom: 50px;
+  }
+
+  .brands-catalogue {
+    padding-top: 58px;
+  }
+
+  .brands-catalogue__head {
+    grid-template-columns: 1fr 1.15fr;
+    align-items: end;
+    column-gap: 48px;
+    padding-bottom: 28px;
+  }
+
+  .brands-catalogue__head .brands-catalogue__eyebrow {
+    grid-column: 1 / -1;
+  }
+
+  .brands-catalogue__head p {
+    justify-self: end;
+    text-align: start;
+  }
+
+  .brands-premium .filters {
+    padding-block: 22px 12px;
+  }
+
+  .brands-premium .chips {
+    justify-content: flex-start;
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .brands-premium .brandgrid {
+    gap: 18px;
+  }
+
+  .brands-premium .brandcard {
+    min-height: 305px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .brands-hero__copy {
+    animation: rozyHeroIn .7s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  .brands-hero__visual {
+    animation: rozyHeroIn .8s .08s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  .brands-hero__mark--huda { animation: rozyFloat 7s ease-in-out infinite; }
+  .brands-hero__mark--elf { animation: rozyFloat 8.5s .8s ease-in-out infinite reverse; }
+  .brands-hero__mark--lavera { animation: rozyFloat 9s 1.4s ease-in-out infinite; }
+
+  @keyframes rozyHeroIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes rozyFloat {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -8px; }
+  }
+}
+
+@media (max-width: 639px) {
+  .brands-premium .ats-preview__row > span {
+    display: none;
+  }
+
+  .brands-hero__grid {
+    padding-top: 38px;
+  }
+
+  .brands-hero__visual {
+    min-height: 300px;
+    margin-inline: -4px;
+  }
+
+  .brands-hero__copy h1 {
+    font-size: 42px;
+  }
+
+  .brands-hero__signals {
+    gap: 7px 12px;
+  }
+
+  .brands-hero__signals span + span::before {
+    margin-inline-end: 5px;
+  }
+
+  .brands-catalogue {
+    padding-top: 34px;
+  }
+
+  .brands-premium .chip {
+    padding-inline: 11px;
+  }
+}
