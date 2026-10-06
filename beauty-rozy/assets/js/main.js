@@ -141,19 +141,102 @@
     const state = { type: 'all' };
     const v = new URLSearchParams(location.search).get('type');
     if (v && $(`[data-filter="type"][data-value="${CSS.escape(v)}"]`, filters)) state.type = v;
-    const cards = $$('.brandcard');
+
+    const heroPresets = {
+      all: {
+        eyebrow: 'BEAUTY ROZY / CURATED BEAUTY',
+        title: 'ماركات عالمية، مختارة بهدوء.',
+        subtitle: 'CURATED BEAUTY',
+        copy: 'اختيارات من عالم الجمال في مكان واحد — اكتشفي البراند، شوفي مجموعته، واعرفي موعد التسليم قبل التأكيد.',
+        section: 'اكتشفي الماركات المختارة',
+        sectionCopy: 'بدّلي بين الأقسام واكتشفي البراندات المتاحة بدون زحمة أو تفاصيل زيادة.',
+        code: 'BEAUTY / 00',
+        countLabel: 'ماركات مختارة',
+        pageTitle: 'الماركات'
+      },
+      makeup: {
+        eyebrow: 'BEAUTY ROZY / MAKEUP EDIT',
+        title: 'ميك أب، مختار بذوق.',
+        subtitle: 'THE MAKEUP EDIT',
+        copy: 'ماركات عالمية مختارة للوك أدق وتجربة أهدى — اختاري البراند، اكتشفي مجموعته، واعرفي موعد التسليم قبل التأكيد.',
+        section: 'ماركات الميك أب المختارة',
+        sectionCopy: 'اختيارات للـmakeup من براندات مختلفة، مع تجربة تصفح بسيطة وواضحة.',
+        code: 'MAKEUP / 01',
+        countLabel: 'ماركات ميك أب',
+        pageTitle: 'ميك أب'
+      },
+      hair: {
+        eyebrow: 'BEAUTY ROZY / HAIR EDIT',
+        title: 'شعرك، بروتين أذكى.',
+        subtitle: 'THE HAIR EDIT',
+        copy: 'اكتشفي براندات العناية بالشعر المتاحة، واختاري الروتين المناسب من غير ما تتوهي بين اختيارات كتير.',
+        section: 'ماركات العناية بالشعر',
+        sectionCopy: 'براندات للشعر مرتبة في تجربة هادئة تساعدك توصلي للاختيار أسرع.',
+        code: 'HAIR / 02',
+        countLabel: 'ماركات شعر',
+        pageTitle: 'العناية بالشعر'
+      },
+      skin: {
+        eyebrow: 'BEAUTY ROZY / SKIN EDIT',
+        title: 'بشرة، باختيارات محسوبة.',
+        subtitle: 'THE SKIN EDIT',
+        copy: 'اختيارات عناية بالبشرة من براندات عالمية، مرتبة عشان توصلي للمناسب لروتينك بسهولة.',
+        section: 'ماركات العناية بالبشرة',
+        sectionCopy: 'اختاري البراند الأول، وبعدها شوفي المنتجات المتاحة داخل مجموعته.',
+        code: 'SKIN / 03',
+        countLabel: 'ماركات بشرة',
+        pageTitle: 'العناية بالبشرة'
+      },
+      body: {
+        eyebrow: 'BEAUTY ROZY / BODY EDIT',
+        title: 'عناية الجسم، بطابع أهدى.',
+        subtitle: 'THE BODY EDIT',
+        copy: 'براندات للعناية اليومية بالجسم، مختارة ومقدمة بشكل واضح من أول الاختيار لحد موعد التسليم.',
+        section: 'ماركات العناية بالجسم',
+        sectionCopy: 'تصفحي البراندات المتاحة واختاري المجموعة اللي تناسب احتياجك.',
+        code: 'BODY / 04',
+        countLabel: 'ماركات جسم',
+        pageTitle: 'العناية بالجسم'
+      }
+    };
+
+    const cards = $('.brandcard');
     const apply = () => {
-      $$('[data-filter]', filters).forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter] === c.dataset.value)));
+      const preset = heroPresets[state.type] || heroPresets.all;
+      $('[data-filter]', filters).forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter] === c.dataset.value)));
       let n = 0;
       cards.forEach((card) => {
         const ok = state.type === 'all' || card.dataset.types.split(' ').includes(state.type);
         card.hidden = !ok;
         if (ok) n += 1;
       });
-      $('[data-count]').textContent = `${n} ماركة`;
-      $('[data-empty]').hidden = n > 0;
+
+      const count = $('[data-count]');
+      if (count) count.textContent = `${n} ماركة`;
+      const heroCount = $('[data-count-hero]');
+      if (heroCount) heroCount.textContent = String(n);
+      const countLabel = $('[data-brand-count-label]');
+      if (countLabel) countLabel.textContent = preset.countLabel;
+      const empty = $('[data-empty]');
+      if (empty) empty.hidden = n > 0;
+
+      const setText = (selector, value) => {
+        const el = $(selector);
+        if (el) el.textContent = value;
+      };
+      setText('[data-brand-hero-eyebrow]', preset.eyebrow);
+      setText('[data-brand-hero-title]', preset.title);
+      setText('[data-brand-hero-subtitle]', preset.subtitle);
+      setText('[data-brand-hero-copy]', preset.copy);
+      setText('[data-brand-section-title]', preset.section);
+      setText('[data-brand-section-copy]', preset.sectionCopy);
+      setText('[data-brand-hero-code]', preset.code);
+
+      document.body.dataset.activeBrandType = state.type;
+      document.title = `${preset.pageTitle} | Beauty ROZY`;
       history.replaceState(null, '', state.type === 'all' ? location.pathname : `?type=${state.type}`);
     };
+
     filters.addEventListener('click', (e) => {
       const chip = e.target.closest('[data-filter]');
       if (!chip) return;
