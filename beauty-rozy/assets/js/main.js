@@ -233,6 +233,7 @@
       setText('[data-brand-hero-code]', preset.code);
 
       document.body.dataset.activeBrandType = state.type;
+      $('[data-nav-type]').forEach((link) => link.classList.toggle('is-active', link.dataset.navType === state.type));
       document.title = `${preset.pageTitle} | Beauty ROZY`;
       history.replaceState(null, '', state.type === 'all' ? location.pathname : `?type=${state.type}`);
     };
