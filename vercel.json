@@ -91,6 +91,7 @@
   "git": {
     "deploymentEnabled": {
       "*": false,
+      "beauty-rozy-premium-v1": true,
       "main": true
     }
   },
