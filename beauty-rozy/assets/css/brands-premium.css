@@ -161,3 +161,139 @@ body.rozy-brands {
 @media(prefers-reduced-motion:reduce) {
   .rozy-brands *, .rozy-brands *::before, .rozy-brands *::after {animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Discovery v2 — a visual beauty house, with two genuine entry paths. */
+.rozy-campaign {display:grid;grid-template-columns:1.12fr 1fr;direction:ltr;min-height:540px;margin-block:28px 34px;background:#efe8df}
+.rozy-campaign__copy {padding:58px 40px 42px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;background:#f0e9e1;min-width:0}
+.rozy-campaign h1 {font:500 clamp(52px,5.2vw,76px)/.98 var(--serif);letter-spacing:-.045em;color:#392d28;margin:24px 0 28px}
+.rozy-campaign h1 em {font-weight:500;color:var(--burgundy)}
+.rozy-campaign__intro {direction:rtl;text-align:right;align-self:flex-end;width:100%}
+.rozy-campaign__intro h2 {font:500 23px/1.7 var(--font);margin-bottom:8px}
+.rozy-campaign__intro p {font-size:14px;line-height:2;color:#6e5c52}
+.rozy-campaign__actions {display:flex;direction:rtl;gap:10px;flex-wrap:wrap;width:100%;margin-top:24px}
+.rozy-action {display:flex;justify-content:space-between;align-items:center;gap:24px;min-height:48px;padding:10px 18px;border:1px solid #b6a69a;font-size:12px;transition:background-color .2s ease,color .2s ease}
+.rozy-action--solid {background:var(--burgundy);border-color:var(--burgundy);color:#fffefa}
+.rozy-action:hover {background:#e1d5ca}
+.rozy-action--solid:hover {background:var(--burgundy-dark)}
+.rozy-campaign__signature {font:italic 17px/1.5 var(--serif);color:#796559;margin-top:36px}
+.rozy-campaign__visual {position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:hidden;background:linear-gradient(120deg,#e4d8cd,#f5eee5 55%,#ded0c2);padding:62px 50px 80px}
+.rozy-campaign__visual>img {width:58%;height:370px;object-fit:contain;filter:drop-shadow(10px 20px 14px #5845382b);transition:transform .5s ease}
+.rozy-campaign__visual:hover>img {transform:scale(1.025)}
+.rozy-campaign__edition {position:absolute;top:26px;left:28px;font:10px Arial,sans-serif;letter-spacing:.16em;color:#6b574b}
+.rozy-campaign__caption {position:absolute;bottom:28px;left:28px;right:28px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #bba592;padding-top:18px;direction:rtl;color:#4f392c}
+.rozy-campaign__caption>span:first-child {display:flex;flex-direction:column;gap:6px}
+.rozy-campaign__caption small {font:10px Arial,sans-serif;letter-spacing:.12em}
+.rozy-campaign__caption strong {font:400 15px/1.5 var(--font)}
+.rozy-campaign__caption>span:last-child {font-size:24px}
+.rozy-collection__head .rozy-eyebrow {margin-bottom:12px}
+.rozy-collection__head h2 {font-size:32px;font-weight:400}
+.rozy-collection__intro {font-size:13px;line-height:1.8;color:var(--muted)}
+.rozy-paths {display:flex;gap:44px;border-bottom:1px solid var(--line);margin-top:32px}
+.rozy-paths button {display:flex;align-items:center;gap:18px;min-height:65px;cursor:pointer;background:transparent;border:0;border-bottom:2px solid transparent;padding:12px 2px;color:var(--muted);font:400 18px var(--font)}
+.rozy-paths button[aria-selected=true] {border-bottom-color:var(--burgundy);color:var(--burgundy)}
+.rozy-paths small {font:10px Arial,sans-serif;letter-spacing:.13em}
+.rozy-brandtools {padding-block:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap}
+.rozy-brandtools>p,.rozy-typehint {font-size:13px;color:var(--muted)}
+.rozy-brandfilters {display:flex;gap:8px;flex-wrap:wrap}
+.rozy-brandfilter {background:transparent;border:1px solid var(--line);padding:9px 15px;min-height:42px;cursor:pointer;font-size:13px}
+.rozy-brandfilter[aria-pressed=true] {background:var(--plum);color:var(--paper);border-color:var(--plum)}
+.rozy-typetools {padding-top:26px}
+.rozy-types {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding-block:24px 38px}
+.rozy-type {border:0;border-bottom:2px solid transparent;padding:0 0 16px;background:transparent;cursor:pointer;text-align:start;min-width:0}
+.rozy-type[aria-pressed=true] {border-bottom-color:var(--burgundy)}
+.rozy-type__art {position:relative;display:flex;align-items:center;justify-content:center;height:245px;overflow:hidden;background:#ece6df}
+.rozy-type--hair .rozy-type__art {background:#e4e3db}
+.rozy-type--body .rozy-type__art {background:#eae0d3}
+.rozy-type--makeup .rozy-type__art {background:#6b3e4a;color:#f9f0e9}
+.rozy-type__art>img {height:76%;width:72%;object-fit:contain;filter:drop-shadow(8px 12px 9px #4b33221a);transition:transform .3s ease}
+.rozy-type:hover .rozy-type__art>img {transform:scale(1.03)}
+.rozy-type__makeup {display:flex;align-items:center;flex-direction:column;gap:28px;width:100%;padding:28px}
+.rozy-type__makeup img {width:100%;max-width:170px;mix-blend-mode:screen;filter:grayscale(1) invert(1)}
+.rozy-type__makeup>span {font:9px/1.8 Arial,sans-serif;letter-spacing:.14em;text-align:center}
+.rozy-type__check {display:none;position:absolute;top:12px;right:12px;width:26px;height:26px;background:var(--burgundy);color:white;align-items:center;justify-content:center;border-radius:50%;font:14px Arial,sans-serif}
+.rozy-type[aria-pressed=true] .rozy-type__check {display:flex}
+.rozy-type__title {display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:16px;font-size:19px}
+.rozy-type__title [lang] {font:italic 22px var(--serif)}
+.rozy-type__note {display:block;font-size:12px;line-height:1.8;color:var(--muted);margin-top:6px}
+.rozy-resulthead {display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:20px}
+.rozy-resulthead h3 {font:400 19px/1.7 var(--font)}
+.rozy-brands [data-selection=all] .brandcard:first-child .brandlogo {width:100%;padding:30px}
+.rozy-brands .brandcard__name.brandlogo {--s:72px}
+.rozy-brands .brandlogo img {max-width:190px;max-height:100px}
+.rozy-brands [data-mode=types] .brandgrid {grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+.rozy-brands [data-mode=types] .brandgrid .brandcard {grid-column:span 1}
+.rozy-brands [data-mode=types] .rozy-brand__art {height:145px}
+.rozy-brands [data-mode=types] .brandlogo img {max-width:130px;max-height:65px}
+.rozy-brands [data-mode=types] .rozy-brand__body>p,.rozy-brands [data-mode=types] .rozy-brand__category,.rozy-brands [data-mode=types] .rozy-brand__caption {display:none}
+.rozy-brands [data-mode=types] .rozy-brand__heading {margin-bottom:14px}
+.rozy-brands [data-mode=types] .rozy-brand__heading h3 {font-size:21px}
+.rozy-brands [data-mode=types] .rozy-brand__number {font-size:9px;left:14px;top:12px}
+.rozy-typeproducts {padding-top:42px;margin-top:35px;border-top:1px solid var(--line)}
+.rozy-productgrid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 24px}
+.rozy-product {min-width:0;display:flex;flex-direction:column;gap:10px}
+.rozy-product__image {background:#f0eae4;overflow:hidden;aspect-ratio:4/5;display:block}
+.rozy-product__image img {width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;transition:transform .3s ease}
+.rozy-product:hover img {transform:scale(1.025)}
+.rozy-product>.rozy-eyebrow {padding-top:8px}
+.rozy-product h4 {font:400 15px/1.6 var(--font);margin:0}
+.rozy-product__link {display:flex;justify-content:space-between;font-size:12px;color:var(--burgundy);padding-top:12px;margin-top:auto}
+@media(max-width:959px) {
+  .rozy-campaign {min-height:480px}
+  .rozy-campaign__copy {padding:40px 28px}
+  .rozy-campaign h1 {font-size:58px}
+  .rozy-campaign__visual {padding:70px 24px 85px}
+  .rozy-campaign__visual>img {width:85%;height:310px}
+  .rozy-campaign__actions {gap:8px}
+  .rozy-action {padding:10px 12px;gap:14px}
+  .rozy-types {gap:14px}
+  .rozy-type__art {height:200px}
+  .rozy-type__title {flex-direction:column;gap:3px;font-size:17px}
+  .rozy-type__title [lang] {font-size:20px}
+  .rozy-brands [data-mode=types] .brandgrid {grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rozy-productgrid {grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:600px) {
+  .rozy-campaign {grid-template-columns:1fr;margin-block:22px 24px}
+  .rozy-campaign__copy {padding:32px 24px 26px}
+  .rozy-campaign h1 {font-size:clamp(43px,11.5vw,64px);margin:20px 0 22px}
+  .rozy-campaign__intro h2 {font-size:20px}
+  .rozy-campaign__intro p {font-size:13px}
+  .rozy-campaign__actions {flex-direction:column;margin-top:20px}
+  .rozy-action {padding:12px 16px;width:100%;font-size:13px}
+  .rozy-campaign__signature {margin-top:23px;font-size:16px}
+  .rozy-campaign__visual {min-height:335px;padding:48px 28px 80px}
+  .rozy-campaign__visual>img {height:240px;width:55%}
+  .rozy-campaign__caption {left:22px;right:22px;bottom:18px;padding-top:13px}
+  .rozy-campaign__edition {top:20px;left:22px;font-size:9px}
+  .rozy-campaign__caption strong {font-size:14px}
+  .rozy-collection__head {align-items:flex-start;gap:12px;flex-direction:column}
+  .rozy-collection__head h2 {font-size:27px}
+  .rozy-collection__intro {font-size:12px}
+  .rozy-paths {gap:24px;margin-top:22px}
+  .rozy-paths button {font-size:17px;gap:6px;flex-direction:column;align-items:flex-start;min-height:66px;flex:1}
+  .rozy-paths small {font-size:9px}
+  .rozy-brandtools {padding-block:20px;gap:15px}
+  .rozy-brandfilters {gap:7px}
+  .rozy-brandfilter {font-size:12px;min-height:44px;padding:8px 12px}
+  .rozy-types {grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px;padding-block:20px 24px}
+  .rozy-type__art {height:185px}
+  .rozy-type__title {font-size:18px;gap:2px}
+  .rozy-type__note {font-size:11px}
+  .rozy-type__makeup {padding:16px;gap:18px}
+  .rozy-type__makeup>span {font-size:8px}
+  .rozy-resulthead h3 {font-size:17px}
+  .rozy-brands [data-mode=types] .brandgrid {grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}
+  .rozy-brands [data-mode=types] .rozy-brand__art {height:130px}
+  .rozy-brands [data-mode=types] .brandlogo img {max-width:100px;max-height:55px}
+  .rozy-brands [data-mode=types] .brandcard__name.brandlogo {padding:18px}
+  .rozy-brands [data-mode=types] .rozy-brand__heading h3 {font-size:20px}
+  .rozy-brands [data-mode=types] .brandcard__foot {font-size:11px}
+  .rozy-productgrid {grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px}
+  .rozy-product h4 {font-size:12px;line-height:1.65}
+  .rozy-product__link {font-size:11px;gap:8px}
+  .rozy-typeproducts {padding-top:26px;margin-top:30px}
+  .rozy-typeproducts .rozy-resulthead {align-items:start;flex-direction:column;gap:6px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .rozy-campaign__visual>img,.rozy-type__art>img,.rozy-product__image img {transition:none;transform:none!important}
+}
