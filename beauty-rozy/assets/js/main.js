@@ -141,8 +141,68 @@
     const state = { type: 'all' };
     const v = new URLSearchParams(location.search).get('type');
     if (v && $(`[data-filter="type"][data-value="${CSS.escape(v)}"]`, filters)) state.type = v;
+
+    const heroPresets = {
+      all: {
+        eyebrow: 'BEAUTY ROZY / CURATED BEAUTY',
+        title: 'جمال أصلي، مختار بذوق.',
+        subtitle: 'Chosen with care.',
+        copy: 'Beauty ROZY وجهة راقية لمنتجات Beauty أصلية ومنتقاة بعناية. تجربة هادئة تساعدك تختاري بثقة، لا أن تتوهّي بين اختيارات كثيرة.',
+        section: 'اختاري من عالم ROZY المنتقى.',
+        sectionCopy: 'ابدئي بالبراند أو نوع العناية. ROZY تنظّم الاختيارات لتصلي لما يناسبك بهدوء ووضوح.',
+        code: 'BEAUTY / 00',
+        countLabel: 'ماركات مختارة',
+        pageTitle: 'الماركات'
+      },
+      makeup: {
+        eyebrow: 'BEAUTY ROZY / MAKEUP EDIT',
+        title: 'ميك أب يستحق الاختيار.',
+        subtitle: 'The Makeup Edit.',
+        copy: 'اختيارات Makeup منتقاة للوك أدق وتجربة أوضح. نعرض البراندات التي تضيف قيمة حقيقية، لا مجرد أسماء كثيرة.',
+        section: 'The ROZY makeup selection.',
+        sectionCopy: 'براندات Makeup مختارة بعناية، مقدمة بهدوء يساعدك تكتشفي المجموعة المناسبة.',
+        code: 'MAKEUP / 01',
+        countLabel: 'ماركات ميك أب',
+        pageTitle: 'ميك أب'
+      },
+      hair: {
+        eyebrow: 'BEAUTY ROZY / HAIR EDIT',
+        title: 'عناية بالشعر، منظمة بذكاء.',
+        subtitle: 'The Hair Edit.',
+        copy: 'اختيارات Hair Care تساعدك تبني روتين واضح للشعر، من غير زحمة أو وعود مبالغ فيها.',
+        section: 'Hair care, carefully selected.',
+        sectionCopy: 'براندات للعناية بالشعر مرتبة حول الجودة والاحتياج وسهولة القرار.',
+        code: 'HAIR / 02',
+        countLabel: 'ماركات شعر',
+        pageTitle: 'العناية بالشعر'
+      },
+      skin: {
+        eyebrow: 'BEAUTY ROZY / SKIN EDIT',
+        title: 'بشرة، باختيارات محسوبة.',
+        subtitle: 'The Skin Edit.',
+        copy: 'اختيارات Skin Care أصلية ومنظمة حول الاحتياج، المصدر، ووضوح المعلومة قبل القرار.',
+        section: 'Skin care with intention.',
+        sectionCopy: 'اكتشفي براندات البشرة التي تدخل ROZY لأنها تضيف قيمة حقيقية لروتينك.',
+        code: 'SKIN / 03',
+        countLabel: 'ماركات بشرة',
+        pageTitle: 'العناية بالبشرة'
+      },
+      body: {
+        eyebrow: 'BEAUTY ROZY / BODY EDIT',
+        title: 'عناية الجسم، بطابع أهدأ.',
+        subtitle: 'The Body Edit.',
+        copy: 'منتجات Body Care مختارة لتجربة شخصية راقية، بسيطة، وواضحة من أول الاكتشاف.',
+        section: 'Body care, quietly refined.',
+        sectionCopy: 'اختيارات للعناية اليومية بالجسم، مقدمة بروح ROZY: أقل زحمة، أكثر ثقة.',
+        code: 'BODY / 04',
+        countLabel: 'ماركات جسم',
+        pageTitle: 'العناية بالجسم'
+      }
+    };
+
     const cards = $$('.brandcard');
     const apply = () => {
+      const preset = heroPresets[state.type] || heroPresets.all;
       $$('[data-filter]', filters).forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter] === c.dataset.value)));
       let n = 0;
       cards.forEach((card) => {
@@ -150,10 +210,34 @@
         card.hidden = !ok;
         if (ok) n += 1;
       });
-      $('[data-count]').textContent = `${n} ماركة`;
-      $('[data-empty]').hidden = n > 0;
+
+      const count = $('[data-count]');
+      if (count) count.textContent = `${n} ماركة`;
+      const heroCount = $('[data-count-hero]');
+      if (heroCount) heroCount.textContent = String(n);
+      const countLabel = $('[data-brand-count-label]');
+      if (countLabel) countLabel.textContent = preset.countLabel;
+      const empty = $('[data-empty]');
+      if (empty) empty.hidden = n > 0;
+
+      const setText = (selector, value) => {
+        const el = $(selector);
+        if (el) el.textContent = value;
+      };
+      setText('[data-brand-hero-eyebrow]', preset.eyebrow);
+      setText('[data-brand-hero-title]', preset.title);
+      setText('[data-brand-hero-subtitle]', preset.subtitle);
+      setText('[data-brand-hero-copy]', preset.copy);
+      setText('[data-brand-section-title]', preset.section);
+      setText('[data-brand-section-copy]', preset.sectionCopy);
+      setText('[data-brand-hero-code]', preset.code);
+
+      document.body.dataset.activeBrandType = state.type;
+      $$('[data-nav-type]').forEach((link) => link.classList.toggle('is-active', link.dataset.navType === state.type));
+      document.title = `${preset.pageTitle} | Beauty ROZY`;
       history.replaceState(null, '', state.type === 'all' ? location.pathname : `?type=${state.type}`);
     };
+
     filters.addEventListener('click', (e) => {
       const chip = e.target.closest('[data-filter]');
       if (!chip) return;
