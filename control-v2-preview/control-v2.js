@@ -338,7 +338,7 @@
   $$('.nav-btn').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
   $('#toggle-language').addEventListener('click',()=>{state.lang=state.lang==='ar'?'en':'ar';updateLanguage()});
   $('#case-search').addEventListener('input',renderCases);
-  $('.case-filter').forEach(button=>button.addEventListener('click',()=>{state.caseFilter=button.dataset.caseFilter;renderCases()}));
+  $$('.case-filter').forEach(button=>button.addEventListener('click',()=>{state.caseFilter=button.dataset.caseFilter;renderCases()}));
   $('#review-direction').addEventListener('click',()=>openDialog('review'));
   $('#request-context').addEventListener('click',()=>openDialog('ask'));
   $('#hero-open-case').addEventListener('click',()=>{const first=sampleCases.find(c=>!state.completed.has(c.id))||sampleCases[0];state.selectedCase=first.id;state.caseFilter='all';setView('clients')});
