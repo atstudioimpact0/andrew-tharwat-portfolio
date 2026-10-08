@@ -1,6 +1,18 @@
 # ATS Control Room V2 — Zoho Directory Staff SSO Pilot
 **Status:** implementation scaffolding + tests available in feature branch. NO OIDC connection to a real Zoho tenant yet. NO route deployed. Do not use for Production login.
 
+## Security checkpoint — 8 Oct 2026, hardening slice
+
+**New server-only modules** (not wired to URLs or connected to Zoho):
+- \`server/access-v2/zoho-directory-flow.cjs\`: started OIDC transactions are now bound to an independent 256-bit browser value. Store its hash with the one-time state; return binding only so the future HTTP handler can set a short-lived Secure HttpOnly SameSite=Lax **host-only** cookie. Callback consumes the state and requires a matching browser binding. This blocks login-CSRF / cross-browser callback acceptance if implemented as specified.
+- \`server/access-v2/session.cjs\`: 256-bit random, revocable 2-hour staff sessions. Browser gets a \`__Host-ats_v2\` cookie; storage gets SHA-256 token digest only. Each request rechecks the staff mapping so offboarding, changing role or tenant revokes the session.
+- \`tests/control-v2-session.test.cjs\` and expanded \`tests/zoho-directory-flow.test.cjs\`: browser-binding, expiry, replay, forged identity, session revocation, offboarding tests.
+- \`server/access-v2/STAGING_ONLY_IDENTITY_SCHEMA.sql\`: **unapplied** example staging schema. No database mutation was performed.
+
+**Critical deployment blockers:** the session and OIDC adapters still require an **isolated staging database**, atomically consumed pending state, storage encryption of PKCE payload, a vetted OIDC client, server routes, CSRF-safe callback correlation cookie, request-origin defenses for authenticated writes, dedicated DB role/RLS access, mandatory Zoho MFA and approved member mapping. A user-provided cookie, staff role or "verified" flag is not proof of identity. Real client portal auth remains a separate workstream. Strictly no automatic billing or production cutover.
+
+---
+
 ## Why this provider
 Zoho Directory supports custom OIDC applications, providing a vendor-supported login for AT Studio founder/internal staff. Zoho Directory's public Free plan lists up to 10 users and 3 non-Zoho apps; account eligibility must be confirmed inside the owner's Zoho organization. We are not adding Zoho CRM as a database or using ordinary Zoho Mail to deliver automated OTP.
 
