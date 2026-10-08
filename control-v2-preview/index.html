@@ -77,6 +77,12 @@
               <div class="panel-header"><h2 data-i18n="activeCases">ملفات العملاء</h2><span class="subtle-tag">DEMO</span></div>
               <label class="search-label" for="case-search" data-i18n="searchLabel">ابحث في الملفات</label>
               <input id="case-search" type="search" placeholder="ابحث بالاسم أو المشكلة..." autocomplete="off">
+              <div class="case-filters" role="group" aria-label="Filter cases">
+                <button class="case-filter is-current" data-case-filter="all" type="button" aria-pressed="true" data-i18n="filterAll">الكل</button>
+                <button class="case-filter" data-case-filter="needs" type="button" aria-pressed="false" data-i18n="filterNeeds">معلومة ناقصة</button>
+                <button class="case-filter" data-case-filter="review" type="button" aria-pressed="false" data-i18n="filterReview">تحتاج مراجعة</button>
+                <button class="case-filter" data-case-filter="handled" type="button" aria-pressed="false" data-i18n="filterHandled">تمت متابعتها</button>
+              </div>
               <div class="case-list" id="case-list"></div>
               <p class="empty" id="case-empty" hidden data-i18n="noCases">لا توجد نتائج مطابقة.</p>
             </div>
@@ -85,6 +91,11 @@
               <div class="case-section"><span class="section-number">01</span><div><h3 data-i18n="challenge">المشكلة اللي بنحلّها</h3><p id="case-problem"></p></div></div>
               <div class="case-section"><span class="section-number">02</span><div><h3 data-i18n="known">إيه اللي نعرفه بالفعل؟</h3><p id="case-known"></p></div></div>
               <div class="case-section"><span class="section-number">03</span><div><h3 data-i18n="missing">إيه اللي محتاج توضيح؟</h3><p id="case-missing"></p></div></div>
+              <section class="case-journal" aria-labelledby="case-journal-title">
+                <div class="journal-heading"><div><p class="eyebrow">DECISION HISTORY / THIS CASE</p><h3 id="case-journal-title" data-i18n="journalTitle">سجل القرار والمتابعة</h3></div><span class="journal-count" id="journal-count">01</span></div>
+                <ol id="case-journal-list" class="journal-list" aria-live="polite"></ol>
+                <p class="journal-caveat" data-i18n="journalCaveat">السجل ده توضيحي وبيختفي لما تقفل المعاينة. مش متصل بملفات عملاء حقيقية.</p>
+              </section>
               <div class="case-action-block"><div class="action-kicker" data-i18n="suggestedNext">الخطوة المقترحة — تحتاج مراجعتك</div><p id="case-recommendation"></p><div class="action-row"><button type="button" class="btn btn-primary" id="review-direction" data-i18n="reviewAction">راجع الاتجاه</button><button type="button" class="btn btn-outline" id="request-context" data-i18n="askAction">اطلب معلومة</button></div></div>
               <p class="safety-note" data-i18n="demoDisclaimer">أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.</p>
             </article>
