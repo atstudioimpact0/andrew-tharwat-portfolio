@@ -170,7 +170,7 @@
   }
   function card(root,{symbol,title,desc,meta}){
     const section=elt('article',root.id==='delivery-grid'?'delivery-card':'studio-card');
-    section.append(elt('div','small-icon',symbol),elt('h2','',translations(title)),elt('p','',translations(desc)),elt('small','',translations(meta))));
+    section.append(elt('div','small-icon',symbol),elt('h2','',translations(title)),elt('p','',translations(desc)),elt('small','',translations(meta)));
     root.append(section)
   }
   function renderOtherPages(){
