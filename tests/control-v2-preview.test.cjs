@@ -127,3 +127,21 @@ test('collection event handlers never use a single-node selector',()=>{
  assert.match(src,/\$\$\('\.case-filter'\)\.forEach/);
  assert.match(src,/\$\$\('\.command-option'\)\.forEach/);
 });
+
+
+test('Ultra-Premium quick navigation is accessible and release status is not overstated',()=>{
+ const html=load('index.html'),js=load('control-v2.js'),styles=load('ultra.css');
+ assert.match(html,/id="command-dialog" aria-labelledby="command-title"/);
+ assert.match(html,/role="combobox" aria-autocomplete="list"/);
+ assert.match(html,/id="command-open"/);
+ assert.match(html,/href="\.\/ultra\.css"/);
+ assert.match(js,/event\.key\.toLowerCase\(\)==='k'/);
+ assert.match(js,/commandModal\.showModal\(\)/);
+ assert.match(styles,/\.command-dialog::backdrop/);
+ assert.match(styles,/@media\(max-width:560px\)/);
+ assert.match(html,/class="build-track"/);
+ assert.match(html,/data-i18n="buildCaution"/);
+ assert.match(js,/buildIdentityDesc:'كود تجريبي/);
+ assert.match(js,/buildIdentityDesc:'Pilot code and security tests only/);
+ assert.doesNotMatch(html,/class="build-state"[^>]*>Production active/);
+});
