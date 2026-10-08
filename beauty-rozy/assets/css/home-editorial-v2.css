@@ -105,3 +105,13 @@
  .rozy-home-v2 .rozy-edit-note{margin-top:8px}
 }
 @media(prefers-reduced-motion:reduce){.rozy-home-v2 .rozy-campaign__visual>img{transition:none!important}}
+
+/* Retain the hero photography and split campaign composition approved in the original premium template. */
+.rozy-home-v2 .rozy-campaign__visual{padding:0;display:block;background:#af8174}
+.rozy-home-v2 .rozy-campaign__visual>img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center 33%;mix-blend-mode:normal;filter:none;transform:none}
+.rozy-home-v2 .rozy-campaign__visual::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(27,17,15,.22) 0%,transparent 29%,transparent 48%,rgba(25,13,14,.57) 100%);pointer-events:none}
+.rozy-home-v2 .rozy-campaign__edition{z-index:2;color:#fff9f5;text-shadow:0 1px 8px #21120e69}
+.rozy-home-v2 .rozy-campaign__caption{z-index:2;color:#fffaf5;border-top-color:#ffffff85;text-shadow:0 1px 8px #21120e66}
+.rozy-home-v2 .rozy-campaign__caption small:last-child{color:#f1ded4}
+.rozy-home-v2 .rozy-campaign__visual:hover>img{transform:scale(1.018)}
+@media(max-width:520px){.rozy-home-v2 .rozy-campaign__visual>img{width:100%;object-position:center 29%}}
