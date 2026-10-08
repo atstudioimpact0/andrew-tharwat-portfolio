@@ -15,3 +15,14 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
+      - name: Build portable Ultra-Premium review (PR #16 only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'feat/ats-control-v2-zoho-auth-plan'
+        run: node scripts/package-control-v2-offline.cjs
+      - name: Attach short-lived offline design review
+        if: github.event_name == 'pull_request' && github.head_ref == 'feat/ats-control-v2-zoho-auth-plan'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ATS-Ultra-Premium-Offline-Review
+          path: dist/control-v2-offline/
+          if-no-files-found: error
+          retention-days: 1
