@@ -39,7 +39,8 @@ test('mock UI cannot send data, verify OTP, or authenticate',()=>{
  assert.match(access,/form-action 'none'/);
  assert.doesNotMatch(access,/<input\b|<form\b|<textarea\b/i);
  assert.doesNotMatch(access,/value="[^"]*(?:sk_live_|sb_secret_|password|token)[^"]*"/i);
- assert.match(access,/No live login/);
+ assert.match(access,/لا تسجيل دخول حقيقي/);
+ assert.match(load('access.js'),/No live login/);
  assert.match(access,/DESIGN PROTOTYPE/);
 });
 
