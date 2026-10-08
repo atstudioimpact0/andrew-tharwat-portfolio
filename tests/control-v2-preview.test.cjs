@@ -46,7 +46,7 @@ test('mock UI cannot send data, verify OTP, or authenticate',()=>{
 
 test('prototype view links to isolated journey without changing live admin',()=>{
  const html=load('index.html');
- assert.match(html,/href="\.\/access\.html"/);
+ assert.match(html,/href="\/control-v2-preview\/access"/);
  assert.match(html,/data-i18n="accessPreview"/);
  assert.doesNotMatch(html,/href="\/admin\/"[^>]*data-i18n="accessPreview"/);
  assert.match(load('control-v2.js'),/accessPreview:'Preview the new access journey/);
@@ -78,7 +78,7 @@ test('executive version has a real next action, not a decorative hero CTA',()=>{
  assert.match(html,/class="executive-hero"/);
  assert.match(html,/id="hero-open-case"/);
  assert.match(html,/class="hero-title"/);
- assert.match(html,/href="\.\/premium\.css"/);
+ assert.match(html,/href="\/control-v2-preview\/premium\.css"/);
  assert.match(js,/\$\('#hero-open-case'\)\.addEventListener\('click'/);
  assert.match(js,/setView\('clients'\)/);
 });
@@ -89,7 +89,7 @@ test('premium visual layer stays safe and viewports are accounted for',()=>{
  assert.match(premium,/@media\(max-width:760px\)/);
  assert.match(premium,/@media\(max-width:410px\)/);
  assert.match(accessPremium,/@media\(max-width:760px\)/);
- assert.match(access,/href="\.\/access-premium\.css"/);
+ assert.match(access,/href="\/control-v2-preview\/access-premium\.css"/);
 });
 
 test('Zoho status is never represented as connected app authentication',()=>{
@@ -134,7 +134,7 @@ test('Ultra-Premium quick navigation is accessible and release status is not ove
  assert.match(html,/id="command-dialog" aria-labelledby="command-title"/);
  assert.match(html,/role="combobox" aria-autocomplete="list"/);
  assert.match(html,/id="command-open"/);
- assert.match(html,/href="\.\/ultra\.css"/);
+ assert.match(html,/href="\/control-v2-preview\/ultra\.css"/);
  assert.match(js,/event\.key\.toLowerCase\(\)==='k'/);
  assert.match(js,/commandModal\.showModal\(\)/);
  assert.match(styles,/\.command-dialog::backdrop/);
@@ -144,4 +144,23 @@ test('Ultra-Premium quick navigation is accessible and release status is not ove
  assert.match(js,/buildIdentityDesc:'كود تجريبي/);
  assert.match(js,/buildIdentityDesc:'Pilot code and security tests only/);
  assert.doesNotMatch(html,/class="build-state"[^>]*>Production active/);
+});
+
+
+test('preview assets resolve correctly with clean URLs and trailing slash variants',()=>{
+ const checks=[
+  {doc:load('index.html'),assets:['control-v2.css','premium.css','ultra.css','control-v2.js']},
+  {doc:load('access.html'),assets:['access.css','access-premium.css','access.js']}
+ ];
+ const origins=['https://preview.example.test/control-v2-preview','https://preview.example.test/control-v2-preview/','https://preview.example.test/control-v2-preview/index'];
+ for(const item of checks){
+  assert.doesNotMatch(item.doc,/(?:src|href)="\.\/[^"]+\.(?:css|js)"/);
+  for(const file of item.assets){
+   const expected='/control-v2-preview/'+file;
+   assert.ok(item.doc.includes('href="'+expected+'"') || item.doc.includes('src="'+expected+'"'),'canonical absolute asset missing: '+expected);
+   for(const base of origins)assert.equal(new URL(expected,base).pathname,expected);
+  }
+ }
+ assert.match(load('index.html'),/href="\/control-v2-preview\/access"/);
+ assert.match(load('access.html'),/href="\/control-v2-preview" class="brand"/);
 });
