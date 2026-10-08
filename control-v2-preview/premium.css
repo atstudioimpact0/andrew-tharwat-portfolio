@@ -1,0 +1,254 @@
+/*
+AT STUDIO — EXECUTIVE EDITION
+Design preview only / layered over the original functional UX shell.
+Purposefully restrained visual language: editorial structure, quiet navigation,
+strong hierarchy, real next actions. No glassmorphism, fake analytics, neon or decorative stock graphics.
+*/
+:root {
+  --ink:#152b37;
+  --navy:#0b202d;
+  --navy-soft:#153542;
+  --red:#be3344;
+  --canvas:#f7f7f4;
+  --white:#fff;
+  --muted:#6f8186;
+  --line:#e7e7e1;
+  --tag:#f3f3ee;
+  --gold:#b29b7c;
+  --shadow:none;
+}
+html{font-synthesis:none}
+body{background:var(--canvas);color:var(--ink);font-size:14px}
+::selection{background:#debec0;color:#0b202d}
+.prototype-strip{height:30px;background:#e9e7e0;color:#777469;border-bottom:1px solid #dddcd6;font:600 9px Montserrat,Cairo,sans-serif;letter-spacing:.035em;gap:10px}
+.prototype-strip strong{font-size:9px;letter-spacing:.09em;color:#645f51}
+.prototype-strip .strip-dot{background:#a78b6d;width:5px;height:5px}
+.shell{grid-template-columns:235px minmax(0,1fr);min-height:calc(100vh - 30px)}
+.sidebar{background:#0a202e;min-height:calc(100vh - 30px);border-inline-end:1px solid #24404b}
+.sidebar-top{padding:36px 21px 18px;border-bottom:0}
+.brand{gap:12px}
+.brand img{width:43px;height:43px;border-radius:0}
+.brand strong{font-weight:700;font-size:12px;letter-spacing:.135em}
+.brand small{margin-top:2px;color:#899fa6;letter-spacing:.18em}
+.brand small span{color:#d39499}
+.side-caption{margin-top:40px;color:#738a93;font-size:10px;font-weight:600;letter-spacing:.03em}
+.side-rule{margin-top:15px;height:1px;background:linear-gradient(90deg,transparent,#39505c,transparent)}
+.side-nav{padding:18px 12px;gap:3px}
+.nav-btn{border-radius:5px;padding:14px 12px;gap:13px;color:#acbec3;transition:background .15s,color .15s;min-height:52px}
+.nav-btn span:nth-child(2){font-size:12px;letter-spacing:.005em;font-weight:600}
+.nav-btn .nav-symbol{font-size:19px;width:24px;color:#7797a2}
+.nav-btn small{opacity:.6}
+.nav-btn:hover{background:#143140}
+.nav-btn.active{background:#14303d;border-color:transparent;box-shadow:none!important;color:white}
+.nav-btn.active .nav-symbol{color:#e7acac}
+.nav-btn.active:before{content:"";display:block;position:absolute;inset-inline-start:0;height:19px;width:2px;background:#ce5b64;border-radius:2px}
+.nav-btn{position:relative}
+.sidebar-bottom{padding:20px 21px 27px;border-top:1px solid #2a3d47}
+.sidebar-identity{display:grid;gap:7px;margin-bottom:22px}
+.sidebar-identity .identity-index{font:600 10px Montserrat,sans-serif;letter-spacing:.18em;color:#cb9090}
+.sidebar-identity span:last-child{font-size:11px;color:#bac8c9}
+.system-pill{border:0;border-radius:0;padding:10px 0;background:transparent;align-items:start}
+.system-pill .mini-dot{margin-top:7px;background:#d9b98b}
+.system-pill b{font-size:10px;font-weight:600;color:#b8c7c9}
+.system-pill small{margin-top:2px;font-size:9px;color:#758c94}
+.sidebar-bottom p{font-size:8px;line-height:1.8;margin:18px 0 0;color:#6a8793}
+.content-area{background:#f8f8f5}
+.topbar{height:88px;background:#fbfbf9;border-bottom:1px solid #e8e9e3;padding:0 clamp(24px,3.6vw,65px)}
+.topbar-leading{display:flex;align-items:center}
+.bread{gap:17px;color:#73848a;font-size:10px}
+.bread span{color:#939fa2;letter-spacing:.18em}
+.bread b{color:#b8bcb8}
+.bread strong{color:#2e4652;font-size:13px;font-weight:700}
+.topbar-actions{gap:21px}
+.preview-pill{background:#f0f1eb;border:0;border-radius:4px;padding:7px 12px;display:flex;gap:9px;align-items:center;font-size:9px;color:#69796f;font-weight:700;letter-spacing:.04em}
+.preview-pulse{width:6px;height:6px;border-radius:50%;background:#94a68e}
+.lang-btn{background:transparent;border:0;border-radius:2px;font-size:11px;padding:6px;min-height:37px;min-width:39px;color:#354b56}
+.lang-btn:hover{background:#eef0ed}
+.avatar{border:1px solid #dae0dc;border-radius:7px;background:#fff;color:#18313e;padding:0 11px;min-width:41px;width:auto;height:38px;font-size:11px;gap:6px;display:flex;align-items:center}
+.avatar-mini{color:#839093;font-size:8px;letter-spacing:.08em}
+main{max-width:1530px;padding:39px clamp(24px,3.6vw,65px) 80px}
+.page-heading{margin-bottom:27px;align-items:end}
+.page-heading h1{font-size:clamp(30px,2.9vw,43px);letter-spacing:-.045em;line-height:1.32;color:#102936;margin:8px 0 9px}
+.page-heading p:not(.eyebrow){color:#7d8b8b;font-size:13px}
+.eyebrow{color:#9b7c70;font-weight:700;font-size:9px;letter-spacing:.19em}
+.heading-emblem{background:none;border:0;border-radius:0;height:auto;min-width:auto;font-size:25px;color:#778b8d;letter-spacing:-.15em;opacity:.65}
+.heading-emblem span{color:#c45962}
+.home-heading{margin-bottom:19px}
+.home-heading h1{font-size:27px;margin:3px 0 5px}
+.home-heading .heading-emblem{font-size:20px}
+.home-heading p:not(.eyebrow){font-size:11px}
+.executive-hero{
+  background:#091f2c;position:relative;min-height:368px;overflow:hidden;color:#fff;
+  display:grid;grid-template-columns:minmax(0,1.24fr) minmax(270px,.76fr);
+  border:1px solid #142f3d;border-radius:3px;margin-bottom:27px;isolation:isolate;
+}
+.executive-hero:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(130deg,transparent 26%,rgba(181,162,128,.055) 55%,transparent 80%);z-index:-1}
+.executive-story{position:relative;padding:32px clamp(27px,3.1vw,51px) 37px;z-index:1}
+.hero-meta{display:flex;align-items:center;gap:11px;font:600 9px Montserrat,Cairo,sans-serif;letter-spacing:.1em;color:#bbcbc8;margin-bottom:32px}
+.hero-indicator{width:7px;height:7px;background:#ca7473;border-radius:50%}
+.hero-divider{height:12px;width:1px;background:#52636a}
+.hero-overline{color:#b5a28e;font:600 9px Montserrat,Cairo,sans-serif;letter-spacing:.2em;margin-bottom:12px}
+.hero-title{font-weight:800;letter-spacing:-.045em;font-size:clamp(26px,2.7vw,42px);line-height:1.48;margin-bottom:13px;max-width:790px}
+.hero-title em{color:#dcb7af;font-style:normal;font-weight:600}
+.hero-desc{max-width:565px;color:#aebfc3;font-size:12px;line-height:2.05;margin-bottom:23px}
+.hero-actions{display:flex;align-items:center;gap:19px;flex-wrap:wrap}
+.hero-cta{display:inline-flex;align-items:center;justify-content:space-between;gap:23px;min-width:184px;background:#e7dfd4;border:1px solid #e7dfd4;border-radius:2px;color:#19303a;font-size:12px;font-weight:800;padding:12px 17px;transition:background .18s,transform .18s}
+.hero-cta:hover{background:#f8f3ed;transform:translateY(-1px)}
+.hero-cta span:last-child{font-size:20px;line-height:1;transform:scaleX(-1)}
+html[dir=ltr] .hero-cta span:last-child{transform:none}
+.hero-caption{color:#7e9ba4;font-size:9px}
+.hero-index{position:absolute;bottom:22px;inset-inline-end:25px;color:#8095a0;font:600 9px Montserrat,sans-serif;letter-spacing:.15em}
+.hero-art{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at center,rgba(61,90,101,.22),transparent 66%)}
+.hero-art:before,.hero-art:after{content:"";position:absolute;border:1px solid rgba(210,222,219,.14);border-radius:50%;aspect-ratio:1}
+.hero-art:before{width:395px}.hero-art:after{width:305px}
+.hero-art-orbit{width:240px;height:240px;position:relative;display:grid;place-items:center;border:1px solid rgba(233,239,232,.3);border-radius:50%}
+.hero-art-orbit:before{content:"";position:absolute;inset:38px;border:1px solid rgba(197,216,217,.22);border-radius:50%}
+.hero-art-orbit:after{content:"";position:absolute;inset:80px;border:1px solid rgba(197,216,217,.22);border-radius:50%}
+.orbit-core{display:grid;gap:0;place-items:center;transform:translateY(-6px)}
+.orbit-core>span{font:600 54px Montserrat,Arial,sans-serif;letter-spacing:-.16em;color:#e1d5c7;padding-inline-end:10px}
+.orbit-core>small{font:600 9px Montserrat,sans-serif;letter-spacing:.35em;color:#849ba4}
+.orbit-tick{position:absolute;background:#dbb9a8;width:8px;height:8px;border-radius:50%}
+.orbit-tick-a{inset-block-start:30px;inset-inline-end:30px}.orbit-tick-b{inset-block-end:16px;inset-inline-start:45px;width:4px;height:4px}
+.orbit-label{position:absolute;top:30px;inset-inline-start:25px;color:#879da5;font:600 8px/2.2 Montserrat,sans-serif;letter-spacing:.1em;text-align:start}
+.orbit-signature{position:absolute;bottom:24px;inset-inline-start:25px;color:#dae4df;font:600 10px/1.22 Montserrat,sans-serif;letter-spacing:.16em}
+.orbit-signature span{color:#db737e}
+.metric-section{margin-bottom:29px}
+.metric-section-label{display:flex;align-items:center;justify-content:space-between;font:700 9px Montserrat,Cairo,sans-serif;letter-spacing:.17em;color:#83908e;margin:0 2px 12px}
+.metric-section-label span:last-child{font-size:11px;font-weight:600;letter-spacing:0;color:#82908f}
+.metric-grid{gap:0;background:#fff;border:1px solid var(--line);border-radius:2px;margin-bottom:0}
+.metric{border:0;border-radius:0;background:none;padding:19px clamp(14px,1.5vw,29px);min-height:107px;box-shadow:none;position:relative;display:block}
+.metric:not(:last-child):after{content:"";position:absolute;inset-inline-end:0;top:18px;bottom:18px;width:1px;background:#e6e8e3}
+.metric .metric-label{font-size:11px;color:#657d7c;display:block;font-weight:600}
+.metric strong{font:500 38px Montserrat,sans-serif;color:#152c39;line-height:1.45;display:inline-block;vertical-align:middle;margin-inline-end:18px;letter-spacing:-.055em}
+.metric .metric-foot{display:inline-block;font-size:10px;line-height:1.7;color:#97a2a0;vertical-align:middle;margin:0}
+.metric .metric-foot:before{content:"";display:none}
+.two-col{grid-template-columns:minmax(0,1.45fr) minmax(310px,.75fr);gap:20px}
+.panel{border:1px solid #e4e7e2;box-shadow:none;border-radius:2px;background:#fff}
+.panel-header{padding:25px 28px 19px;border-bottom:1px solid #e7e9e5}
+.panel-header h2{font-size:19px;font-weight:700;color:#19313c}
+.subtle-tag{color:#798581;background:#f0f2ee;border-radius:2px;padding:6px 10px;font-size:9px;letter-spacing:.05em}
+.priority-list{padding:4px 28px}
+.priority-item{border-color:#eef0eb;padding:21px 0;gap:21px}
+.priority-num{background:transparent;color:#b6a89c;font:600 12px Montserrat,sans-serif;width:20px;border-radius:0}
+.priority-body strong{font-size:13px;color:#16303c}
+.priority-body p{font-size:11px;line-height:1.8;max-width:580px}
+.priority-btn,.text-btn{border-radius:2px;border-color:#c9d1cd;color:#1e3942;font-weight:700;padding:9px 12px}
+.priority-btn:hover,.text-btn:hover{border-color:#b57571;color:#ab5b58}
+.focus-panel{background:#f0f1ec;border-color:#e6e8e0}
+.focus-panel .panel-header{border-color:#e0e3da}
+.focus-panel .principle{margin:0 26px;padding:25px 0;border-color:#dce1d9;gap:19px}
+.focus-panel .principle>span{color:#a98977;font-size:10px}
+.focus-panel .principle b{font-size:13px;color:#233d45}
+.focus-panel .principle p{font-size:11px;line-height:1.85}
+.client-layout{grid-template-columns:minmax(275px,.70fr) minmax(0,1.7fr);gap:18px}
+.case-list-panel,.case-detail{border-radius:2px}
+.case-list-panel input{border-radius:2px;background:#f8f9f5;border-color:#dfe6df}
+.case-choice{border-radius:2px;padding:18px 15px}
+.case-choice.active{border-color:transparent;background:#f0f2ed;box-shadow:inset 3px 0 0 #bd7374}
+html[dir=rtl] .case-choice.active{box-shadow:inset -3px 0 0 #bd7374}
+.case-choice strong{font-size:13px}
+.case-choice span{font-size:11px}
+.case-choice em{color:#956c5a}
+.case-detail{padding:29px 34px}
+.case-head{padding-bottom:26px}
+.case-head h2{font-size:27px;letter-spacing:-.02em}
+.status-label{border-radius:2px;color:#8b6d59;background:#f0eee7}
+.case-section{padding:25px 0;grid-template-columns:45px minmax(0,1fr)}
+.case-section h3{font-size:12px;color:#18313b}
+.case-section p{font-size:13px;line-height:2}
+.case-action-block{background:#f5f5f0;border:1px solid #e4e6dd;border-radius:2px;padding:25px;margin-top:24px}
+.case-action-block p{font-size:15px;max-width:660px}
+.btn{border-radius:2px;padding:12px 19px}
+.btn-primary{background:#142f3c}
+.btn-primary:hover{background:#2a4651}
+.btn-outline{border-color:#cbd5d0}
+.safety-note{font-size:10px}
+.delivery-grid,.studio-grid{gap:14px}
+.delivery-card,.studio-card{border-radius:2px;border:1px solid #e4e7e1;box-shadow:none;min-height:210px;padding:28px 24px}
+.delivery-card .small-icon,.studio-card .small-icon{background:none;border:1px solid #dfe4de;border-radius:2px;color:#9b7773;width:37px;height:37px;font-size:15px}
+.delivery-card h2,.studio-card h2{margin-top:26px;font-weight:700;font-size:16px}
+.delivery-card p,.studio-card p{line-height:1.9}
+.guidance-panel{padding:30px 33px;border-radius:2px;background:#fbfbf8}
+.guidance-panel h2{font-weight:700;font-size:22px}
+.auth-preview-link{border-radius:2px}
+.intelligence-card{border-radius:2px;padding:42px;gap:26px}
+.intelligence-mark{background:#f0f1ec;border-radius:3px;border:1px solid #e2e6de;color:#bf7376}
+.intel-step{border-radius:2px;box-shadow:none;padding:29px}
+.zoho-system-row{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:28px;align-items:start;background:#0e2835;color:white;margin:0 0 21px;border:1px solid #24404a;border-radius:2px;padding:30px 34px}
+.zoho-system-lead h2{font-size:23px;font-weight:700;line-height:1.45;margin-bottom:12px}
+.zoho-system-lead p:last-child{max-width:370px;color:#a7bcbf;font-size:12px;line-height:2}
+.zoho-providers{border-inline-start:1px solid #40515a;padding-inline-start:28px}
+.zoho-providers>div{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:11px 0;border-bottom:1px solid #334b55}
+.zoho-providers>div:last-child{border:0}
+.zoho-providers b{font:600 12px Montserrat,sans-serif;letter-spacing:.02em;white-space:nowrap}
+.zoho-providers span{font-size:10px;color:#a8bbbf;text-align:end}
+.app-footer{border-top-color:#e7e9e2;padding:23px clamp(24px,3.6vw,65px);font-size:9px}
+.dialog-frame{padding:35px}
+dialog{border-radius:3px}
+.dialog-top .icon-button{border-radius:2px}
+dialog textarea{border-radius:2px}
+@media(max-width:1250px){
+ .shell{grid-template-columns:215px minmax(0,1fr)}
+ .executive-hero{grid-template-columns:minmax(0,1.45fr) minmax(210px,.55fr)}
+ .hero-art-orbit{width:190px;height:190px}
+ .hero-art:before{width:310px}.hero-art:after{width:245px}
+ .metric .metric-foot{display:block}
+ .metric strong{font-size:34px}
+ .two-col{grid-template-columns:1.2fr .8fr}
+}
+@media(max-width:1000px){
+ .two-col{grid-template-columns:1fr}
+ .executive-story{padding:27px 30px 31px}
+ .hero-meta{margin-bottom:24px}
+ .hero-art-orbit{width:165px;height:165px}
+ .orbit-core>span{font-size:40px}
+ .hero-title{font-size:31px}
+ .client-layout{grid-template-columns:minmax(220px,.65fr) minmax(0,1.4fr)}
+ .zoho-system-row{grid-template-columns:1fr}
+ .zoho-providers{border-inline-start:0;padding-inline-start:0}
+}
+@media(max-width:760px){
+ .shell{display:block}
+ .sidebar{top:30px;max-height:calc(100vh - 30px)}
+ .topbar{height:70px;padding:0 18px}
+ .topbar-actions{gap:8px}
+ .avatar-mini{display:none}
+ main{padding:27px 17px 44px}
+ .executive-hero{grid-template-columns:1fr;min-height:auto}
+ .executive-story{padding:29px 25px 33px}
+ .hero-meta{margin-bottom:30px}
+ .hero-title{font-size:clamp(29px,6.8vw,38px)}
+ .hero-art{display:none}
+ .hero-index{inset-inline-end:15px;bottom:14px}
+ .hero-actions{gap:12px}
+ .hero-cta{min-width:190px}
+ .metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .metric{padding:16px 13px}
+ .metric strong{font-size:26px;margin-inline-end:0}
+ .metric .metric-label{font-size:10px}
+ .metric .metric-foot{font-size:9px}
+ .metric-section-label{font-size:9px}
+ .page-heading h1{font-size:30px}
+ .home-heading h1{font-size:23px}
+ .page-heading{margin-bottom:20px}
+ .client-layout{grid-template-columns:1fr}
+ .delivery-grid,.studio-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .case-detail{padding:22px}
+ .zoho-system-row{padding:23px}
+ .zoho-providers>div{flex-direction:column;align-items:flex-start;gap:2px}
+ .zoho-providers span{text-align:start}
+ .app-footer{padding:18px;line-height:1.7}
+}
+@media(max-width:410px){
+ .metric-grid{grid-template-columns:repeat(3,1fr)}
+ .metric:last-child{grid-column:auto}
+ .metric .metric-label{min-height:34px}
+ .metric strong{font-size:23px}
+ .metric .metric-foot{display:none}
+ .metric{min-height:85px}
+ .hero-caption{width:100%;margin-top:1px}
+ .hero-meta{font-size:8px}
+ .delivery-grid,.studio-grid{grid-template-columns:1fr}
+ .preview-pill{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
