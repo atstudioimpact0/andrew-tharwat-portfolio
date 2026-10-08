@@ -4,7 +4,7 @@
  * Zoho Directory OIDC staff-login transaction orchestration — STAGING MODULE ONLY.
  *
  * Requires an injected, maintained, signature-validating OIDC implementation
- * (e.g. openid-client v6) plus a durable one-time pending-transaction store.
+ * (e.g. openid-client v6) plus a durable one-time pending-transaction store.\n * OIDC state is browser-bound by an independent host-only secure cookie.
  * NO routes, secrets, sessions, DNS, database writes, or production wiring here.
  * Never accept browser-provided "verified", "role", "tenantId" or "clientId".
  */
@@ -37,6 +37,14 @@ function assertAdapter(oidc){
     if(!oidc || typeof oidc[name]!=='function')throw new OidcDenied('Validated OIDC client missing');
 }
 const stateToken=()=>crypto.randomBytes(32).toString('base64url');
+const bindingDigest=value=>crypto.createHash('sha256').update(value,'utf8').digest();
+function browserMatches(binding,expectedHex){
+  if(typeof binding!=='string' || !/^[A-Za-z0-9_-]{43}$/.test(binding) ||
+    typeof expectedHex!=='string' || !/^[a-f0-9]{64}$/.test(expectedHex))return false;
+  const actual=bindingDigest(binding),expected=Buffer.from(expectedHex,'hex');
+  return crypto.timingSafeEqual(actual,expected);
+}
+
 const isClaimsAud=(claims,clientId)=>claims.aud===clientId ||
   (Array.isArray(claims.aud)&&claims.aud.includes(clientId));
 
@@ -49,7 +57,7 @@ async function beginStaffLogin({settings,oidc,oidcConfig,pending,now=Date.now()}
   if(!validId(verifier))throw new OidcDenied('PKCE unavailable');
   const challenge=await oidc.calculatePKCECodeChallenge(verifier);
   if(!validId(challenge))throw new OidcDenied('PKCE unavailable');
-  const state=stateToken(),nonce=stateToken();
+  const state=stateToken(),nonce=stateToken(),browserBinding=stateToken();
   const authorizeUrl=oidc.buildAuthorizationUrl(oidcConfig,{
     redirect_uri:cfg.callbackUrl,scope:'openid email',state,nonce,
     code_challenge:challenge,code_challenge_method:'S256'
@@ -58,23 +66,28 @@ async function beginStaffLogin({settings,oidc,oidcConfig,pending,now=Date.now()}
   if(location.protocol!=='https:' || !location.searchParams.has('state') ||
      location.searchParams.get('state')!==state)throw new OidcDenied('Invalid provider redirect');
   // Atomic create, unique state, TTL with a durable server-only store.
-  await pending.create(state,{verifier,nonce,issuer:cfg.issuer,clientId:cfg.clientId,callbackUrl:cfg.callbackUrl,expiresAt:now+300_000});
-  return {authorizationUrl:location.href,state}; // state is *not* a bearer login token
+  await pending.create(state,{verifier,nonce,browserBindingHash:bindingDigest(browserBinding).toString('hex'),
+    issuer:cfg.issuer,clientId:cfg.clientId,callbackUrl:cfg.callbackUrl,expiresAt:now+300_000});
+  // Caller MUST set browserBinding in a Secure HttpOnly SameSite=Lax host-only
+  // cookie, Path limited to callback route, Max-Age <= 300; never log it.
+  return {authorizationUrl:location.href,state,browserBinding};
 }
 
 /** Consume pending state atomically before token exchange. Caller issues secure session separately. */
-async function finishStaffLogin({settings,oidc,oidcConfig,pending,callbackRequestUrl,lookupStaff,now=Date.now()}){
+async function finishStaffLogin({settings,oidc,oidcConfig,pending,callbackRequestUrl,browserBinding,lookupStaff,now=Date.now()}){
   const cfg=configCheck(settings);assertAdapter(oidc);
   if(!pending || typeof pending.consume!=='function' || typeof lookupStaff!=='function')
     throw new OidcDenied('Protected integration unavailable');
   const url=strictHttpsUrl(callbackRequestUrl);
   if(url.origin!==new URL(cfg.callbackUrl).origin || url.pathname!==new URL(cfg.callbackUrl).pathname ||
      url.searchParams.getAll('state').length!==1 || url.searchParams.getAll('code').length!==1 ||
+     !validId(url.searchParams.get('state')) || !validId(url.searchParams.get('code')) ||
      url.searchParams.has('error'))
     throw new OidcDenied('Untrusted callback');
   const transaction=await pending.consume(url.searchParams.get('state')); // MUST be atomic, one-time.
   if(!transaction || transaction.expiresAt<=now || transaction.issuer!==cfg.issuer ||
     transaction.clientId!==cfg.clientId || transaction.callbackUrl!==cfg.callbackUrl ||
+    !browserMatches(browserBinding,transaction.browserBindingHash) ||
     !validId(transaction.verifier)||!validId(transaction.nonce))
     throw new OidcDenied('Expired or reused login');
   // Maintained OIDC adapter must validate signatures, issuer, audience, nonce and state.
