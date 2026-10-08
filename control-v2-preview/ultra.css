@@ -36,3 +36,23 @@ html[dir=ltr] .command-search-wrap input{font-family:Montserrat,Cairo,sans-serif
 @media(max-width:830px){.command-trigger>span:nth-child(2){display:none}.command-trigger{min-width:38px;justify-content:center}}
 @media(max-width:560px){.command-dialog{width:calc(100vw - 20px);max-height:calc(100dvh - 24px)}.command-frame{max-height:calc(100dvh - 24px)}.command-heading{padding:23px 18px 16px}.command-heading h2{font-size:22px}.command-search-label{margin:0 18px 8px}.command-search-wrap{margin:0 18px 15px}.command-results{padding:6px 8px}.command-option{gap:10px;padding:9px 10px}.command-footer{padding:13px 16px;flex-wrap:wrap}.command-footer span:last-child{display:none}}
 @media(prefers-reduced-motion:reduce){.command-trigger,.command-search-wrap{transition:none}}
+
+
+/* Ultra build ledger: one truthful release narrative, deliberately not a dashboard of false numbers. */
+.build-track{margin:0 0 21px;border:1px solid #e0e5dd;background:#fafbf7;border-radius:2px;overflow:hidden}
+.build-track-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:32px 35px 23px;border-bottom:1px solid #e7eae3}
+.build-track-heading h2{font-size:23px;color:#16313d;letter-spacing:-.03em;font-weight:800;margin:5px 0 9px}
+.build-track-heading p:last-of-type{font-size:12px;line-height:1.8;color:#768789;margin:0}
+.build-version{font:700 9px Montserrat,sans-serif;letter-spacing:.13em;color:#9b8a79;background:#f1f2eb;padding:10px 13px;white-space:nowrap}
+.build-list{padding:9px 35px 16px;margin:0;list-style:none}
+.build-list li{display:grid;grid-template-columns:48px minmax(0,1fr) 98px;align-items:center;gap:14px;border-bottom:1px solid #e7ebe5;padding:17px 0}
+.build-list li:last-child{border-bottom:0}
+.build-no{font:600 12px Montserrat,sans-serif;color:#b7aa98}
+.build-list strong{display:block;font-size:14px;font-weight:700;color:#18323d}
+.build-list p{font-size:11px;color:#778b8b;line-height:1.8;margin:4px 0 0}
+.build-state{justify-self:end;font-size:10px;font-weight:700;color:#647d72;background:#edf3eb;padding:7px 11px;border-radius:2px;text-align:center;white-space:nowrap}
+.build-active .build-state{color:#95764b;background:#f7f0e3}
+.build-active .build-no{color:#bc6264}
+.build-next .build-state{color:#899898;background:#f2f3ee}
+.build-caution{background:#eff1eb;border-top:1px solid #e5e8df;margin:0;padding:15px 35px;color:#71827e;font-size:11px;line-height:1.9}
+@media(max-width:700px){.build-track-heading{padding:24px 20px;flex-direction:column}.build-version{align-self:flex-start}.build-list{padding:9px 20px 14px}.build-list li{grid-template-columns:29px minmax(0,1fr);gap:8px}.build-state{grid-column:2;justify-self:start;padding:5px 8px}.build-caution{padding:14px 20px}}
