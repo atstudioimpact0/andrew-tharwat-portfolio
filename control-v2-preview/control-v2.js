@@ -259,7 +259,7 @@
   $('.case-filter').forEach(button=>button.addEventListener('click',()=>{state.caseFilter=button.dataset.caseFilter;renderCases()}));
   $('#review-direction').addEventListener('click',()=>openDialog('review'));
   $('#request-context').addEventListener('click',()=>openDialog('ask'));
-  $('#hero-open-case').addEventListener('click',()=>{const first=sampleCases.find(c=>!state.completed.has(c.id))||sampleCases[0];state.selectedCase=first.id;setView('clients')});
+  $('#hero-open-case').addEventListener('click',()=>{const first=sampleCases.find(c=>!state.completed.has(c.id))||sampleCases[0];state.selectedCase=first.id;state.caseFilter='all';setView('clients')});
   $('#mobile-menu').addEventListener('click',()=>{const open=document.body.classList.toggle('menu-open');$('#mobile-menu').setAttribute('aria-expanded',String(open))});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'){document.body.classList.remove('menu-open');$('#mobile-menu').setAttribute('aria-expanded','false')}});
   const dialog=$('#action-dialog');
@@ -270,6 +270,7 @@
     const note=$('#dialog-text').value.slice(0,3000).trim();
     state.completed.add(state.selectedCase); // Attention handled — NOT case closure.
     state.outcomes.set(state.selectedCase,action);
+    state.caseFilter='handled'; // Keep the saved demo action visible with its next state.
     state.notes.set(state.selectedCase,note);
     const events=state.journal.get(state.selectedCase)||[];
     events.push({title:action==='ask'?'journalAsk':'journalReview',desc:action==='ask'?'journalAskText':'journalReviewText',note});
