@@ -3,6 +3,20 @@
 **Status:** engineering handoff, no implementation or production mutation
 **Scope:** replace reliance on Supabase Auth and existing Trusted Device frontend-based secrets while keeping Supabase Postgres temporarily.
 
+## Slice 2 development update — 8 Oct 2026
+
+**Implemented, strictly on development branch:**
+- `/control-v2-preview/access.html`, `access.css`, `access.js`: bilingual interactive walkthrough for founder / invited team / own-case client; no login form, credentials, OTP handling, network/storage calls, business data or authentication.
+- `/control-v2-preview/` Studio page links to the Access V2 journey.
+- `/server/access-v2/authorize.cjs`: pure fail-closed server authorization **policy module** with action/resource-kind check, tenant isolation, founder/admin/reviewer/contributor/client roles, assigned reviewer/assignee constraints, draft-offer suppression and opt-in case answering. This is not an auth provider, login or API endpoint.
+- `/tests/control-v2-preview.test.cjs` and `/tests/control-v2-authorization.test.cjs`: safety, parsing, role and cross-client denial cases.
+
+**Mandatory integration constraints:** The new `can(principal,action,resource)` accepts a principal only after a trustworthy server-side authentication/session check. A frontend can NEVER supply a self-asserted role, `verified:true`, `tenantId` or resource owner. Server endpoints must perform trusted DB lookups (including tenant scope) and re-authorize every request; this policy alone does not secure the application. Authorization semantics for payments/proposals must be reviewed and expanded before live use.
+
+**Still not implemented:** real identity lifecycle, passkey or MFA validation, credentials/challenge delivery, session creation, database adapter, client data migration, production route wiring, full browser/device QA.
+
+---
+
 ## Existing entry points confirmed in main
 | Screen / File | Authentication / access mechanism | Migration risk |
 |---|---|---|
