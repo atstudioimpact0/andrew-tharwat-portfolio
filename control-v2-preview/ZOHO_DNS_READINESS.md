@@ -1,8 +1,24 @@
+## VERIFIED MAIL MILESTONE — 2026-10-08
+
+**Operational status: human-to-human email sending and receiving confirmed by account owner.** The owner reported a successful outbound message from Zoho Mail and a successful inbound reply. This does **not** yet prove the SPF/DKIM/DMARC Authentication-Results of the delivered message or authorize sending automated OTP messages.
+
+**Live DNS re-check (read-only Vercel):**
+- MX apex: `mx.zoho.com.` priority 10, `mx2.zoho.com.` priority 20, `mx3.zoho.com.` priority 50.
+- SPF TXT apex: `v=spf1 include:zohomail.com ~all`.
+- DKIM TXT: `atsmail._domainkey`, `v=DKIM1` RSA public-key record present.
+- DMARC TXT: `_dmarc` = `v=DMARC1; p=none; rua=mailto:hello@atstudioimpact.com; ruf=mailto:hello@atstudioimpact.com; sp=none; adkim=r; aspf=r; pct=100`.
+- Records are visible in Vercel DNS. Domain name resolution from external third-party resolvers and DKIM Verified status in Zoho were not independently checked with Zoho administrator access.
+- **No further DNS changes or production modifications were made by this assistant.**
+
+**Follow-up (nonblocking for ordinary correspondence):** examine a sample outgoing message’s Authentication-Results for SPF, DKIM and DMARC alignment; confirm selector status in Zoho if not already done. DMARC `p=none` is monitoring-only and does NOT instruct recipients to quarantine/reject spoofing failures. Use a dedicated reporting mailbox later, review whether the `ruf` stream is appropriate. Do not enable automatic OTP / transactional sending from ordinary Zoho Mail; select a compliant sender, check cost and require owner authorization.
+
+---
+
 # AT Studio — Zoho Mail DNS Readiness (8 Oct 2026)
 
 **Target domain:** atstudioimpact.com
 **DNS provider:** Vercel (authoritative NS ns1.vercel-dns.com, ns2.vercel-dns.com)
-**Status:** Verification TXT is in place; email routing/authentication records were missing at the last Vercel DNS inspection.
+**Status:** Ordinary Zoho Mail send/receive working as reported by owner; live DNS records confirmed. Historical pre-setup audit is preserved below for traceability.
 **Production:** Do not replace the zone file, alter website records, or change paid plans. Any DNS change must add/update precisely the necessary mail records after values are verified against the Zoho Admin Console.
 
 ## Current Vercel DNS snapshot (read-only)
