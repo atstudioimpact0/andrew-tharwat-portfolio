@@ -1,8 +1,9 @@
-/* Beauty ROZY — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
+/* Rozy Beauty — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
 (() => {
   'use strict';
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const english = document.documentElement.lang === 'en';
     const CART = document.body.dataset.cart || '/cart/';
   const BRANDS = document.body.dataset.brands || '/brands/';
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -25,7 +26,7 @@
     const fail = () => {
       const span = document.createElement('span');
       span.className = img.classList.contains('hero__logo') ? 'hero__fallback' : 'footer__fallback';
-      span.textContent = 'Beauty ROZY';
+      span.textContent = 'Rozy Beauty';
       img.replaceWith(span);
     };
     if (img.complete && img.naturalWidth === 0) fail();
@@ -64,17 +65,23 @@
       .then((list) => list.map((x) => ({ ...x, hay: norm(`${x.title} ${x.sub} ${x.terms}`) })))
       .catch(() => []));
     const show = async () => {
+      const entered = input.value.trim();
       const q = norm(input.value).trim();
       if (!q) { results.innerHTML = ''; hint.hidden = false; return; }
       hint.hidden = true;
       const words = q.split(/\s+/);
       const hits = (await load()).filter((x) => words.every((w) => x.hay.includes(w)))
         .sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'brand' ? -1 : 1)).slice(0, 10);
+      if (input.value.trim() !== entered) return;
+      const requestUrl = new URL(document.body.dataset.request, location.href);
+      requestUrl.searchParams.set('product', entered);
       results.innerHTML = hits.length
         ? hits.map((x) => `<li><a class="search__hit" href="${x.url}">
             <span class="media search__img" aria-hidden="true">${x.image ? `<img src="${x.image}" alt="" loading="lazy">` : (x.kind === 'brand' ? '★' : '')}</span>
-            <span class="search__text"><strong dir="auto">${esc(x.title)}</strong><span>${esc(x.kind === 'brand' ? `ماركة · ${x.sub}` : x.sub)}</span></span></a></li>`).join('')
-        : `<li class="search__none">مفيش نتايج لـ «${esc(input.value.trim())}». <a href="${document.body.dataset.request}">اطلبيه مخصوص</a></li>`;
+            <span class="search__text"><strong dir="auto">${esc(x.title)}</strong><span>${esc(x.kind === 'brand' ? `${english ? 'Brand' : 'ماركة'} · ${x.sub}` : x.sub)}</span></span></a></li>`).join('')
+        : english
+          ? `<li class="search__none">No results for “${esc(entered)}”. <a href="${esc(requestUrl.href)}">Make a special request</a></li>`
+          : `<li class="search__none">مفيش نتايج لـ «${esc(input.value.trim())}». <a href="${document.body.dataset.request}">اطلبيه مخصوص</a></li>`;
     };
     const setOpen = (open) => {
       searchBox.hidden = !open;
@@ -104,7 +111,7 @@
     const n = cart.reduce((s, l) => s + l.qty, 0);
     $$('[data-cart-count]').forEach((el) => { el.textContent = n; el.hidden = n === 0; });
     const link = $('.cartlink');
-    if (link) link.setAttribute('aria-label', n ? `السلة، فيها ${n}` : 'السلة');
+    if (link) link.setAttribute('aria-label', english ? (n ? `Bag, ${n} ${n === 1 ? 'item' : 'items'}` : 'Bag') : (n ? `السلة، فيها ${n}` : 'السلة'));
   };
   updateCount();
 
@@ -112,7 +119,7 @@
   const toast = $('.toast');
   let toastTimer;
   const showToast = (msg) => {
-    toast.innerHTML = `<span>${esc(msg)}</span><a href="${CART}">شوفي السلة</a>`;
+    toast.innerHTML = `<span>${esc(msg)}</span><a href="${CART}">${english ? 'View Bag' : 'شوفي السلة'}</a>`;
     toast.hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toast.hidden = true; }, 3500);
@@ -132,7 +139,7 @@
     if (!btn) return;
     const { kind, id } = btn.dataset;
     addToCart([{ kind, id }]);
-    showToast(kind === 'bundle' ? 'الباكيج اتضاف للسلة' : 'اتضاف للسلة');
+    showToast(english ? (kind === 'bundle' ? 'The set has been added to your bag.' : 'Added to your bag.') : (kind === 'bundle' ? 'الباكيج اتضاف للسلة' : 'اتضاف للسلة'));
   });
 
   /* ---------- Brands filters ---------- */
@@ -150,7 +157,7 @@
         card.hidden = !ok;
         if (ok) n += 1;
       });
-      $('[data-count]').textContent = `${n} ماركة`;
+      $('[data-count]').textContent = `${n} brands`;
       $('[data-empty]').hidden = n > 0;
       history.replaceState(null, '', state.type === 'all' ? location.pathname : `?type=${state.type}`);
     };
@@ -168,8 +175,8 @@
   if (cartRoot) {
     const cat = JSON.parse($('#catalog').textContent);
     const ph = (v, label) => (v === null || v === undefined || v === '' ? `[${label}]` : v);
-    const price = (p) => (typeof p === 'number' ? `${p.toLocaleString('en-US')} ج.م` : '[السعر] ج.م');
-    const date = (iso) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('ar-EG-u-nu-latn', { day: 'numeric', month: 'long' }) : '[تاريخ]');
+    const price = (p) => (typeof p === 'number' ? `${p.toLocaleString('en-US')} EGP` : 'Price to be confirmed');
+    const date = (iso) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) : 'To be confirmed');
     const latest = (dates) => (dates.length && dates.every(Boolean) ? dates.sort().at(-1) : null);
 
     // Resolve a cart line to display data and a status, the same rules as the build (lib.mjs bundleStatus).
@@ -181,29 +188,29 @@
         const status = items.some((p) => p.status === 'soldout') ? 'soldout' : 'preorder';
         const marks = [...new Set(items.map((p) => p.brand))].map((slug) => cat.brands[slug]).join('');
         const brandText = [...new Set(items.map((p) => cat.brandNames[p.brand]))].join(' + ');
-        return { ...l, name: ph(b.name, 'اسم الباكيج'), brandText: `باكيج ${brandText}`, metaHtml: `<span>باكيج</span>${marks}`, price: b.price, status,
+        return { ...l, name: ph(b.name, 'Set details pending'), brandText: `Set ${brandText}`, metaHtml: `<span>Set</span>${marks}`, price: b.price, status,
           deliveryDate: latest(items.map((p) => p.deliveryDate)) };
       }
       const p = cat.products[l.id];
       if (!p) return null;
-      return { ...l, name: ph(p.name, 'اسم المنتج'), brandText: cat.brandNames[p.brand], image: p.image, metaHtml: cat.brands[p.brand], price: p.price, status: p.status, deliveryDate: p.deliveryDate };
+      return { ...l, name: ph(p.name, 'Product details pending'), brandText: cat.brandNames[p.brand], image: p.image, metaHtml: cat.brands[p.brand], price: p.price, status: p.status, deliveryDate: p.deliveryDate };
     };
 
     const lineHtml = (x) => `
 <div class="cline">
-  <div class="media" aria-hidden="true">${x.image ? `<img src="${x.image}" alt="" loading="lazy">` : 'صورة'}</div>
+  <div class="media" aria-hidden="true">${x.image ? `<img src="${x.image}" alt="" loading="lazy">` : 'Photograph'}</div>
   <div class="cline__body">
     <span class="cline__name">${esc(x.name)}</span>
     <span class="cline__meta">${x.metaHtml}</span>
-    ${x.status === 'preorder' ? `<span class="badge badge--pre">التسليم ${esc(date(x.deliveryDate))}</span>` : ''}
+    ${x.status === 'preorder' ? `<span class="badge badge--pre">Delivery ${esc(date(x.deliveryDate))}</span>` : ''}
     <div class="cline__row">
       <strong>${esc(price(typeof x.price === 'number' ? x.price * x.qty : null))}</strong>
-      <div class="qty" role="group" aria-label="الكمية">
-        <button type="button" data-qty="-1" data-kind="${x.kind}" data-id="${esc(x.id)}" aria-label="قللي واحد">−</button>
+      <div class="qty" role="group" aria-label="Quantity">
+        <button type="button" data-qty="-1" data-kind="${x.kind}" data-id="${esc(x.id)}" aria-label="Decrease quantity">−</button>
         <output>${x.qty}</output>
-        <button type="button" data-qty="1" data-kind="${x.kind}" data-id="${esc(x.id)}" aria-label="زوّدي واحد">+</button>
+        <button type="button" data-qty="1" data-kind="${x.kind}" data-id="${esc(x.id)}" aria-label="Increase quantity">+</button>
       </div>
-      <button class="linkbtn" type="button" data-remove data-kind="${x.kind}" data-id="${esc(x.id)}">شيليه</button>
+      <button class="linkbtn" type="button" data-remove data-kind="${x.kind}" data-id="${esc(x.id)}">Remove</button>
     </div>
   </div>
 </div>`;
@@ -219,28 +226,28 @@
       if (checkoutForm) checkoutForm.hidden = !ok.length;
 
       if (!lines.length) {
-        cartRoot.innerHTML = `<div class="empty"><p>السلة فاضية.</p><p><a class="btn btn--primary" href="${BRANDS}">تسوّقي الماركات</a></p></div>`;
+        cartRoot.innerHTML = `<div class="empty"><p>Your bag is waiting for something lovely.</p><p><a class="btn btn--primary" href="${BRANDS}">Explore the Index</a></p></div>`;
         return;
       }
 
       cartRoot.innerHTML = `
 ${ok.length ? `<section class="cgroup" aria-labelledby="g-order">
   <div class="cgroup__head">
-    <h2 id="g-order">طلبك</h2>
-    <span class="badge badge--pre">التسليم المتوقع ${esc(date(latest(ok.map((x) => x.deliveryDate))))}</span>
-    <span class="fine">الطلب كله بيتسلّم مرة واحدة مع آخر قطعة. الدفع أونلاين: دفعة حجز ${esc(ph(cat.site.preorderDeposit, 'قيمة دفعة الحجز'))}.</span>
+    <h2 id="g-order">Your order</h2>
+    <span class="badge badge--pre">Expected delivery ${esc(date(latest(ok.map((x) => x.deliveryDate))))}</span>
+    <span class="fine">Orders are delivered together once all items are ready. Reservation payment: ${esc(ph(cat.site.preorderDeposit, 'amount to be confirmed'))}.</span>
   </div>
   ${ok.map(lineHtml).join('')}
 </section>` : ''}
 ${out.length ? `<section class="cgroup" aria-labelledby="g-out">
-  <div class="cgroup__head"><h2 id="g-out">مش متاح دلوقتي</h2><span class="fine">مش هيدخل في الطلب. تقدري تشيليه أو تطلبيه مخصوص.</span></div>
+  <div class="cgroup__head"><h2 id="g-out">Currently unavailable</h2><span class="fine">This item is excluded from the order. You may remove it or make a special request.</span></div>
   ${out.map(lineHtml).join('')}
 </section>` : ''}
-${ok.length ? `<section class="summary" aria-label="ملخص الطلب">
-  <div class="summary__row"><span>المنتجات</span><strong>${esc(price(subtotal))}</strong></div>
-  <div class="summary__row"><span>الشحن (تقدير مبدئي)</span><span>${esc(ph(cat.site.shippingEstimate, 'تقدير الشحن'))}</span></div>
-  <p class="fine">تكلفة الشحن النهائية بتتأكد بعد الطلب.</p>
-  <div class="summary__row summary__row--total"><span>الإجمالي</span><span>${esc(price(subtotal))} + الشحن</span></div>
+${ok.length ? `<section class="summary" aria-label="Order summary">
+  <div class="summary__row"><span>Products</span><strong>${esc(price(subtotal))}</strong></div>
+  <div class="summary__row"><span>Delivery estimate</span><span>${esc(ph(cat.site.shippingEstimate, 'Delivery estimate pending'))}</span></div>
+  <p class="fine">Final delivery charges are confirmed before payment.</p>
+  <div class="summary__row summary__row--total"><span>Total</span><span>${esc(price(subtotal))} + delivery</span></div>
 </section>` : ''}`;
     };
 
@@ -274,45 +281,52 @@ ${ok.length ? `<section class="summary" aria-label="ملخص الطلب">
       Object.keys(d).forEach((k) => { d[k] = String(d[k]).trim(); });
       const phone = d.phone.replace(/[\s-]/g, '');
       const fail = (msg, id) => { errorBox.textContent = msg; errorBox.hidden = false; const f = $(`#${id}`, checkoutForm); f.setAttribute('aria-invalid', 'true'); f.focus(); };
-      if (!d.name) return fail('اكتبي اسمك.', 'c-name');
-      if (!/^01[0125]\d{8}$/.test(phone)) return fail('اكتبي رقم موبايل مصري صحيح من 11 رقم يبدأ بـ 01.', 'c-phone');
-      if (!d.governorate) return fail('اختاري المحافظة.', 'c-gov');
-      if (!d.area) return fail('اكتبي المنطقة.', 'c-area');
-      if (!d.address) return fail('اكتبي العنوان بالتفصيل.', 'c-address');
+      if (!d.name) return fail('Please enter your full name.', 'c-name');
+      if (!/^01[0125]\d{8}$/.test(phone)) return fail('Please enter a valid 11-digit Egyptian mobile number beginning with 01.', 'c-phone');
+      if (!d.governorate) return fail('Please select a governorate.', 'c-gov');
+      if (!d.area) return fail('Please enter your area.', 'c-area');
+      if (!d.address) return fail('Please enter your full delivery address.', 'c-address');
       if (!order.lines.length) return;
 
       const now = new Date();
       const ref = `BR-${String(now.getFullYear()).slice(2)}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
       const text = [
-        `طلب جديد من ${cat.site.name}`,
-        `رقم الطلب: ${ref}`,
+        `New order from ${cat.site.name}`,
+        `Order reference: ${ref}`,
         '',
         ...order.lines.map((x) => `• ${x.name} (${x.brandText}) × ${x.qty}${typeof x.price === 'number' ? ` — ${price(x.price * x.qty)}` : ''}`),
         '',
-        `المنتجات: ${price(order.subtotal)} + الشحن`,
-        `التسليم المتوقع: ${date(order.deliveryDate)}`,
+        `Products: ${price(order.subtotal)} + delivery`,
+        `Expected delivery: ${date(order.deliveryDate)}`,
         '',
-        `الاسم: ${d.name}`,
-        `الموبايل: ${phone}`,
-        `العنوان: ${d.governorate}، ${d.area}، ${d.address}`,
-        d.note && `ملاحظات: ${d.note}`,
+        `Name: ${d.name}`,
+        `Mobile: ${phone}`,
+        `Address: ${d.governorate}, ${d.area}, ${d.address}`,
+        d.note && `Notes: ${d.note}`,
       ].filter((l) => l !== null && l !== undefined && l !== false).join('\n');
 
       const wa = cat.site.whatsappNumber ? `https://wa.me/${cat.site.whatsappNumber}?text=${encodeURIComponent(text)}` : null;
       checkoutDone.innerHTML = `
-<h2>طلبك جاهز</h2>
-<p>رقم طلبك <strong dir="ltr">${esc(ref)}</strong>. احتفظي بيه عشان تتابعي طلبك.</p>
+<h2>Your order details are ready.</h2>
+<p>Your reference <strong dir="ltr">${esc(ref)}</strong>. Keep this reference with your prepared order details.</p>
 ${wa
-  ? `<a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">افتحي الواتساب وابعتي الطلب</a>
-<p class="fine">الطلب مش بيتأكد غير لما الرسالة توصلنا. بعد ما تبعتيها، بنرجعلك بالتأكيد وتكلفة الشحن وطريقة دفع الحجز.</p>`
-  : '<p class="fine">(نسخة تجريبية: رقم واتساب المتجر لسه مش متحدد، فدي الرسالة اللي هتتبعت.)</p>'}
+  ? `<a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">Open WhatsApp to Send Your Order</a>
+<p class="fine">An order is confirmed only after we receive your message and agree the delivery and payment details with you.</p>`
+  : '<p class="fine">Preview only: your order has not been sent. The store contact is not connected. Your prepared details appear below.</p>'}
 <pre class="order-text">${esc(text)}</pre>
-<button class="btn btn--outline-green" type="button" data-copy-order>انسخي تفاصيل الطلب</button>`;
+<button class="btn btn--outline-green" type="button" data-copy-order>Copy Order Details</button>
+<button class="btn btn--link" type="button" data-edit-order>Return to Your Bag</button>`;
       $('[data-copy-order]', checkoutDone).addEventListener('click', (ev) => {
         const btn = ev.currentTarget;
-        navigator.clipboard?.writeText(text).then(() => { btn.textContent = 'اتنسخت'; }, () => { btn.textContent = 'انسخيها يدوي من فوق'; });
+        navigator.clipboard?.writeText(text).then(() => { btn.textContent = 'Copied'; }, () => { btn.textContent = 'Please copy the details above'; });
       });
-      saveCart([]);
+      $('[data-edit-order]', checkoutDone).addEventListener('click', () => {
+        checkoutDone.hidden = true;
+        checkoutForm.hidden = false;
+        render();
+        $('#c-name', checkoutForm).focus();
+      });
+      // Preparing a message does not confirm an order or remove the customer's selection.
       checkoutForm.hidden = true;
       cartRoot.innerHTML = '';
       checkoutDone.hidden = false;
@@ -327,8 +341,8 @@ ${wa
     const result = $('[data-routine-result]');
     const tabs = $$('[data-routine-tab]');
     const forms = $$('[data-routine-form]');
-    const price = (p) => (typeof p === 'number' ? `${p.toLocaleString('en-US')} ج.م` : '[السعر] ج.م');
-    const date = (iso) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('ar-EG-u-nu-latn', { day: 'numeric', month: 'long' }) : '[تاريخ]');
+    const price = (p) => (typeof p === 'number' ? `${p.toLocaleString('en-US')} EGP` : 'Price to be confirmed');
+    const date = (iso) => (iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }) : 'To be confirmed');
 
     const showTab = (key) => {
       tabs.forEach((t) => t.setAttribute('aria-pressed', String(t.dataset.routineTab === key)));
@@ -391,35 +405,35 @@ ${wa
 
       result.innerHTML = `
 <div class="result__head">
-  <h2>روتينك في ${esc(routine.label)}</h2>
+  <h2>Your ritual · ${esc(routine.label)}</h2>
   <div class="tags">${summary.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div>
 </div>
 <ol class="routine">${plan.map(({ step, match }) => `
   <li class="routine__step${match ? '' : ' routine__step--empty'}">
     <div class="routine__label"><strong>${esc(step.label)}${step.when ? ` <span class="routine__when">${esc(step.when)}</span>` : ''}</strong><span>${esc(step.why)}</span></div>
     ${match ? `<div class="routine__product">
-      <a class="media routine__media" href="${match.product.url}" tabindex="-1" aria-hidden="true">${match.product.image ? `<img src="${match.product.image}" alt="" loading="lazy">` : 'صورة'}</a>
+      <a class="media routine__media" href="${match.product.url}" tabindex="-1" aria-hidden="true">${match.product.image ? `<img src="${match.product.image}" alt="" loading="lazy">` : 'Photograph'}</a>
       <div class="routine__info">
         ${match.product.brandMark}
         <a class="routine__name" href="${match.product.url}" dir="auto">${esc(match.product.name)}</a>
         ${match.product.size ? `<span class="fine">${esc(match.product.size)}</span>` : ''}
         <span class="routine__price">${esc(price(match.product.price))}</span>
-        ${match.reasons.length ? `<span class="fine">مناسب لـ: ${match.reasons.map(esc).join(' · ')}</span>` : ''}
+        ${match.reasons.length ? `<span class="fine">Selected for: ${match.reasons.map(esc).join(' · ')}</span>` : ''}
       </div>
-    </div>` : '<p class="fine">مفيش منتج عندنا مناسب للخطوة دي دلوقتي، فتقدري تمشي من غيرها.</p>'}
+    </div>` : '<p class="fine">There is no matching product in the current edit for this step.</p>'}
   </li>`).join('')}
 </ol>
 ${picked.length ? `<div class="summary">
-  <div class="summary__row"><span>الروتين (${picked.length} منتجات)</span><strong>${esc(price(total))}</strong></div>
-  <div class="summary__row"><span>التسليم المتوقع</span><span class="badge badge--pre">${esc(date(latest))}</span></div>
-  <button class="btn btn--primary btn--block btn--lg" type="button" data-add-routine>أضيفي الروتين كله للسلة</button>
-  <button class="btn btn--link" type="button" data-routine-edit>عدّلي إجاباتك</button>
-</div>` : `<div class="empty"><p>مفيش منتجات عندنا مناسبة للإجابات دي دلوقتي.</p><button class="btn btn--link" type="button" data-routine-edit>عدّلي إجاباتك</button></div>`}`;
+  <div class="summary__row"><span>The ritual (${picked.length} products)</span><strong>${esc(price(total))}</strong></div>
+  <div class="summary__row"><span>Expected delivery</span><span class="badge badge--pre">${esc(date(latest))}</span></div>
+  <button class="btn btn--primary btn--block btn--lg" type="button" data-add-routine>Add the Ritual to Your Bag</button>
+  <button class="btn btn--link" type="button" data-routine-edit>Refine Your Preferences</button>
+</div>` : `<div class="empty"><p>There are no matching products in the current edit. You can review your preferences or explore another ritual.</p><button class="btn btn--link" type="button" data-routine-edit>Refine Your Preferences</button></div>`}`;
 
       const addAll = $('[data-add-routine]', result);
       if (addAll) addAll.addEventListener('click', () => {
         addToCart(picked.map((p) => ({ kind: 'product', id: p.id })));
-        showToast('الروتين اتضاف للسلة');
+        showToast('Your ritual has been added to your bag.');
       });
       $('[data-routine-edit]', result).addEventListener('click', () => {
         const form = $(`[data-routine-form="${key}"]`);
@@ -438,7 +452,7 @@ ${picked.length ? `<div class="summary">
       const answers = Object.fromEntries(new FormData(form));
       const missing = routines[key].questions.find((q) => !answers[q.id]);
       if (missing) {
-        errorBox.textContent = `جاوبي على: ${missing.label}`;
+        errorBox.textContent = `Please choose: ${missing.label}`;
         errorBox.hidden = false;
         $(`input[name="${missing.id}"]`, form).focus();
         return;
@@ -476,21 +490,21 @@ ${picked.length ? `<div class="summary">
       errorBox.hidden = true;
       const ref = $('#t-order', trackForm).value.trim().toUpperCase();
       const phone = $('#t-phone', trackForm).value.replace(/[\s-]/g, '');
-      if (!/^BR-\d{6}-\d{4}$/.test(ref)) { errorBox.textContent = 'رقم الطلب شكله كده: BR-000000-0000.'; errorBox.hidden = false; $('#t-order', trackForm).focus(); return; }
-      if (!/^01[0125]\d{8}$/.test(phone)) { errorBox.textContent = 'اكتبي رقم الموبايل اللي طلبتي بيه.'; errorBox.hidden = false; $('#t-phone', trackForm).focus(); return; }
+      if (!/^BR-\d{6}-\d{4}$/.test(ref)) { errorBox.textContent = 'Please enter an order reference in this format: BR-000000-0000.'; errorBox.hidden = false; $('#t-order', trackForm).focus(); return; }
+      if (!/^01[0125]\d{8}$/.test(phone)) { errorBox.textContent = 'Please enter the mobile number used for your order.'; errorBox.hidden = false; $('#t-phone', trackForm).focus(); return; }
       let html;
       if (trackForm.dataset.endpoint) {
         try {
           const res = await fetch(`${trackForm.dataset.endpoint}?order=${encodeURIComponent(ref)}&phone=${encodeURIComponent(phone)}`);
           if (!res.ok) throw new Error(String(res.status));
           const data = await res.json();
-          html = `<h2>${esc(data.status || 'حالة الطلب')}</h2><p>${esc(data.message || '')}</p>`;
-        } catch { html = '<h2>مش لاقيين الطلب</h2><p>اتأكدي من رقم الطلب والموبايل، أو كلمينا على الواتساب.</p>'; }
+          html = `<h2>${esc(data.status || 'Order status')}</h2><p>${esc(data.message || '')}</p>`;
+        } catch { html = '<h2>Order not found</h2><p>Please check your reference and mobile number, or contact Client Care.</p>'; }
       } else if (trackForm.dataset.whatsapp) {
-        const wa = `https://wa.me/${trackForm.dataset.whatsapp}?text=${encodeURIComponent(`عايزة أتابع طلبي رقم ${ref} (موبايل ${phone})`)}`;
-        html = `<h2>هنبلغك بحالة طلبك</h2><p>ابعتيلنا رقم الطلب على الواتساب ونرد عليكي بآخر تحديث.</p><a class="btn btn--primary" href="${wa}" target="_blank" rel="noopener">اسألي على الواتساب</a>`;
+        const wa = `https://wa.me/${trackForm.dataset.whatsapp}?text=${encodeURIComponent(`Please provide an update for order ${ref} (mobile ${phone})`)}`;
+        html = `<h2>Request an order update</h2><p>Share your order reference on WhatsApp to request an update.</p><a class="btn btn--primary" href="${wa}" target="_blank" rel="noopener">Ask on WhatsApp</a>`;
       } else {
-        html = '<h2>التتبّع لسه مش متوصل</h2><p class="fine">(نسخة تجريبية: التتبّع هيشتغل بعد ربط المنصة أو رقم الواتساب.)</p>';
+        html = '<h2>Tracking is not yet connected</h2><p class="fine">Preview only: live order tracking will be available once the service is connected.</p>';
       }
       out.innerHTML = html;
       out.hidden = false;
@@ -505,8 +519,21 @@ ${picked.length ? `<div class="summary">
     const errorBox = $('[data-form-error]', form);
     const fileInput = $('#r-image', form);
     const uploadLabel = $('[data-upload-label]', form);
+    const selection = new URLSearchParams(location.search);
+    let hasSelection = false;
+    [['product', '#r-name'], ['brand', '#r-brand']].forEach(([key, selector]) => {
+      const value = (selection.get(key) || '').trim().slice(0, 200);
+      const field = $(selector, form);
+      if (value && !field.value) { field.value = value; hasSelection = true; }
+    });
+    const originPath = selection.get('from') || '';
+    if (/^\/beauty-rozy\/products\/[a-z0-9-]+\/$/.test(originPath)) {
+      $('#r-link', form).value = new URL(originPath, location.href).href;
+    }
+    const context = $('[data-request-context]');
+    if (context) context.hidden = !hasSelection;
     fileInput.addEventListener('change', () => {
-      uploadLabel.textContent = fileInput.files[0] ? `الصورة: ${fileInput.files[0].name}` : 'أو ارفعي صورة المنتج';
+      uploadLabel.textContent = fileInput.files[0] ? `Photograph: ${fileInput.files[0].name}` : 'Or upload a product photograph';
     });
 
     const fail = (msg, field) => {
@@ -525,9 +552,9 @@ ${picked.length ? `<div class="summary">
       const hasImage = fileInput.files.length > 0;
       const phone = data.get('phone').replace(/[\s-]/g, '');
 
-      if (!product && !link && !hasImage) return fail('اكتبي اسم المنتج، أو حطي رابطه، أو ارفعي صورته.', $('#r-name', form));
-      if (link && !/^https?:\/\/\S+\.\S+/.test(link)) return fail('الرابط مش مظبوط. انسخيه كامل من المتصفح.', $('#r-link', form));
-      if (!/^01[0125]\d{8}$/.test(phone)) return fail('اكتبي رقم واتساب مصري صحيح من 11 رقم يبدأ بـ 01.', $('#r-phone', form));
+      if (!product && !link && !hasImage) return fail('Please include a product name, link or photograph.', $('#r-name', form));
+      if (link && !/^https?:\/\/\S+\.\S+/.test(link)) return fail('Please enter the complete product link, including https://.', $('#r-link', form));
+      if (!/^01[0125]\d{8}$/.test(phone)) return fail('Please enter a valid 11-digit Egyptian WhatsApp number beginning with 01.', $('#r-phone', form));
 
       const submit = $('button[type="submit"]', form);
       submit.disabled = true;
@@ -539,19 +566,19 @@ ${picked.length ? `<div class="summary">
           if (!res.ok) throw new Error(String(res.status));
           ref = (await res.json().catch(() => ({}))).reference || '';
         } else if (form.dataset.whatsapp) {
-          const text = [`طلب منتج مخصوص`, product && `المنتج: ${product}`, data.get('brand') && `الماركة: ${data.get('brand')}`,
-            link && `الرابط: ${link}`, `الكمية: ${data.get('qty')}`, `رقمي: ${phone}`, data.get('note') && `ملاحظات: ${data.get('note')}`,
-            hasImage && '(هبعت صورة المنتج هنا)'].filter(Boolean).join('\n');
+          const text = [`Special product request`, product && `Product: ${product}`, data.get('brand') && `Brand: ${data.get('brand')}`,
+            link && `Link: ${link}`, `Quantity: ${data.get('qty')}`, `My number: ${phone}`, data.get('note') && `Notes: ${data.get('note')}`,
+            hasImage && '(Product photograph to be attached)'].filter(Boolean).join('\n');
           window.open(`https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
         } else {
           demo = true;
         }
       } catch {
         submit.disabled = false;
-        return fail('حصلت مشكلة في الإرسال. جرّبي تاني بعد شوية.');
+        return fail('Your request could not be sent. Please try again in a moment.');
       }
       submit.disabled = false;
-      $('[data-request-ref]', done).textContent = ref ? ` رقم الطلب: ${ref}` : '';
+      $('[data-request-ref]', done).textContent = ref ? ` Order reference: ${ref}` : '';
       $('[data-demo-note]', done).hidden = !demo;
       form.hidden = true;
       done.hidden = false;
@@ -560,10 +587,12 @@ ${picked.length ? `<div class="summary">
 
     $('[data-request-again]', done).addEventListener('click', () => {
       form.reset();
-      uploadLabel.textContent = 'أو ارفعي صورة المنتج';
+      if (context) context.hidden = true;
+      uploadLabel.textContent = 'Or upload a product photograph';
       done.hidden = true;
       form.hidden = false;
       $('#r-name', form).focus();
     });
   }
 })();
+
