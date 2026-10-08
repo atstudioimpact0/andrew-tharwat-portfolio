@@ -118,3 +118,12 @@ test('client case workspace uses status-specific follow-up and local decision hi
  assert.match(css,/\.case-detail\[hidden\]\{display:none!important\}/);
  assert.doesNotMatch(js,/closedCase:|status:'closed'|caseClosed:'Closed'/);
 });
+
+
+test('collection event handlers never use a single-node selector',()=>{
+ const src=load('control-v2.js');
+ // "$('.x').forEach" would throw at runtime; "$$('.x').forEach" is the collection form.
+ assert.doesNotMatch(src,/(?<!\$)\$\(['"][.#][^'"]+['"]\)\.forEach\(/);
+ assert.match(src,/\$\$\('\.case-filter'\)\.forEach/);
+ assert.match(src,/\$\$\('\.command-option'\)\.forEach/);
+});
