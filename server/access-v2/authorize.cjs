@@ -29,7 +29,7 @@ const REVIEW_ACTIONS = Object.freeze(new Set([
 ]));
 const CONTRIBUTOR_ACTIONS = Object.freeze(new Set(['task:read','task:submit']));
 const CLIENT_ACTIONS = Object.freeze(new Set([
-  'case:read','case:answer','proposal:read','proposal:accept','project:read','payment:read'
+  'case:read','case:answer','proposal:read','proposal:accept','project:read'
 ]));
 
 function isId(value) {
@@ -63,6 +63,7 @@ function can(principal,action,resource) {
   }
   if(principal.role === 'client') {
     if(!CLIENT_ACTIONS.has(action) || !isId(resource.clientId) || resource.clientId !== principal.clientId)return false;
+    if(action==='case:answer' && resource.awaitingClient !== true)return false;
     // Draft commercial data must not be exposed or acted on by clients.
     if(type==='proposal') {
       const status=resource.status;
@@ -83,4 +84,4 @@ function requireAccess(principal,action,resource) {
   return true;
 }
 
-module.exports={can,requireAccess,AccessDenied,ACTIONS,ROLES};
+module.exports={can,requireAccess,AccessDenied};
