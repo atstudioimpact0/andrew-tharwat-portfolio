@@ -261,7 +261,7 @@
   function markActiveCommand(index){
     if(!visibleCommands.length)return;
     activeCommand=(index+visibleCommands.length)%visibleCommands.length;
-    $('.command-option').forEach((el,i)=>{
+    $$('.command-option').forEach((el,i)=>{
       const yes=i===activeCommand;
       el.setAttribute('aria-selected',String(yes));el.classList.toggle('is-active',yes);
       if(yes)el.scrollIntoView({block:'nearest',inline:'nearest'});
