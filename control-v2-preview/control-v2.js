@@ -16,7 +16,7 @@
       principleTwo:'معلومة واحدة وقت الحاجة',principleTwoDesc:'لا نكرر الأسئلة ولا نظهر للعميل التعقيد الداخلي.',
       principleThree:'قرار بشري مسؤول',principleThreeDesc:'لا عرض نهائي أو اعتماد مالي من غير موافقة واضحة.',
       clientsTitle:'كل عميل، قصة واحدة واضحة.',clientsSub:'من المشكلة إلى فهمها ثم تحديد الخطوة التالية.',
-      activeCases:'ملفات العملاء',searchLabel:'ابحث في الملفات',noCases:'لا توجد نتائج مطابقة.',
+      activeCases:'ملفات العملاء',searchLabel:'ابحث في الملفات',noCases:'لا توجد نتائج مطابقة.',commandTrigger:'وصول سريع',commandTitle:'اذهب لما يهمك',commandSearchLabel:'ابحث في الأقسام وملفات العملاء التجريبية',commandEmpty:'مفيش نتائج مطابقة.',commandHint:'↑ ↓ للتنقل · Enter للفتح · Esc للإغلاق',commandSearchPlaceholder:'ابحث عن قسم أو ملف...',commandCaseLabel:'افتح ملف العميل',commandSectionLabel:'اذهب إلى القسم', 
       clientCase:'ملف العميل',challenge:'المشكلة اللي بنحلّها',known:'إيه اللي نعرفه بالفعل؟',
       missing:'إيه اللي محتاج توضيح؟',suggestedNext:'الخطوة المقترحة — تحتاج مراجعتك',
       reviewAction:'راجع الاتجاه',askAction:'اطلب معلومة',demoDisclaimer:'أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.',
@@ -61,7 +61,7 @@
       principleTwo:'One useful question',principleTwoDesc:'Do not repeat questions or expose internal complexity.',
       principleThree:'Accountable human review',principleThreeDesc:'No final proposal or financial approval without explicit authorization.',
       clientsTitle:'One client. One clear story.',clientsSub:'Challenge, understanding, and one meaningful next step.',
-      activeCases:'Client cases',searchLabel:'Search cases',noCases:'No matches found.',
+      activeCases:'Client cases',searchLabel:'Search cases',noCases:'No matches found.',commandTrigger:'Quick open',commandTitle:'Go where it matters',commandSearchLabel:'Search sections and illustrative case files',commandEmpty:'No matches found.',commandHint:'↑ ↓ to navigate · Enter to open · Esc to close',commandSearchPlaceholder:'Search sections or cases...',commandCaseLabel:'Open client case',commandSectionLabel:'Open section', 
       clientCase:'Client case',challenge:'The challenge',known:'What we already know',
       missing:'What needs clarification',suggestedNext:'Suggested next step — requires your review',
       reviewAction:'Review direction',askAction:'Request context',demoDisclaimer:'All approvals and messages are simulated. Nothing is saved to the live system.',
@@ -245,12 +245,94 @@
     $('#action-dialog').showModal();
     $('#dialog-text').focus();
   }
+  // Local-only navigation palette: no network, credentials or real client data.
+  let visibleCommands=[],activeCommand=0;
+  const commandModal=$('#command-dialog'),commandSearch=$('#command-search');
+  function commandEntries(){
+    const pages=['today','clients','delivery','studio','intelligence'].map(key=>({
+      kind:'page',key,label:translations('nav'+key.charAt(0).toUpperCase()+key.slice(1)),
+      caption:translations('commandSectionLabel')
+    }));
+    const cases=sampleCases.map(c=>({
+      kind:'case',key:c.id,label:textFor(c.name),caption:textFor(c.subtitle)
+    }));
+    return pages.concat(cases);
+  }
+  function markActiveCommand(index){
+    if(!visibleCommands.length)return;
+    activeCommand=(index+visibleCommands.length)%visibleCommands.length;
+    $('.command-option').forEach((el,i)=>{
+      const yes=i===activeCommand;
+      el.setAttribute('aria-selected',String(yes));el.classList.toggle('is-active',yes);
+      if(yes)el.scrollIntoView({block:'nearest',inline:'nearest'});
+    });
+    commandSearch.setAttribute('aria-activedescendant','command-option-'+activeCommand);
+  }
+  function renderCommands(){
+    const input=commandSearch.value.trim().toLocaleLowerCase(state.lang);
+    visibleCommands=commandEntries().filter(c=>(c.label+' '+c.caption).toLocaleLowerCase(state.lang).includes(input));
+    const root=$('#command-results');root.replaceChildren();
+    $('#command-empty').hidden=visibleCommands.length>0;
+    visibleCommands.forEach((c,i)=>{
+      const item=elt('div','command-option');item.id='command-option-'+i;
+      item.setAttribute('role','option');item.setAttribute('aria-selected',String(i===0));
+      const words=elt('span','command-words');
+      words.append(elt('strong','',c.label),elt('small','',c.caption));
+      item.append(elt('span','command-symbol',c.kind==='case'?'◎':'↗'),words,elt('span','command-enter','↵'));
+      item.addEventListener('click',()=>activateCommand(i));
+      item.addEventListener('mouseenter',()=>markActiveCommand(i));
+      root.append(item);
+    });
+    activeCommand=0;
+    if(visibleCommands.length)markActiveCommand(0);
+    else commandSearch.removeAttribute('aria-activedescendant');
+  }
+  function activateCommand(index){
+    const cmd=visibleCommands[index];if(!cmd)return;
+    commandModal.close();
+    if(cmd.kind==='case'){
+      state.selectedCase=cmd.key;state.caseFilter='all';
+      $('#case-search').value='';
+      setView('clients');
+    }else{
+      state.caseFilter='all';
+      if(cmd.key==='clients')$('#case-search').value='';
+      setView(cmd.key);
+    }
+  }
+  function openCommands(){
+    if($('#action-dialog').open)return;
+    if(!commandModal.open)commandModal.showModal();
+    commandSearch.value='';
+    renderCommands();commandSearch.focus();
+  }
+  $('#command-open').addEventListener('click',openCommands);
+  $('#command-close').addEventListener('click',()=>commandModal.close());
+  commandSearch.addEventListener('input',renderCommands);
+  commandSearch.addEventListener('keydown',event=>{
+    if(event.key==='ArrowDown'){event.preventDefault();markActiveCommand(activeCommand+1)}
+    else if(event.key==='ArrowUp'){event.preventDefault();markActiveCommand(activeCommand-1)}
+    else if(event.key==='Enter'){event.preventDefault();activateCommand(activeCommand)}
+  });
+  document.addEventListener('keydown',event=>{
+    if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){
+      event.preventDefault();
+      if(commandModal.open){commandModal.close();return}
+      openCommands();
+    }
+  });
+  commandModal.addEventListener('click',event=>{
+    if(event.target===commandModal)commandModal.close();
+  });
+
   function updateLanguage(){
     document.documentElement.lang=state.lang;
     document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';
     $('#toggle-language').textContent=state.lang==='ar'?'EN':'عربي';
     $$('[data-i18n]').forEach(el=>{el.textContent=translations(el.dataset.i18n)});
     $('#case-search').placeholder=translations('searchPlaceholder');
+    commandSearch.placeholder=translations('commandSearchPlaceholder');
+    if(commandModal.open)renderCommands();
     renderToday();renderCases();renderOtherPages();setView(state.view,{focus:false});
   }
   $$('.nav-btn').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
