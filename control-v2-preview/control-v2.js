@@ -32,7 +32,7 @@
       metricDecisions:'قرارات تنتظر المراجعة',metricDecisionsHint:'طلبات ذات خطوة بشرية مقترحة',
       metricFollowups:'متابعات مطلوبة',metricFollowupsHint:'أسئلة أو أدلة ناقصة',
       metricReviews:'ملفات قيد المراجعة',metricReviewsHint:'مثال على خطوة متقدمة',
-      open:'افتح الملف',reviewState:'مراجعة',needsInfo:'مطلوب توضيح',readyReview:'جاهز للمراجعة',simulated:'تمت محاكاة الإجراء',
+      open:'افتح الملف',reviewState:'مراجعة',needsInfo:'مطلوب توضيح',readyReview:'جاهز للمراجعة',simulated:'تمت محاكاة الإجراء',awaitingInfo:'بانتظار رد (تجريبي)',directionReviewed:'مراجعة مسجلة (تجريبي)',filterAll:'الكل',filterNeeds:'معلومة ناقصة',filterReview:'تحتاج مراجعة',filterHandled:'تمت متابعتها',journalTitle:'سجل القرار والمتابعة',journalCaveat:'سجل توضيحي مؤقت داخل المعاينة فقط، لا يرسل أو يحفظ بيانات حقيقية.',journalCreated:'تم إنشاء ملف افتراضي',journalCreatedText:'تسجيل المشكلة والسياق الأولي للمناقشة.',journalSuggested:'اتجاه مبدئي للمراجعة',journalSuggestedText:'اقتراح يحتاج قرارًا بشريًا بعد مراجعة الأدلة.',journalAsk:'تمت محاكاة طلب معلومة',journalAskText:'لم يتم إرسال طلب فعلي. في النظام الحقيقي تظل الحالة بانتظار رد العميل.',journalReview:'تمت محاكاة مراجعة الاتجاه',journalReviewText:'مراجعة داخلية تجريبية فقط، بدون موافقة تجارية أو إغلاق الملف.',journalYourNote:'ملاحظة المحاكاة',
       askTitle:'طلب معلومة إضافية',reviewTitle:'مراجعة اتجاه الحل',askDesc:'هنطلب فقط المعلومة التي قد تغيّر القرار. لا توجد رسالة حقيقية ستُرسل.',
       reviewDesc:'تأكيد اتجاه مبدئي للمناقشة فقط. ده مش اعتماد عرض تجاري أو قرار نهائي.',
       dialogLabel:'ملاحظتك (تجريبية)',dialogWarning:'لا تُرسل رسائل، ولا تُنشأ مهام، ولا تُحفظ أي بيانات حقيقية.',
@@ -77,7 +77,7 @@
       metricDecisions:'Decisions awaiting review',metricDecisionsHint:'Cases with a suggested human action',
       metricFollowups:'Follow-ups needed',metricFollowupsHint:'Missing evidence or context',
       metricReviews:'In review',metricReviewsHint:'Sample higher-stage case',
-      open:'Open case',reviewState:'In review',needsInfo:'Need context',readyReview:'Ready for review',simulated:'Action simulated',
+      open:'Open case',reviewState:'In review',needsInfo:'Need context',readyReview:'Ready for review',simulated:'Action simulated',awaitingInfo:'Awaiting reply (demo)',directionReviewed:'Direction reviewed (demo)',filterAll:'All',filterNeeds:'Needs context',filterReview:'For review',filterHandled:'Followed up',journalTitle:'Decision & activity history',journalCaveat:'Illustrative browser-only history; no data is sent or stored in real systems.',journalCreated:'Illustrative case opened',journalCreatedText:'Problem and initial context logged for discussion.',journalSuggested:'Initial direction proposed',journalSuggestedText:'Provisional recommendation pending human evidence review.',journalAsk:'Information request simulated',journalAskText:'No request was sent. A real case would await a client response.',journalReview:'Direction review simulated',journalReviewText:'Internal preview only; no commercial approval or case closure.',journalYourNote:'Demo note',
       askTitle:'Request more context',reviewTitle:'Review the proposed direction',askDesc:'Ask only what may change the decision. No actual message will be sent.',
       reviewDesc:'Explore a possible direction only. This is not a commercial approval.',
       dialogLabel:'Your note (demo only)',dialogWarning:'No messages are sent. No tasks or real records are created.',
@@ -115,7 +115,7 @@
      next:{ar:'مراجعة بشرية متخصصة لتحديد اختبار صغير يقيس اتخاذ القرار.',en:'Qualified human review to design a small decision-making pilot.'},
      status:'review',action:'review'}
   ];
-  const state={lang:'ar',view:'today',selectedCase:'c1',dialogAction:null,completed:new Set(),notes:new Map()};
+  const state={lang:'ar',view:'today',selectedCase:'c1',caseFilter:'all',dialogAction:null,completed:new Set(),outcomes:new Map(),journal:new Map(),notes:new Map()};
   const translations=(key)=>copy[state.lang][key]||key;
   const textFor=(field)=>typeof field==='object'&&field!==null?field[state.lang]:String(field??'');
   const elt=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
@@ -149,24 +149,68 @@
       item.append(num,body,btn);root.append(item);
     })
   }
+  function caseLabel(c){
+    if(state.outcomes.get(c.id)==='ask')return translations('awaitingInfo');
+    if(state.outcomes.get(c.id)==='review')return translations('directionReviewed');
+    return translations(c.status==='needs'?'needsInfo':'readyReview');
+  }
+  function renderJournal(c){
+    const entries=[
+      {title:'journalCreated',desc:'journalCreatedText',note:null},
+      {title:'journalSuggested',desc:'journalSuggestedText',note:null},
+      ...(state.journal.get(c.id)||[])
+    ];
+    const root=$('#case-journal-list');root.replaceChildren();
+    entries.forEach((event,index)=>{
+      const row=elt('li','journal-entry'+(index===entries.length-1?' is-latest':''));
+      const marker=elt('span','journal-step',String(index+1).padStart(2,'0'));
+      const text=elt('div','journal-text');
+      text.append(elt('strong','',translations(event.title)),elt('p','',translations(event.desc)));
+      if(event.note)text.append(elt('blockquote','journal-note',translations('journalYourNote')+': '+event.note));
+      row.append(marker,text);root.append(row);
+    });
+    $('#journal-count').textContent=String(entries.length).padStart(2,'0');
+  }
   function renderCases(){
     const query=($('#case-search').value||'').trim().toLocaleLowerCase();
-    const list=$('#case-list');list.replaceChildren();
-    const matches=sampleCases.filter(c=>(textFor(c.name)+' '+textFor(c.problem)+' '+textFor(c.subtitle)).toLocaleLowerCase().includes(query));
-    $('#case-empty').hidden=matches.length>0;
-    matches.forEach(c=>{
-      const button=elt('button','case-choice'+(state.selectedCase===c.id?' active':''));button.type='button';button.setAttribute('aria-pressed',String(state.selectedCase===c.id));
-      button.append(elt('strong','',textFor(c.name)),elt('span','',textFor(c.subtitle)),elt('em','',state.completed.has(c.id)?translations('simulated'):translations(c.status==='needs'?'needsInfo':'readyReview')));
-      button.addEventListener('click',()=>{state.selectedCase=c.id;renderCases()});list.append(button);
+    const matches=sampleCases.filter(c=>{
+      const byText=(textFor(c.name)+' '+textFor(c.problem)+' '+textFor(c.subtitle)).toLocaleLowerCase().includes(query);
+      const byType=state.caseFilter==='all' ||
+        (state.caseFilter==='handled' && state.completed.has(c.id)) ||
+        (state.caseFilter==='needs' && c.status==='needs' && !state.completed.has(c.id)) ||
+        (state.caseFilter==='review' && c.status==='review' && !state.completed.has(c.id));
+      return byText&&byType;
     });
-    const selected=sampleCases.find(c=>c.id===state.selectedCase)||sampleCases[0];
+    const list=$('#case-list');list.replaceChildren();
+    $('#case-empty').hidden=matches.length>0;
+    if(matches.length && !matches.some(c=>c.id===state.selectedCase))state.selectedCase=matches[0].id;
+    matches.forEach(c=>{
+      const button=elt('button','case-choice'+(state.selectedCase===c.id?' active':''));button.type='button';
+      button.setAttribute('aria-pressed',String(state.selectedCase===c.id));
+      button.append(elt('strong','',textFor(c.name)),elt('span','',textFor(c.subtitle)),elt('em','',caseLabel(c)));
+      button.addEventListener('click',()=>{state.selectedCase=c.id;renderCases()});
+      list.append(button);
+    });
+    $$('.case-filter').forEach(b=>{
+      const active=b.dataset.caseFilter===state.caseFilter;
+      b.setAttribute('aria-pressed',String(active));b.classList.toggle('is-current',active);
+    });
+    const selected=matches.find(c=>c.id===state.selectedCase)||
+      (!matches.length?null:matches[0]);
+    const detail=$('#case-detail');
+    if(!selected){
+      detail.hidden=true;
+      return;
+    }
+    detail.hidden=false;
     $('#case-title').textContent=textFor(selected.name);
     $('#case-subtitle').textContent=textFor(selected.subtitle);
-    $('#case-status').textContent=state.completed.has(selected.id)?translations('simulated'):translations(selected.status==='needs'?'needsInfo':'readyReview');
+    $('#case-status').textContent=caseLabel(selected);
     $('#case-problem').textContent=textFor(selected.problem);
     $('#case-known').textContent=textFor(selected.known);
     $('#case-missing').textContent=textFor(selected.missing);
     $('#case-recommendation').textContent=textFor(selected.next);
+    renderJournal(selected);
   }
   function card(root,{symbol,title,desc,meta}){
     const section=elt('article',root.id==='delivery-grid'?'delivery-card':'studio-card');
@@ -212,6 +256,7 @@
   $$('.nav-btn').forEach(button=>button.addEventListener('click',()=>setView(button.dataset.view)));
   $('#toggle-language').addEventListener('click',()=>{state.lang=state.lang==='ar'?'en':'ar';updateLanguage()});
   $('#case-search').addEventListener('input',renderCases);
+  $('.case-filter').forEach(button=>button.addEventListener('click',()=>{state.caseFilter=button.dataset.caseFilter;renderCases()}));
   $('#review-direction').addEventListener('click',()=>openDialog('review'));
   $('#request-context').addEventListener('click',()=>openDialog('ask'));
   $('#hero-open-case').addEventListener('click',()=>{const first=sampleCases.find(c=>!state.completed.has(c.id))||sampleCases[0];state.selectedCase=first.id;setView('clients')});
@@ -221,8 +266,14 @@
   $('#close-dialog').addEventListener('click',()=>dialog.close());
   $('#cancel-action').addEventListener('click',()=>dialog.close());
   $('#simulate-action').addEventListener('click',()=>{
-    state.completed.add(state.selectedCase);
-    state.notes.set(state.selectedCase,$('#dialog-text').value.slice(0,3000));
+    const action=state.dialogAction;
+    const note=$('#dialog-text').value.slice(0,3000).trim();
+    state.completed.add(state.selectedCase); // Attention handled — NOT case closure.
+    state.outcomes.set(state.selectedCase,action);
+    state.notes.set(state.selectedCase,note);
+    const events=state.journal.get(state.selectedCase)||[];
+    events.push({title:action==='ask'?'journalAsk':'journalReview',desc:action==='ask'?'journalAskText':'journalReviewText',note});
+    state.journal.set(state.selectedCase,events);
     dialog.close();renderToday();renderCases();toast(translations('toastDemo'))
   });
   updateLanguage();
