@@ -31,16 +31,16 @@ function env(opts={}){
    })};
   }
  };
- let previous;
+ let previous,previousBinding;
  async function start(){
   const init=await beginStaffLogin({settings,oidc,oidcConfig:{},pending,now});
-  previous=store.get(init.state);
+  previous=store.get(init.state);previousBinding=init.browserBinding;
   const callback=settings.callbackUrl+'?code=TEST_AUTH_CODE&state='+encodeURIComponent(init.state);
   return {init,callback};
  }
  const approved=Object.freeze({active:true,id:'ats-team-1',tenantId:'ats-org',role:'reviewer',issuer:settings.issuer,subject:'zoho-user-1'});
  const lookupStaff=opts.lookupStaff || (async()=>approved);
- const finish=callback=>finishStaffLogin({settings,oidc,oidcConfig:{},pending,callbackRequestUrl:callback,lookupStaff,now:now+1000});
+ const finish=(callback,binding=previousBinding)=>finishStaffLogin({settings,oidc,oidcConfig:{},pending,callbackRequestUrl:callback,browserBinding:binding,lookupStaff,now:now+1000});
  return {start,finish,store,calls,pending,oidc};
 }
 test('OIDC staging config allows only exact secure HTTPS endpoints',()=>{
@@ -64,6 +64,9 @@ test('begin creates one-time PKCE transaction and returns redirect without crede
  assert.equal(url.searchParams.get('code_challenge'),'TEST_CHALLENGE');
  assert.equal(e.store.get(init.state).expiresAt,now+300000);
  assert.equal(e.store.get(init.state).nonce.length>10,true);
+ assert.match(init.browserBinding,/^[A-Za-z0-9_-]{43}$/);
+ assert.match(e.store.get(init.state).browserBindingHash,/^[a-f0-9]{64}$/);
+ assert.ok(!JSON.stringify(e.store.get(init.state)).includes(init.browserBinding),'never store raw browser binding');
 });
 test('verified OIDC claims map only to explicitly active, assigned ATS staff identity',async()=>{
  const e=env(); const {callback}=await e.start();
@@ -113,4 +116,24 @@ test('unapproved or inactive member denied despite a validated Zoho login',async
   const e=env({lookupStaff:async()=>bad});const {callback}=await e.start();
   await assert.rejects(e.finish(callback),OidcDenied);
  }
+});
+
+
+test('OIDC callback rejects missing/wrong browser binding even with a valid state and code',async()=>{
+ for(const wrong of ['',null,'other-device','p'.repeat(43),'a'.repeat(42),'q'.repeat(44)]){
+  const e=env(),{callback}=await e.start();
+  await assert.rejects(e.finish(callback,wrong),OidcDenied);
+  assert.equal(e.store.size,0,'invalid callback consumes one-time state');
+ }
+});
+test('a state from another browser or another concurrent login is rejected',async()=>{
+ const e=env(),{init,callback}=await e.start();
+ assert.ok(init.browserBinding);
+ const another='Y'.repeat(43);
+ await assert.rejects(e.finish(callback,another),OidcDenied);
+});
+test('callback with blank code or state is rejected',async()=>{
+ const e=env(),{callback}=await e.start();
+ await assert.rejects(e.finish(callback.replace('TEST_AUTH_CODE','')),OidcDenied);
+ await assert.rejects(e.finish(callback.replace(/state=[^&]+/,'state=')),OidcDenied);
 });
