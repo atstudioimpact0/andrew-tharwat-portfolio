@@ -101,3 +101,18 @@ test('Zoho status is never represented as connected app authentication',()=>{
  assert.match(js,/zohoZeptoStatus:'Customer verification mail · not enabled'/);
  assert.doesNotMatch(js,/https:\/\/accounts\.zoho|zoho\.oauth|zeptomail\.zoho/i);
 });
+
+
+test('client case workspace uses status-specific follow-up and local decision history',()=>{
+ const html=load('index.html'),js=load('control-v2.js'),css=load('premium.css');
+ for(const filter of ['all','needs','review','handled'])assert.match(html,new RegExp('data-case-filter="'+filter+'"'));
+ assert.match(html,/id="case-journal-list"/);
+ assert.match(html,/id="case-journal-title"/);
+ assert.match(js,/state\.outcomes\.set\(state\.selectedCase,action\)/);
+ assert.match(js,/action==='ask'\?'journalAsk':'journalReview'/);
+ assert.match(js,/function caseLabel\(c\)/);
+ assert.match(js,/awaitingInfo:'بانتظار رد/);
+ assert.match(js,/directionReviewed:'مراجعة مسجلة/);
+ assert.match(css,/\.case-detail\[hidden\]\{display:none!important\}/);
+ assert.doesNotMatch(js,/closedCase:|status:'closed'|caseClosed:'Closed'/);
+});
