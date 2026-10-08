@@ -71,3 +71,33 @@ test('prototype pages have a clear nonproduction warning and proper document lan
  assert.match(load('access.css'),/@media\(max-width:570px\)/);
  assert.match(load('control-v2.css'),/@media\(max-width:760px\)/);
 });
+
+
+test('executive version has a real next action, not a decorative hero CTA',()=>{
+ const html=load('index.html'),js=load('control-v2.js');
+ assert.match(html,/class="executive-hero"/);
+ assert.match(html,/id="hero-open-case"/);
+ assert.match(html,/class="hero-title"/);
+ assert.match(html,/href="\.\/premium\.css"/);
+ assert.match(js,/\$\('#hero-open-case'\)\.addEventListener\('click'/);
+ assert.match(js,/setView\('clients'\)/);
+});
+
+test('premium visual layer stays safe and viewports are accounted for',()=>{
+ const premium=load('premium.css'),accessPremium=load('access-premium.css'),access=load('access.html');
+ assert.match(premium,/EXECUTIVE EDITION/);
+ assert.match(premium,/@media\(max-width:760px\)/);
+ assert.match(premium,/@media\(max-width:410px\)/);
+ assert.match(accessPremium,/@media\(max-width:760px\)/);
+ assert.match(access,/href="\.\/access-premium\.css"/);
+});
+
+test('Zoho status is never represented as connected app authentication',()=>{
+ const html=load('index.html'),js=load('control-v2.js');
+ assert.match(html,/Zoho Mail/);
+ assert.match(html,/Zoho Directory/);
+ assert.match(html,/ZeptoMail/);
+ assert.match(js,/zohoDirectoryStatus:'Team SSO · under evaluation'/);
+ assert.match(js,/zohoZeptoStatus:'Customer verification mail · not enabled'/);
+ assert.doesNotMatch(js,/https:\/\/accounts\.zoho|zoho\.oauth|zeptomail\.zoho/i);
+});
