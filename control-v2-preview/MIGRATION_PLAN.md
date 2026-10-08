@@ -5,6 +5,16 @@
 **Work branch:** feat/ats-control-v2-zoho-auth-plan
 **Production:** unchanged. No database/auth/DNS changes authorized by this plan.
 
+## Milestone update — 8 Oct 2026
+
+**Official Zoho Mail (ordinary business correspondence): operational, per successful outbound/inbound test confirmed by the owner.** MX/SPF/DKIM/DMARC TXT records were independently confirmed present in Vercel DNS. DKIM/DMARC per-message alignment should be checked using Authentication-Results before hardening DMARC beyond monitoring-only policy; p=none currently does not block spoofed mail.
+
+**Next active stage: Control Room V2 + ATS Auth V2 pilot, no Production changes.** This milestone is distinct from automated transaction-email delivery. Zoho Mail should not be used as automated OTP sender. A secure, separately approved sender/authentication design is still needed.
+
+See `ZOHO_DNS_READINESS.md` and `AUTH_V2_DEPENDENCY_MAP.md`.
+
+---
+
 ## Business intent
 ATS must feel easy and trustworthy to its clients, clear to the founder, and directed for the team.
 Problem → Understand → Evidence → Desired Outcome → Assemble → Build → Verify → Real Solution.
