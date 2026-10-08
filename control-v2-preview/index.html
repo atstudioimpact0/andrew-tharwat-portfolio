@@ -6,12 +6,13 @@
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#071b2a">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; base-uri 'none'; form-action 'none'; connect-src 'none'; object-src 'none'">
-  <title>ATS Control Room V2 — UX Prototype</title>
+  <title>AT Studio — Executive Control Room / Design Preview</title>
   <link rel="icon" href="/assets/logo-mark-official.png?v=24" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./control-v2.css">
+  <link rel="stylesheet" href="./premium.css">
   <script src="./control-v2.js" defer></script>
 </head>
 <body>
@@ -21,7 +22,7 @@
     <aside class="sidebar" id="sidebar" aria-label="Main navigation">
       <div class="sidebar-top">
         <div class="brand"><img src="/assets/logo-mark-official.png?v=24" alt="AT Studio" width="48" height="48"><div><strong>AT STUDIO</strong><small>CONTROL ROOM <span>02</span></small></div></div>
-        <div class="side-caption" data-i18n="workspace">مساحة قيادة الاستوديو</div>
+        <div class="side-caption" data-i18n="workspace">مساحة قيادة الاستوديو</div><div class="side-rule"></div>
       </div>
       <nav class="side-nav" aria-label="Control Room sections">
         <button class="nav-btn active" type="button" data-view="today" aria-current="page"><span class="nav-symbol">◫</span><span data-i18n="navToday">اليوم</span><small>01</small></button>
@@ -31,6 +32,7 @@
         <button class="nav-btn" type="button" data-view="intelligence"><span class="nav-symbol">✧</span><span data-i18n="navIntelligence">ATS Intelligence</span><small>05</small></button>
       </nav>
       <div class="sidebar-bottom">
+        <div class="sidebar-identity"><span class="identity-index">ATS / 26</span><span data-i18n="sidebarPromise">من المشكلة إلى الأثر الحقيقي.</span></div>
         <div class="system-pill"><span class="mini-dot"></span><div><b data-i18n="demoMode">وضع العرض التجريبي</b><small data-i18n="noRealActions">لن يتم إرسال أو حفظ أي إجراء</small></div></div>
         <p>AT STUDIO <span>— Build what works.</span></p>
       </div>
@@ -38,12 +40,23 @@
     <div class="content-area">
       <header class="topbar">
         <div class="topbar-leading"><button type="button" class="mobile-menu icon-button" id="mobile-menu" aria-label="Toggle menu" aria-expanded="false">☰</button><div class="bread"><span>AT STUDIO</span><b aria-hidden="true">/</b><strong id="currentSection">اليوم</strong></div></div>
-        <div class="topbar-actions"><span class="preview-pill">PREVIEW ONLY</span><button type="button" class="lang-btn" id="toggle-language" aria-label="Switch language">EN</button><span class="avatar" aria-label="Demo administrator">AT</span></div>
+        <div class="topbar-actions"><span class="preview-pill"><span class="preview-pulse"></span> DESIGN PREVIEW</span><button type="button" class="lang-btn" id="toggle-language" aria-label="Switch language">EN</button><span class="avatar" aria-label="Demo administrator">AT<span class="avatar-mini">/ OWNER</span></span></div>
       </header>
       <main id="workspace" tabindex="-1">
         <section class="page is-active" data-page="today" aria-labelledby="today-title">
-          <div class="page-heading"><div><p class="eyebrow">OPERATIONS / TODAY</p><h1 id="today-title" data-i18n="todayTitle">صباح واضح. قرارات أقل.</h1><p data-i18n="todaySub">المهم قدامك، والتفاصيل موجودة وقت ما تحتاجها.</p></div><div class="heading-emblem" aria-hidden="true">A<span>T</span></div></div>
-          <div class="metric-grid" id="today-metrics" aria-label="Demo metrics"></div>
+          <div class="page-heading home-heading"><div><p class="eyebrow">OPERATIONS / TODAY</p><h1 id="today-title" data-i18n="todayTitle">صباح واضح. قرارات أقل.</h1><p data-i18n="todaySub">المهم قدامك، والتفاصيل موجودة وقت ما تحتاجها.</p></div><div class="heading-emblem" aria-hidden="true">A<span>T</span></div></div>
+          <div class="executive-hero">
+  <div class="executive-story">
+    <div class="hero-meta"><span class="hero-indicator"></span><span>AT STUDIO / DECISION DESK</span><span class="hero-divider"></span><span data-i18n="heroScope">مساحة المالك · معاينة</span></div>
+    <p class="hero-overline" data-i18n="heroEyebrow">THE WORK BEHIND THE WORK</p>
+    <h2 class="hero-title" data-i18n="heroTitle">مش كل حاجة محتاجة<br>تدخّلك. <em>القرار المهم بس.</em></h2>
+    <p class="hero-desc" data-i18n="heroDesc">نرتّب التفاصيل علشان يظهر قدامك القرار اللي يستحق وقتك. من فهم العميل إلى تنفيذ الحل، في مسار واحد.</p>
+    <div class="hero-actions"><button type="button" class="hero-cta" id="hero-open-case"><span data-i18n="heroCTA">راجع أول طلب</span><span aria-hidden="true">↗</span></button><span class="hero-caption" data-i18n="heroDemo">عرض توضيحي · بيانات غير حقيقية</span></div>
+  </div>
+  <div class="hero-art" aria-hidden="true"><div class="hero-art-orbit"><div class="orbit-tick orbit-tick-a"></div><div class="orbit-tick orbit-tick-b"></div><div class="orbit-core"><span>AT</span><small>STUDIO</small></div></div><div class="orbit-label">01 / UNDERSTAND<br>02 / DECIDE<br>03 / BUILD</div><div class="orbit-signature">BUILD<br>WHAT<br>WORKS<span>.</span></div></div>
+  <span class="hero-index">01 / 05</span>
+</div>
+          <div class="metric-section"><div class="metric-section-label"><span>OVERVIEW</span><span data-i18n="metricIntro">الاستوديو في لمحة</span></div><div class="metric-grid" id="today-metrics" aria-label="Demo metrics"></div></div>
           <div class="two-col">
             <article class="panel priority-panel">
               <div class="panel-header"><div><p class="eyebrow">FIRST THINGS FIRST</p><h2 data-i18n="yourDecisions">قرارات محتاجة انتباهك</h2></div><span class="subtle-tag" data-i18n="sampleCases">حالات افتراضية</span></div>
@@ -84,6 +97,10 @@
         </section>
         <section class="page" data-page="studio" aria-labelledby="studio-title" hidden>
           <div class="page-heading"><div><p class="eyebrow">THE STUDIO / ADMINISTRATION</p><h1 id="studio-title" data-i18n="studioTitle">إدارة الاستوديو بدون زحمة.</h1><p data-i18n="studioSub">الأشخاص، المحتوى، الأنظمة، والإعدادات — بعيدًا عن قرارات العملاء اليومية.</p></div></div>
+          <div class="zoho-system-row" aria-label="Zoho integration design">
+ <div class="zoho-system-lead"><span class="eyebrow">FOUNDATION / SYSTEMS</span><h2 data-i18n="zohoTitle">منظومة أبسط. خدمات متكاملة.</h2><p data-i18n="zohoDesc">اعتماد Zoho قدر الإمكان، من غير ربط غير ضروري ولا تكلفة غير معتمدة.</p></div>
+ <div class="zoho-providers"><div><b>Zoho Mail</b><span data-i18n="zohoMailStatus">البريد الرسمي · جاهز للمراسلات</span></div><div><b>Zoho Directory</b><span data-i18n="zohoDirectoryStatus">دخول المالك والفريق · مرشح للفحص</span></div><div><b>ZeptoMail</b><span data-i18n="zohoZeptoStatus">إرسال أكواد العملاء · لم يُفعّل</span></div></div>
+</div>
           <div class="studio-grid" id="studio-grid"></div>
           <div class="panel guidance-panel"><p class="eyebrow">SECURITY / ACCESS</p><h2 data-i18n="securityTitle">الدخول الجديد منفصل عن Supabase Auth</h2><p data-i18n="securityDesc">المرحلة القادمة تستلزم جلسات خادم آمنة، تحقق من الهوية، صلاحيات حسب الدور، وسجلًا واضحًا لأي قرار حساس. الواجهة التجريبية لا تحتوي على تسجيل دخول.</p><a class="btn btn-primary auth-preview-link" href="./access.html" data-i18n="accessPreview">شاهد تصميم تجربة الدخول الجديدة ←</a></div>
         </section>
