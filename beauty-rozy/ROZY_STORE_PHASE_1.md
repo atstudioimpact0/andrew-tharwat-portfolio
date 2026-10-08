@@ -3,6 +3,19 @@
 Date: 2026-10-08
 Source branch: `codex/rozy-premium-brands` at commit `156d706f2db9d8a765020f0b0b369fdd85c35267`
 
+## Approved primary development path — decision 2026-10-08
+
+**Source of truth for further ROZY STORE work:** `codex/rozy-store-order-on-demand-v1` and its current preview at `/beauty-rozy/preview/`. Product → Request → Quote → Customer Approval is the default interaction model. This is an explicit user-approved direction.
+
+**Other versions are secondary reference material only:**
+- `codex/rozy-premium-brands` may supply useful visual or technical elements after selective review; do not resume feature development there.
+- `beauty-rozy-premium-v1` and other earlier designs are historical references, not parallel product directions.
+- Reuse individual components, images (only where licensing permits), and content when they support the approved ROZY STORE flow, not by wholesale merging old concepts.
+
+**Guardrails:** Keep current editorial/quiet-luxury direction, English-first presentation, and the approved ROZY STORE name. In the preview, no real order or payment exists. Price, availability and delivery must be verified before payment in the eventual live flow. Do not change default Git branch, merge into `main`, retarget production, or change `atstudioimpact.com` without separate review and approval.
+
+**Repository note:** The current draft PR #15 targets `codex/rozy-premium-brands` only for an intelligible diff against its historical source. That technical PR base does not mean the old branch is the strategic mainline. Before release, review the combined change set against the real production branch.
+
 ## Approved direction
 - Public-facing identity: **ROZY STORE**, with ROZY visually primary and STORE secondary.
 - Premium curated beauty destination, English-first visual experience, customer clarity over decoration.
