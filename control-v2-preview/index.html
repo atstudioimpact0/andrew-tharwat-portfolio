@@ -41,7 +41,7 @@
     <div class="content-area">
       <header class="topbar">
         <div class="topbar-leading"><button type="button" class="mobile-menu icon-button" id="mobile-menu" aria-label="Toggle menu" aria-expanded="false">☰</button><div class="bread"><span>AT STUDIO</span><b aria-hidden="true">/</b><strong id="currentSection">اليوم</strong></div></div>
-        <div class="topbar-actions"><button class="command-trigger" id="command-open" type="button" aria-haspopup="dialog" aria-controls="command-dialog"><span class="command-trigger-symbol" aria-hidden="true">⌕</span><span data-i18n="commandTrigger">وصول سريع</span><kbd>⌘ K</kbd></button><span class="preview-pill"><span class="preview-pulse"></span> DESIGN PREVIEW</span><button type="button" class="lang-btn" id="toggle-language" aria-label="Switch language">EN</button><span class="avatar" aria-label="Demo administrator">AT<span class="avatar-mini">/ OWNER</span></span></div>
+        <div class="topbar-actions"><button class="command-trigger" id="command-open" type="button" aria-haspopup="dialog" aria-controls="command-dialog"><span class="command-trigger-symbol" aria-hidden="true">⌕</span><span data-i18n="commandTrigger">وصول سريع</span><kbd>Ctrl / ⌘ K</kbd></button><span class="preview-pill"><span class="preview-pulse"></span> DESIGN PREVIEW</span><button type="button" class="lang-btn" id="toggle-language" aria-label="Switch language">EN</button><span class="avatar" aria-label="Demo administrator">AT<span class="avatar-mini">/ OWNER</span></span></div>
       </header>
       <main id="workspace" tabindex="-1">
         <section class="page is-active" data-page="today" aria-labelledby="today-title">
@@ -135,7 +135,7 @@
     <div class="command-frame">
       <div class="command-heading"><div><p class="eyebrow">AT STUDIO / NAVIGATE</p><h2 id="command-title" data-i18n="commandTitle">اذهب لما يهمك</h2></div><button class="command-close" id="command-close" type="button" aria-label="Close quick navigation">×</button></div>
       <label class="command-search-label" for="command-search" data-i18n="commandSearchLabel">ابحث في الأقسام وملفات العملاء التجريبية</label>
-      <div class="command-search-wrap"><span aria-hidden="true">⌕</span><input id="command-search" type="search" autocomplete="off" aria-controls="command-results" aria-label="Search quick navigation" data-command-search><kbd>ESC</kbd></div>
+      <div class="command-search-wrap"><span aria-hidden="true">⌕</span><input id="command-search" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="command-results" data-command-search><kbd>ESC</kbd></div>
       <div id="command-results" class="command-results" role="listbox" aria-label="Quick navigation results"></div>
       <p class="command-empty" id="command-empty" hidden data-i18n="commandEmpty">مفيش نتائج مطابقة.</p>
       <footer class="command-footer"><span data-i18n="commandHint">↑ ↓ للتنقل · Enter للفتح · Esc للإغلاق</span><span>DESIGN PREVIEW / NO LIVE DATA</span></footer>
