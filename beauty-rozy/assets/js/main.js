@@ -1,4 +1,4 @@
-/* Beauty ROZY — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
+/* Rozy Beauty — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
 (() => {
   'use strict';
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -26,7 +26,7 @@
     const fail = () => {
       const span = document.createElement('span');
       span.className = img.classList.contains('hero__logo') ? 'hero__fallback' : 'footer__fallback';
-      span.textContent = 'Beauty ROZY';
+      span.textContent = 'Rozy Beauty';
       img.replaceWith(span);
     };
     if (img.complete && img.naturalWidth === 0) fail();
@@ -65,18 +65,22 @@
       .then((list) => list.map((x) => ({ ...x, hay: norm(`${x.title} ${x.sub} ${x.terms}`) })))
       .catch(() => []));
     const show = async () => {
+      const entered = input.value.trim();
       const q = norm(input.value).trim();
       if (!q) { results.innerHTML = ''; hint.hidden = false; return; }
       hint.hidden = true;
       const words = q.split(/\s+/);
       const hits = (await load()).filter((x) => words.every((w) => x.hay.includes(w)))
         .sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'brand' ? -1 : 1)).slice(0, 10);
+      if (input.value.trim() !== entered) return;
+      const requestUrl = new URL(document.body.dataset.request, location.href);
+      requestUrl.searchParams.set('product', entered);
       results.innerHTML = hits.length
         ? hits.map((x) => `<li><a class="search__hit" href="${x.url}">
             <span class="media search__img" aria-hidden="true">${x.image ? `<img src="${x.image}" alt="" loading="lazy">` : (x.kind === 'brand' ? '★' : '')}</span>
             <span class="search__text"><strong dir="auto">${esc(x.title)}</strong><span>${esc(x.kind === 'brand' ? `${english ? 'Brand' : 'ماركة'} · ${x.sub}` : x.sub)}</span></span></a></li>`).join('')
         : english
-          ? `<li class="search__none">No results for “${esc(input.value.trim())}”. <a href="${document.body.dataset.request}">Make a special request</a></li>`
+          ? `<li class="search__none">No results for “${esc(entered)}”. <a href="${esc(requestUrl.href)}">Make a special request</a></li>`
           : `<li class="search__none">مفيش نتايج لـ «${esc(input.value.trim())}». <a href="${document.body.dataset.request}">اطلبيه مخصوص</a></li>`;
     };
     const setOpen = (open) => {
@@ -310,12 +314,19 @@ ${wa
 <p class="fine">An order is confirmed only after we receive your message and agree the delivery and payment details with you.</p>`
   : '<p class="fine">Preview only: your order has not been sent. The store contact is not connected. Your prepared details appear below.</p>'}
 <pre class="order-text">${esc(text)}</pre>
-<button class="btn btn--outline-green" type="button" data-copy-order>Copy Order Details</button>`;
+<button class="btn btn--outline-green" type="button" data-copy-order>Copy Order Details</button>
+<button class="btn btn--link" type="button" data-edit-order>Return to Your Bag</button>`;
       $('[data-copy-order]', checkoutDone).addEventListener('click', (ev) => {
         const btn = ev.currentTarget;
         navigator.clipboard?.writeText(text).then(() => { btn.textContent = 'Copied'; }, () => { btn.textContent = 'Please copy the details above'; });
       });
-      saveCart([]);
+      $('[data-edit-order]', checkoutDone).addEventListener('click', () => {
+        checkoutDone.hidden = true;
+        checkoutForm.hidden = false;
+        render();
+        $('#c-name', checkoutForm).focus();
+      });
+      // Preparing a message does not confirm an order or remove the customer's selection.
       checkoutForm.hidden = true;
       cartRoot.innerHTML = '';
       checkoutDone.hidden = false;
@@ -508,6 +519,19 @@ ${picked.length ? `<div class="summary">
     const errorBox = $('[data-form-error]', form);
     const fileInput = $('#r-image', form);
     const uploadLabel = $('[data-upload-label]', form);
+    const selection = new URLSearchParams(location.search);
+    let hasSelection = false;
+    [['product', '#r-name'], ['brand', '#r-brand']].forEach(([key, selector]) => {
+      const value = (selection.get(key) || '').trim().slice(0, 200);
+      const field = $(selector, form);
+      if (value && !field.value) { field.value = value; hasSelection = true; }
+    });
+    const originPath = selection.get('from') || '';
+    if (/^\/beauty-rozy\/products\/[a-z0-9-]+\/$/.test(originPath)) {
+      $('#r-link', form).value = new URL(originPath, location.href).href;
+    }
+    const context = $('[data-request-context]');
+    if (context) context.hidden = !hasSelection;
     fileInput.addEventListener('change', () => {
       uploadLabel.textContent = fileInput.files[0] ? `Photograph: ${fileInput.files[0].name}` : 'Or upload a product photograph';
     });
@@ -563,6 +587,7 @@ ${picked.length ? `<div class="summary">
 
     $('[data-request-again]', done).addEventListener('click', () => {
       form.reset();
+      if (context) context.hidden = true;
       uploadLabel.textContent = 'Or upload a product photograph';
       done.hidden = true;
       form.hidden = false;

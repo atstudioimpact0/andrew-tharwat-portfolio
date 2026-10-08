@@ -2,42 +2,44 @@
   {
     "kind": "brand",
     "title": "Balea",
-    "sub": "Skin Care · Hair Care · Body Care",
+    "sub": "Skin · Hair · Body",
     "url": "/beauty-rozy/brands/balea/",
-    "terms": "Balea Skin Care · Hair Care · Body Care",
-    "image": "/beauty-rozy/assets/img/brands/balea.webp"
-  },
-  {
-    "kind": "brand",
-    "title": "Medicube",
-    "sub": "Skin Care",
-    "url": "/beauty-rozy/brands/medicube/",
-    "terms": "Medicube Skin Care",
-    "image": "/beauty-rozy/assets/img/brands/medicube.webp"
-  },
-  {
-    "kind": "brand",
-    "title": "lavera",
-    "sub": "Skin Care · Hair Care · Makeup",
-    "url": "/beauty-rozy/brands/lavera/",
-    "terms": "lavera Skin Care · Hair Care · Makeup",
-    "image": "/beauty-rozy/assets/img/brands/lavera.webp"
+    "terms": "Balea balea skin hair body Skin · Hair · Body"
   },
   {
     "kind": "brand",
     "title": "e.l.f.",
-    "sub": "Makeup · Skin Care",
+    "sub": "Makeup · Skin",
     "url": "/beauty-rozy/brands/elf/",
-    "terms": "e.l.f. Makeup · Skin Care",
-    "image": "/beauty-rozy/assets/img/brands/elf.webp"
+    "terms": "e.l.f. elf makeup skin Makeup · Skin"
+  },
+  {
+    "kind": "brand",
+    "title": "Essence",
+    "sub": "Makeup",
+    "url": "/beauty-rozy/brands/essence/",
+    "terms": "Essence essence makeup Makeup"
   },
   {
     "kind": "brand",
     "title": "Huda Beauty",
     "sub": "Makeup",
     "url": "/beauty-rozy/brands/huda-beauty/",
-    "terms": "Huda Beauty Makeup",
-    "image": "/beauty-rozy/assets/img/brands/huda-beauty.webp"
+    "terms": "Huda Beauty huda-beauty makeup Makeup"
+  },
+  {
+    "kind": "brand",
+    "title": "Maybelline",
+    "sub": "Makeup",
+    "url": "/beauty-rozy/brands/maybelline/",
+    "terms": "Maybelline maybelline makeup Makeup"
+  },
+  {
+    "kind": "brand",
+    "title": "SHEGLAM",
+    "sub": "Makeup",
+    "url": "/beauty-rozy/brands/sheglam/",
+    "terms": "SHEGLAM sheglam makeup Makeup"
   },
   {
     "kind": "product",
