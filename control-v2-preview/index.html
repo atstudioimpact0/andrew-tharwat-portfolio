@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#071b2a">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; base-uri 'none'; form-action 'none'; connect-src 'none'; object-src 'none'">
+  <title>ATS Control Room V2 — UX Prototype</title>
+  <link rel="icon" href="/assets/logo-mark-official.png?v=24" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./control-v2.css">
+  <script src="./control-v2.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">تخطّ إلى المحتوى</a>
+  <div class="prototype-strip" role="status"><span class="strip-dot"></span><strong>CONTROL ROOM V2 — UX PROTOTYPE</strong><span data-i18n="strip">بيانات افتراضية فقط — لا اتصال بالعملاء أو قاعدة البيانات</span></div>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-top">
+        <div class="brand"><img src="/assets/logo-mark-official.png?v=24" alt="AT Studio" width="48" height="48"><div><strong>AT STUDIO</strong><small>CONTROL ROOM <span>02</span></small></div></div>
+        <div class="side-caption" data-i18n="workspace">مساحة قيادة الاستوديو</div>
+      </div>
+      <nav class="side-nav" aria-label="Control Room sections">
+        <button class="nav-btn active" type="button" data-view="today" aria-current="page"><span class="nav-symbol">◫</span><span data-i18n="navToday">اليوم</span><small>01</small></button>
+        <button class="nav-btn" type="button" data-view="clients"><span class="nav-symbol">◎</span><span data-i18n="navClients">العملاء</span><small>02</small></button>
+        <button class="nav-btn" type="button" data-view="delivery"><span class="nav-symbol">▣</span><span data-i18n="navDelivery">التنفيذ</span><small>03</small></button>
+        <button class="nav-btn" type="button" data-view="studio"><span class="nav-symbol">◇</span><span data-i18n="navStudio">الاستوديو</span><small>04</small></button>
+        <button class="nav-btn" type="button" data-view="intelligence"><span class="nav-symbol">✧</span><span data-i18n="navIntelligence">ATS Intelligence</span><small>05</small></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="system-pill"><span class="mini-dot"></span><div><b data-i18n="demoMode">وضع العرض التجريبي</b><small data-i18n="noRealActions">لن يتم إرسال أو حفظ أي إجراء</small></div></div>
+        <p>AT STUDIO <span>— Build what works.</span></p>
+      </div>
+    </aside>
+    <div class="content-area">
+      <header class="topbar">
+        <div class="topbar-leading"><button type="button" class="mobile-menu icon-button" id="mobile-menu" aria-label="Toggle menu" aria-expanded="false">☰</button><div class="bread"><span>AT STUDIO</span><b aria-hidden="true">/</b><strong id="currentSection">اليوم</strong></div></div>
+        <div class="topbar-actions"><span class="preview-pill">PREVIEW ONLY</span><button type="button" class="lang-btn" id="toggle-language" aria-label="Switch language">EN</button><span class="avatar" aria-label="Demo administrator">AT</span></div>
+      </header>
+      <main id="workspace" tabindex="-1">
+        <section class="page is-active" data-page="today" aria-labelledby="today-title">
+          <div class="page-heading"><div><p class="eyebrow">OPERATIONS / TODAY</p><h1 id="today-title" data-i18n="todayTitle">صباح واضح. قرارات أقل.</h1><p data-i18n="todaySub">المهم قدامك، والتفاصيل موجودة وقت ما تحتاجها.</p></div><div class="heading-emblem" aria-hidden="true">A<span>T</span></div></div>
+          <div class="metric-grid" id="today-metrics" aria-label="Demo metrics"></div>
+          <div class="two-col">
+            <article class="panel priority-panel">
+              <div class="panel-header"><div><p class="eyebrow">FIRST THINGS FIRST</p><h2 data-i18n="yourDecisions">قرارات محتاجة انتباهك</h2></div><span class="subtle-tag" data-i18n="sampleCases">حالات افتراضية</span></div>
+              <div id="priority-list" class="priority-list"></div>
+            </article>
+            <article class="panel focus-panel">
+              <div class="panel-header"><div><p class="eyebrow">A CLEAR WAY FORWARD</p><h2 data-i18n="principleTitle">إيه اللي بنحافظ عليه؟</h2></div></div>
+              <div class="principle"><span>01</span><div><b data-i18n="principleOne">نفهم قبل ما نبيع</b><p data-i18n="principleOneDesc">أفضل حل للعميل أهم من أكبر عرض نقدر نبيعه.</p></div></div>
+              <div class="principle"><span>02</span><div><b data-i18n="principleTwo">معلومة واحدة وقت الحاجة</b><p data-i18n="principleTwoDesc">لا نكرر الأسئلة ولا نظهر للعميل التعقيد الداخلي.</p></div></div>
+              <div class="principle"><span>03</span><div><b data-i18n="principleThree">قرار بشري مسؤول</b><p data-i18n="principleThreeDesc">لا عرض نهائي أو اعتماد مالي من غير موافقة واضحة.</p></div></div>
+            </article>
+          </div>
+        </section>
+        <section class="page" data-page="clients" aria-labelledby="clients-title" hidden>
+          <div class="page-heading"><div><p class="eyebrow">RELATIONSHIPS / CLIENT CASES</p><h1 id="clients-title" data-i18n="clientsTitle">كل عميل، قصة واحدة واضحة.</h1><p data-i18n="clientsSub">من المشكلة إلى فهمها ثم تحديد الخطوة التالية.</p></div></div>
+          <div class="client-layout">
+            <div class="panel case-list-panel">
+              <div class="panel-header"><h2 data-i18n="activeCases">ملفات العملاء</h2><span class="subtle-tag">DEMO</span></div>
+              <label class="search-label" for="case-search" data-i18n="searchLabel">ابحث في الملفات</label>
+              <input id="case-search" type="search" placeholder="ابحث بالاسم أو المشكلة..." autocomplete="off">
+              <div class="case-list" id="case-list"></div>
+              <p class="empty" id="case-empty" hidden data-i18n="noCases">لا توجد نتائج مطابقة.</p>
+            </div>
+            <article class="panel case-detail" id="case-detail" aria-live="polite">
+              <div class="case-head"><div><p class="eyebrow" data-i18n="clientCase">ملف العميل</p><h2 id="case-title">—</h2><p id="case-subtitle"></p></div><span id="case-status" class="status-label"></span></div>
+              <div class="case-section"><span class="section-number">01</span><div><h3 data-i18n="challenge">المشكلة اللي بنحلّها</h3><p id="case-problem"></p></div></div>
+              <div class="case-section"><span class="section-number">02</span><div><h3 data-i18n="known">إيه اللي نعرفه بالفعل؟</h3><p id="case-known"></p></div></div>
+              <div class="case-section"><span class="section-number">03</span><div><h3 data-i18n="missing">إيه اللي محتاج توضيح؟</h3><p id="case-missing"></p></div></div>
+              <div class="case-action-block"><div class="action-kicker" data-i18n="suggestedNext">الخطوة المقترحة — تحتاج مراجعتك</div><p id="case-recommendation"></p><div class="action-row"><button type="button" class="btn btn-primary" id="review-direction" data-i18n="reviewAction">راجع الاتجاه</button><button type="button" class="btn btn-outline" id="request-context" data-i18n="askAction">اطلب معلومة</button></div></div>
+              <p class="safety-note" data-i18n="demoDisclaimer">أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.</p>
+            </article>
+          </div>
+        </section>
+        <section class="page" data-page="delivery" aria-labelledby="delivery-title" hidden>
+          <div class="page-heading"><div><p class="eyebrow">DELIVERY / OWNERSHIP</p><h1 id="delivery-title" data-i18n="deliveryTitle">كل مهمة لها مسؤول ونتيجة.</h1><p data-i18n="deliverySub">التنفيذ والمراجعات والاعتمادات، من غير تشتيت.</p></div></div>
+          <div class="delivery-grid" id="delivery-grid"></div>
+          <article class="panel guidance-panel"><p class="eyebrow">THE STANDARD</p><h2 data-i18n="deliveryPrinciple">تسليم واضح، مراجعة واضحة، ثم اعتماد.</h2><p data-i18n="deliveryDescription">لا نعتبر المهمة منتهية لمجرد تحديث حالتها. لازم تسليم قابل للمراجعة، ومسؤول معتمد، ودليل على تحقق المطلوب.</p></article>
+        </section>
+        <section class="page" data-page="studio" aria-labelledby="studio-title" hidden>
+          <div class="page-heading"><div><p class="eyebrow">THE STUDIO / ADMINISTRATION</p><h1 id="studio-title" data-i18n="studioTitle">إدارة الاستوديو بدون زحمة.</h1><p data-i18n="studioSub">الأشخاص، المحتوى، الأنظمة، والإعدادات — بعيدًا عن قرارات العملاء اليومية.</p></div></div>
+          <div class="studio-grid" id="studio-grid"></div>
+          <div class="panel guidance-panel"><p class="eyebrow">SECURITY / ACCESS</p><h2 data-i18n="securityTitle">الدخول الجديد منفصل عن Supabase Auth</h2><p data-i18n="securityDesc">المرحلة القادمة تستلزم جلسات خادم آمنة، تحقق من الهوية، صلاحيات حسب الدور، وسجلًا واضحًا لأي قرار حساس. الواجهة التجريبية لا تحتوي على تسجيل دخول.</p></div>
+        </section>
+        <section class="page" data-page="intelligence" aria-labelledby="intelligence-title" hidden>
+          <div class="page-heading"><div><p class="eyebrow">ATS INTELLIGENCE / HUMAN FIRST</p><h1 id="intelligence-title" data-i18n="intelligenceTitle">ذكاء يقلل المجهود، مش يزود التعقيد.</h1><p data-i18n="intelligenceSub">الـAI يرتب الفهم والاحتمالات، وإنت تراجع وتقرر.</p></div></div>
+          <div class="panel intelligence-card"><div class="intelligence-mark">✧</div><div><p class="eyebrow">DESIGN PRINCIPLE</p><h2 data-i18n="intelligencePrinciple">فهم واضح → إجراء مبرر → مراجعة بشرية</h2><p data-i18n="intelligenceDesc">أي تحليل آلي يوضح مصدر المعلومة، درجة التأكد، والنواقص. لا يتم إرسال ردود للعميل أو اعتماد عروض أو تحديد أسعار تلقائيًا.</p></div></div>
+          <div class="intel-steps" id="intel-steps"></div>
+        </section>
+      </main>
+      <footer class="app-footer"><span>© AT Studio · Build what works.</span><span>UX prototype · No connected services · No real actions</span></footer>
+    </div>
+  </div>
+  <dialog id="action-dialog" aria-labelledby="action-title">
+    <div class="dialog-frame"><div class="dialog-top"><p class="eyebrow">ATS / PREVIEW ACTION</p><button id="close-dialog" class="icon-button" type="button" aria-label="Close">×</button></div>
+      <h2 id="action-title">—</h2><p id="action-message"></p><label id="dialog-label" for="dialog-text">ملاحظة توضيحية</label><textarea id="dialog-text" rows="5" placeholder="اكتب ملاحظة للتجربة فقط..."></textarea><p class="safety-note" id="dialog-warning">لا تُرسل رسائل، ولا تُنشأ مهام، ولا تُحفظ أي بيانات حقيقية.</p>
+      <div class="dialog-actions"><button type="button" class="btn btn-outline" id="cancel-action">إلغاء</button><button type="button" class="btn btn-primary" id="simulate-action">جرّب الإجراء محليًا</button></div>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
