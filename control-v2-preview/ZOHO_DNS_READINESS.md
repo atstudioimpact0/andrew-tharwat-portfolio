@@ -17,18 +17,33 @@
 - No DKIM selector record found in the zone records.
 - No `_dmarc` record found in the zone records.
 
+## MX records verified from Zoho Admin Console screenshot (8 Oct 2026)
+The account-specific **atstudioimpact.com → Email Configuration → MX** page displays these exact records. These are no longer illustrative and are safe to use for the **mail-only DNS change** once an additive write mechanism is available:
+
+| Record type | Host | Priority | Value |
+|---|---|---:|---|
+| MX | @ | 10 | mx.zoho.com |
+| MX | @ | 20 | mx2.zoho.com |
+| MX | @ | 50 | mx3.zoho.com |
+
+**Current Vercel DNS:** at the recheck after screenshot delivery, there were no MX records; no SPF, DKIM, or DMARC records were present either.
+
+**Execution blocker:** the connected Vercel actions can READ records, UPDATE an existing record, or REPLACE THE ENTIRE DNS ZONE; they do not expose a safe incremental **create DNS record** operation. Do **not** overwrite the entire zone, because it includes Vercel-managed ALIAS records and Move Now routing/verification records. The safe alternatives are adding these three MX records in the Vercel DNS dashboard or using a connected Work browser capable of clicking Add Record; then verify.
+
+**Zoho console next:** click Verify on the MX screen after propagation. Collect account-specific SPF and DKIM pages before adding mail authentication records.
+
 ## Required confirmation FROM THE ACTUAL Zoho account
 Open **Zoho Mail Admin Console → Domains → atstudioimpact.com → Email Configuration / View DNS Records**.
 
 Capture these exact values:
 1. **Mailbox exists and is enabled** (hello@atstudioimpact.com) — confirm in Users.
-2. **Zoho data center / region** and displayed domain-specific MX list with priorities, not guessed from TXT verification.
+2. **Zoho MX records confirmed** from provided Zoho Admin Console image (see table above).
 3. **SPF** required by the Zoho account, and any other authorized outbound mail providers. Only ONE SPF TXT record can exist at the apex.
 4. **DKIM selector** and full public TXT value generated in the Zoho Admin Console. Never invent a DKIM key/selector; do not post the private key.
 5. **DMARC** can be introduced in monitoring mode once an active reporting mailbox is selected; tune enforcement after testing.
 6. Confirm whether **Zoho ZeptoMail** will be the approved transactional sender for website OTP/notifications. Zoho Mail itself is not suitable for automated messages. Do not enable or purchase ZeptoMail without approval.
 
-## Published Zoho reference values (examples, DO NOT apply without account confirmation)
+## Zoho reference SPF (still an EXAMPLE — do not apply until the actual account SPF screen is checked)
 For some Zoho .com-hosted accounts, the public example is:
 | Type | Host | Value | Priority |
 |---|---|---|---|
