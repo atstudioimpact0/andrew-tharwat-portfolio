@@ -1,4 +1,4 @@
-/* Rozy Beauty — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
+/* ROZY STORE — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
 (() => {
   'use strict';
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -26,7 +26,7 @@
     const fail = () => {
       const span = document.createElement('span');
       span.className = img.classList.contains('hero__logo') ? 'hero__fallback' : 'footer__fallback';
-      span.textContent = 'Rozy Beauty';
+      span.textContent = 'ROZY STORE';
       img.replaceWith(span);
     };
     if (img.complete && img.naturalWidth === 0) fail();
@@ -233,9 +233,9 @@
       cartRoot.innerHTML = `
 ${ok.length ? `<section class="cgroup" aria-labelledby="g-order">
   <div class="cgroup__head">
-    <h2 id="g-order">Your order</h2>
-    <span class="badge badge--pre">Expected delivery ${esc(date(latest(ok.map((x) => x.deliveryDate))))}</span>
-    <span class="fine">Orders are delivered together once all items are ready. Reservation payment: ${esc(ph(cat.site.preorderDeposit, 'amount to be confirmed'))}.</span>
+    <h2 id="g-order">Your enquiry selection</h2>
+    <span class="badge badge--pre">Delivery timing: subject to confirmation</span>
+    <span class="fine">This selection is an enquiry only. Availability, final price, payment terms and delivery are reviewed before any order.</span>
   </div>
   ${ok.map(lineHtml).join('')}
 </section>` : ''}
@@ -247,7 +247,7 @@ ${ok.length ? `<section class="summary" aria-label="Order summary">
   <div class="summary__row"><span>Products</span><strong>${esc(price(subtotal))}</strong></div>
   <div class="summary__row"><span>Delivery estimate</span><span>${esc(ph(cat.site.shippingEstimate, 'Delivery estimate pending'))}</span></div>
   <p class="fine">Final delivery charges are confirmed before payment.</p>
-  <div class="summary__row summary__row--total"><span>Total</span><span>${esc(price(subtotal))} + delivery</span></div>
+  <div class="summary__row summary__row--total"><span>Final payable amount</span><span>Confirmed in your ROZY quotation</span></div>
 </section>` : ''}`;
     };
 
@@ -266,7 +266,7 @@ ${ok.length ? `<section class="summary" aria-label="Order summary">
       saveCart(cart);
       render();
     });
-    // Checkout: until a payment gateway is connected, the order goes to the store as a WhatsApp message.
+    // Preview-only request preparation. No order is submitted, paid, or confirmed here.
     const checkoutForm = $('[data-checkout-form]');
     const checkoutDone = $('[data-checkout-done]');
     let order = { lines: [] };
@@ -284,35 +284,35 @@ ${ok.length ? `<section class="summary" aria-label="Order summary">
       if (!d.name) return fail('Please enter your full name.', 'c-name');
       if (!/^01[0125]\d{8}$/.test(phone)) return fail('Please enter a valid 11-digit Egyptian mobile number beginning with 01.', 'c-phone');
       if (!d.governorate) return fail('Please select a governorate.', 'c-gov');
-      if (!d.area) return fail('Please enter your area.', 'c-area');
-      if (!d.address) return fail('Please enter your full delivery address.', 'c-address');
+      
+      
       if (!order.lines.length) return;
 
       const now = new Date();
       const ref = `BR-${String(now.getFullYear()).slice(2)}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
       const text = [
-        `New order from ${cat.site.name}`,
-        `Order reference: ${ref}`,
+        `Unsubmitted enquiry preview from ${cat.site.name}`,
+        `Preview reference (not an order): ${ref}`,
         '',
         ...order.lines.map((x) => `• ${x.name} (${x.brandText}) × ${x.qty}${typeof x.price === 'number' ? ` — ${price(x.price * x.qty)}` : ''}`),
         '',
         `Products: ${price(order.subtotal)} + delivery`,
-        `Expected delivery: ${date(order.deliveryDate)}`,
+        `Delivery estimate: subject to confirmation`,
         '',
         `Name: ${d.name}`,
         `Mobile: ${phone}`,
-        `Address: ${d.governorate}, ${d.area}, ${d.address}`,
+        `Destination: ${[d.governorate, d.area].filter(Boolean).join(', ')}`,
         d.note && `Notes: ${d.note}`,
       ].filter((l) => l !== null && l !== undefined && l !== false).join('\n');
 
       const wa = cat.site.whatsappNumber ? `https://wa.me/${cat.site.whatsappNumber}?text=${encodeURIComponent(text)}` : null;
       checkoutDone.innerHTML = `
-<h2>Your order details are ready.</h2>
-<p>Your reference <strong dir="ltr">${esc(ref)}</strong>. Keep this reference with your prepared order details.</p>
+<h2>Your enquiry preview is ready.</h2>
+<p>Preview reference <strong dir="ltr">${esc(ref)}</strong> — not a submitted or confirmed order.</p>
 ${wa
-  ? `<a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">Open WhatsApp to Send Your Order</a>
+  ? `<a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">Open WhatsApp (optional)</a>
 <p class="fine">An order is confirmed only after we receive your message and agree the delivery and payment details with you.</p>`
-  : '<p class="fine">Preview only: your order has not been sent. The store contact is not connected. Your prepared details appear below.</p>'}
+  : '<p class="fine">Preview only: your enquiry has not been submitted or saved. No payment is collected.</p>'}
 <pre class="order-text">${esc(text)}</pre>
 <button class="btn btn--outline-green" type="button" data-copy-order>Copy Order Details</button>
 <button class="btn btn--link" type="button" data-edit-order>Return to Your Bag</button>`;
