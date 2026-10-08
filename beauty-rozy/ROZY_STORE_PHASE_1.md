@@ -16,6 +16,29 @@ Source branch: `codex/rozy-premium-brands` at commit `156d706f2db9d8a765020f0b0b
 
 **Repository note:** The current draft PR #15 targets `codex/rozy-premium-brands` only for an intelligible diff against its historical source. That technical PR base does not mean the old branch is the strategic mainline. Before release, review the combined change set against the real production branch.
 
+## Decision log — 2026-10-08: PRIMARY DEVELOPMENT TRACK APPROVED
+
+**Approved by project owner:** ROZY STORE sourced-to-order customer experience is the single PRIMARY track for all subsequent website and order-workflow development.
+
+### Canonical development source of truth
+- Primary development branch: `codex/rozy-store-order-on-demand-v1` (or a new feature branch created from its current reviewed head).
+- Primary interactive journey: `/beauty-rozy/preview/` as the UX reference for the customer workflow. The demo itself is NOT the production ordering system.
+- Primary identity: **ROZY STORE**, where ROZY is visually dominant, STORE is secondary.
+- Primary business workflow: curated product discovery → request availability → ROZY supplier/price/timing verification → written offer → customer acceptance → payment under approved terms → sourcing and delivery updates.
+- Prior track `codex/rozy-premium-brands` and earlier work such as `beauty-rozy-premium-v1` are **reference material only**. They may contribute reviewed imagery, layout, editorial components and code where demonstrably beneficial, without replacing the new customer journey or reintroducing outdated naming or German-origin claims.
+- No parallel competing implementation: new ROZY features should branch from the current primary track, with cherry-picks/manual integration only after specific review of differences.
+- Keep legacy URLs `/beauty-rozy/` working for now; changing paths requires a separate redirect/SEO plan.
+- **Not approved:** changing repository default `main`, merging PRs, promoting previews, modifying DNS, connecting payments, inventing stock or prices, or publishing production. Each requires its own review and release approval.
+- Preserve the current approved premium visual language while prioritizing ease of use, truthful sourcing and clarity of the customer's next step.
+
+### Immediate implementation priority
+1. Replace demo-specific flow with a reusable product page experience.
+2. Add persisted enquiries and a simple internal ROZY quote workflow with role-based security.
+3. Implement quote review / approval and customer tracking without mandatory WhatsApp detours.
+4. Validate mobile and desktop usability, then approve a preview as a release candidate before any production merge.
+
+---
+
 ## Approved direction
 - Public-facing identity: **ROZY STORE**, with ROZY visually primary and STORE secondary.
 - Premium curated beauty destination, English-first visual experience, customer clarity over decoration.
