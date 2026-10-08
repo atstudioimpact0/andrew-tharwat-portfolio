@@ -59,19 +59,19 @@
 <div data-cart-root=""><p class="fine">Preparing your bag…</p></div>
 
 <form class="form checkout" data-checkout-form="" novalidate="" hidden="">
-  <h2>Delivery details</h2>
+  <h2>Contact details for your enquiry</h2>
   <p class="fine">This preview prepares an enquiry only. Availability, final price and delivery timing must be confirmed by ROZY STORE before any payment.</p>
   <div class="field"><label for="c-name">Full name</label><input id="c-name" name="name" type="text" autocomplete="name" required=""></div>
   <div class="field"><label for="c-phone">Mobile number (WhatsApp)</label><input id="c-phone" name="phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" placeholder="01xxxxxxxxx" required=""></div>
   <div class="field-row field-row--even">
     <div class="field"><label for="c-gov">Governorate</label><select id="c-gov" name="governorate" required=""><option value="">Please select</option><option>Cairo</option><option>Giza</option><option>Alexandria</option><option>Qalyubia</option><option>Sharqia</option><option>Dakahlia</option><option>Beheira</option><option>Gharbia</option><option>Monufia</option><option>Kafr El Sheikh</option><option>Damietta</option><option>Port Said</option><option>Ismailia</option><option>Suez</option><option>Faiyum</option><option>Beni Suef</option><option>Minya</option><option>Asyut</option><option>Sohag</option><option>Qena</option><option>Luxor</option><option>Aswan</option><option>Red Sea</option><option>New Valley</option><option>Matrouh</option><option>North Sinai</option><option>South Sinai</option></select></div>
-    <div class="field"><label for="c-area">Area</label><input id="c-area" name="area" type="text" autocomplete="address-level2" required=""></div>
+    <div class="field"><label for="c-area">Area (optional)</label><input id="c-area" name="area" type="text" autocomplete="address-level2"></div>
   </div>
-  <div class="field"><label for="c-address">Delivery address</label><textarea id="c-address" name="address" rows="2" autocomplete="street-address" placeholder="Street, building, floor and a nearby landmark" required=""></textarea></div>
+  
   <div class="field"><label for="c-note">A personal note (optional)</label><textarea id="c-note" name="note" rows="2"></textarea></div>
   <p class="form__error" role="alert" data-form-error="" hidden=""></p>
   <button class="btn btn--primary btn--block btn--lg" type="submit">Preview Your Enquiry</button>
-  <p class="fine center">No payment is taken here. Your order must be confirmed first.</p>
+  <p class="fine center">No payment is taken here. This request is not submitted or saved in the preview.</p>
 </form>
 
 <section class="done" data-checkout-done="" hidden="" tabindex="-1" aria-live="polite"></section>
