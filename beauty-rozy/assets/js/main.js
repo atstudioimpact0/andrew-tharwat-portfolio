@@ -1,4 +1,4 @@
-/* Rozy Beauty — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
+/* ROZY STORE — progressive enhancement. Every page renders without this file; it adds filters, cart and forms. */
 (() => {
   'use strict';
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -26,7 +26,7 @@
     const fail = () => {
       const span = document.createElement('span');
       span.className = img.classList.contains('hero__logo') ? 'hero__fallback' : 'footer__fallback';
-      span.textContent = 'Rozy Beauty';
+      span.textContent = 'ROZY STORE';
       img.replaceWith(span);
     };
     if (img.complete && img.naturalWidth === 0) fail();
@@ -266,7 +266,7 @@ ${ok.length ? `<section class="summary" aria-label="Order summary">
       saveCart(cart);
       render();
     });
-    // Checkout: until a payment gateway is connected, the order goes to the store as a WhatsApp message.
+    // Preview-only request preparation. No order is submitted, paid, or confirmed here.
     const checkoutForm = $('[data-checkout-form]');
     const checkoutDone = $('[data-checkout-done]');
     let order = { lines: [] };
@@ -291,13 +291,13 @@ ${ok.length ? `<section class="summary" aria-label="Order summary">
       const now = new Date();
       const ref = `BR-${String(now.getFullYear()).slice(2)}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
       const text = [
-        `New order from ${cat.site.name}`,
-        `Order reference: ${ref}`,
+        `Unsubmitted enquiry preview from ${cat.site.name}`,
+        `Preview reference (not an order): ${ref}`,
         '',
         ...order.lines.map((x) => `• ${x.name} (${x.brandText}) × ${x.qty}${typeof x.price === 'number' ? ` — ${price(x.price * x.qty)}` : ''}`),
         '',
         `Products: ${price(order.subtotal)} + delivery`,
-        `Expected delivery: ${date(order.deliveryDate)}`,
+        `Delivery estimate: subject to confirmation`,
         '',
         `Name: ${d.name}`,
         `Mobile: ${phone}`,
@@ -307,8 +307,8 @@ ${ok.length ? `<section class="summary" aria-label="Order summary">
 
       const wa = cat.site.whatsappNumber ? `https://wa.me/${cat.site.whatsappNumber}?text=${encodeURIComponent(text)}` : null;
       checkoutDone.innerHTML = `
-<h2>Your order details are ready.</h2>
-<p>Your reference <strong dir="ltr">${esc(ref)}</strong>. Keep this reference with your prepared order details.</p>
+<h2>Your enquiry preview is ready.</h2>
+<p>Preview reference <strong dir="ltr">${esc(ref)}</strong> — not a submitted or confirmed order.</p>
 ${wa
   ? `<a class="btn btn--primary btn--lg" href="${wa}" target="_blank" rel="noopener">Open WhatsApp to Send Your Order</a>
 <p class="fine">An order is confirmed only after we receive your message and agree the delivery and payment details with you.</p>`
