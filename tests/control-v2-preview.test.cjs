@@ -111,6 +111,8 @@ test('client case workspace uses status-specific follow-up and local decision hi
  assert.match(js,/state\.outcomes\.set\(state\.selectedCase,action\)/);
  assert.match(js,/action==='ask'\?'journalAsk':'journalReview'/);
  assert.match(js,/function caseLabel\(c\)/);
+ assert.match(js,/state\.caseFilter='handled'/);
+ assert.match(js,/state\.caseFilter='all';setView\('clients'\)/);
  assert.match(js,/awaitingInfo:'بانتظار رد/);
  assert.match(js,/directionReviewed:'مراجعة مسجلة/);
  assert.match(css,/\.case-detail\[hidden\]\{display:none!important\}/);
