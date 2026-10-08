@@ -1,0 +1,81 @@
+/* ROZY STORE — approved makeup editorial hero, 2026-10-08.
+   Isolated to home page; no change to product/checkout behavior. */
+.rozy-brands .rozy-store-hero {
+  --hero-espresso:#302721; --hero-muted:#5e4b43;
+  position:relative; isolation:isolate; display:flex; align-items:center; overflow:hidden;
+  width:min(1480px,calc(100% - 64px)); max-width:none; min-height:clamp(570px,49vw,720px);
+  margin:26px auto 0; padding:clamp(42px,6vw,94px) clamp(32px,6.1vw,108px);
+  background:#dfc9b7; color:var(--hero-espresso); box-shadow:0 18px 60px rgba(51,38,31,.035);
+}
+.rozy-store-hero__media {position:absolute;z-index:-2;inset:0;width:100%;height:100%;overflow:hidden}
+.rozy-store-hero__media img {display:block;width:100%;height:100%;object-fit:cover;object-position:center center;max-width:none;filter:saturate(.91) contrast(.96)}
+.rozy-store-hero::before {content:"";z-index:-1;position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(245,230,211,.48) 0%,rgba(245,230,211,.22) 35%,transparent 65%)}
+.rozy-store-hero__copy {width:min(540px,51%);position:relative;z-index:2}
+.rozy-store-hero__eyebrow {display:flex;align-items:center;gap:14px;margin:0 0 clamp(24px,3vw,48px);
+  color:#4d3830;font:600 10px/1.4 'Inter',sans-serif;letter-spacing:.31em;text-transform:uppercase}
+.rozy-store-hero__eyebrow::before {content:"";display:block;width:37px;height:1px;background:#5d4034;flex:none}
+.rozy-store-hero h1 {font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;
+  font-size:clamp(78px,8.7vw,144px);letter-spacing:-.065em;line-height:.87;
+  margin:0 0 29px;color:var(--hero-espresso)}
+.rozy-store-hero h1 em {font-weight:400;font-style:italic;color:#754f44;display:block;letter-spacing:-.045em;white-space:nowrap}
+.rozy-store-hero__subline {color:var(--hero-muted);font:400 clamp(13px,1.18vw,16px)/1.75 'Inter',Arial,sans-serif;
+  max-width:300px;letter-spacing:.005em;margin:0}
+.rozy-store-hero__actions {display:flex;align-items:center;flex-wrap:wrap;gap:14px 24px;margin-top:38px}
+.rozy-store-hero__cta {min-height:52px;padding:15px 28px;display:inline-flex;gap:30px;align-items:center;
+  justify-content:center;color:#fdfaf5;background:#362d28;border:1px solid #362d28;
+  font:500 11px/1 'Inter',sans-serif;letter-spacing:.07em;transition:background .2s,color .2s,transform .2s}
+.rozy-store-hero__cta:hover {background:#5d4438;color:white;transform:translateY(-2px)}
+.rozy-store-hero__cta--secondary {background:rgba(255,250,244,.16);border-color:#5a463b;color:#392d26}
+.rozy-store-hero__cta--secondary:hover {background:#f6ebdd;color:#392d26}
+.rozy-store-hero__cta span[aria-hidden] {font-size:16px;font-weight:400;line-height:0}
+.rozy-store-hero__folio {position:absolute;right:clamp(24px,3vw,52px);bottom:clamp(20px,3vw,38px);
+  display:flex;flex-direction:column;align-items:flex-end;gap:5px;color:#f9f0e7;
+  font:500 10px/1.4 'Inter',sans-serif;letter-spacing:.24em;text-shadow:0 1px 8px #38251d65}
+.rozy-store-hero__folio b {font:400 27px/1 'Cormorant Garamond',serif;letter-spacing:.02em}
+.rozy-store-note {width:min(1480px,calc(100% - 64px));max-width:none;margin:0 auto;padding:23px 28px;
+  display:flex;align-items:center;gap:18px;justify-content:center;border-bottom:1px solid #d8d0c7;background:#fbf9f5;
+  font:400 11px/1.7 'Inter',sans-serif;color:#62544c;letter-spacing:.018em}
+.rozy-store-note__mark {flex:none;width:20px;height:20px;border:1px solid #8a7464;border-radius:50%;
+  display:grid;place-items:center;font-family:Georgia,serif;font-size:12px;color:#624f44}
+.rozy-store-note strong {font-weight:600;color:#4d3d34}
+.rozy-home-trust {width:min(1480px,calc(100% - 64px));max-width:none;margin:0 auto 19px;padding:27px 0 24px;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid #ded7cf}
+.rozy-home-trust__item {padding:0 22px;display:flex;align-items:center;justify-content:center;gap:13px;
+  border-right:1px solid #d8d0c7;font:500 10px/1.65 'Inter',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#68574f;text-align:center}
+.rozy-home-trust__item:last-child {border-right:0}
+.rozy-home-trust__index {color:#b29a8b;font:400 20px/1 'Cormorant Garamond',serif;letter-spacing:0}
+.rozy-store-hero a:focus-visible,.rozy-home-trust a:focus-visible {outline:3px solid #704439;outline-offset:3px}
+@media(max-width:1000px) {
+  .rozy-brands .rozy-store-hero {width:calc(100% - 40px);min-height:540px;padding:55px 42px}
+  .rozy-store-hero h1 {font-size:clamp(72px,8.1vw,100px)}
+  .rozy-store-hero__copy {width:57%}
+  .rozy-store-note,.rozy-home-trust {width:calc(100% - 40px)}
+}
+@media(max-width:700px) {
+  .rozy-brands .rozy-store-hero {display:flex;flex-direction:column;justify-content:flex-end;align-items:stretch;
+    width:calc(100% - 24px);min-height:0;margin-top:10px;padding:0;background:#efe3d9}
+  .rozy-store-hero__media {position:relative;z-index:auto;width:100%;aspect-ratio:5/4;max-height:470px}
+  .rozy-store-hero__media img {object-fit:cover;object-position:73% 35%;height:100%}
+  .rozy-store-hero::before {display:none}
+  .rozy-store-hero__copy {width:100%;padding:29px 27px 39px;background:#f5eee6}
+  .rozy-store-hero__eyebrow {margin:0 0 17px;font-size:9px;gap:10px;letter-spacing:.22em}
+  .rozy-store-hero__eyebrow::before {width:23px}
+  .rozy-store-hero h1 {font-size:clamp(67px,11vw,92px);margin-bottom:15px;line-height:.88}
+  .rozy-store-hero h1 em {white-space:normal}
+  .rozy-store-hero__subline {font-size:13px;max-width:none}
+  .rozy-store-hero__actions {margin-top:23px;gap:9px}
+  .rozy-store-hero__cta {min-height:48px;padding:15px 16px;gap:15px;font-size:10px}
+  .rozy-store-hero__folio {top:16px;bottom:auto;right:17px;font-size:8px;letter-spacing:.14em}
+  .rozy-store-hero__folio b {font-size:20px}
+  .rozy-store-note {width:calc(100% - 24px);font-size:10px;text-align:left;padding:19px 18px;gap:12px}
+  .rozy-home-trust {width:calc(100% - 24px);padding:18px 0;gap:0}
+  .rozy-home-trust__item {gap:6px;flex-direction:column;font-size:9px;letter-spacing:.01em;padding:0 8px}
+  .rozy-home-trust__index {font-size:19px}
+}
+@media(max-width:380px) {
+  .rozy-store-hero h1 {font-size:63px}
+  .rozy-store-hero__cta {padding-inline:12px;font-size:9px}
+  .rozy-home-trust__item {font-size:8px}
+}
+@media(prefers-reduced-motion:reduce) {.rozy-store-hero__cta {transition:none}.rozy-store-hero__cta:hover {transform:none}}
