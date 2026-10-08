@@ -11,7 +11,8 @@ BEGIN;
 
 CREATE SCHEMA IF NOT EXISTS ats_identity_v2;
 REVOKE ALL ON SCHEMA ats_identity_v2 FROM PUBLIC;
-REVOKE ALL ON SCHEMA ats_identity_v2 FROM anon, authenticated;
+-- If staging uses a vanilla PostgreSQL instance, anon/authenticated roles
+-- may not exist. PUBLIC revocation + FORCE RLS deny-by-default apply regardless.
 
 CREATE TABLE IF NOT EXISTS ats_identity_v2.staff_identity (
   issuer text NOT NULL,
@@ -88,8 +89,10 @@ ALTER TABLE ats_identity_v2.staff_sessions FORCE ROW LEVEL SECURITY;
 ALTER TABLE ats_identity_v2.security_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ats_identity_v2.security_events FORCE ROW LEVEL SECURITY;
 
-REVOKE ALL ON ALL TABLES IN SCHEMA ats_identity_v2 FROM PUBLIC, anon, authenticated;
-REVOKE ALL ON ALL SEQUENCES IN SCHEMA ats_identity_v2 FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON ALL TABLES IN SCHEMA ats_identity_v2 FROM PUBLIC;
+REVOKE ALL ON ALL SEQUENCES IN SCHEMA ats_identity_v2 FROM PUBLIC;
+-- PostgreSQL staging installations with additional API roles must explicitly
+-- revoke their inherited grants as part of the reviewed deployment plan.
 
 COMMIT;
 
