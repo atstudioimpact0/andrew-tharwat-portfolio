@@ -3,6 +3,7 @@
   'use strict';
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const english = document.documentElement.lang === 'en';
     const CART = document.body.dataset.cart || '/cart/';
   const BRANDS = document.body.dataset.brands || '/brands/';
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -73,8 +74,10 @@
       results.innerHTML = hits.length
         ? hits.map((x) => `<li><a class="search__hit" href="${x.url}">
             <span class="media search__img" aria-hidden="true">${x.image ? `<img src="${x.image}" alt="" loading="lazy">` : (x.kind === 'brand' ? '★' : '')}</span>
-            <span class="search__text"><strong dir="auto">${esc(x.title)}</strong><span>${esc(x.kind === 'brand' ? `ماركة · ${x.sub}` : x.sub)}</span></span></a></li>`).join('')
-        : `<li class="search__none">مفيش نتايج لـ «${esc(input.value.trim())}». <a href="${document.body.dataset.request}">اطلبيه مخصوص</a></li>`;
+            <span class="search__text"><strong dir="auto">${esc(x.title)}</strong><span>${esc(x.kind === 'brand' ? `${english ? 'Brand' : 'ماركة'} · ${x.sub}` : x.sub)}</span></span></a></li>`).join('')
+        : english
+          ? `<li class="search__none">No results for “${esc(input.value.trim())}”. <a href="${document.body.dataset.request}">Make a special request</a></li>`
+          : `<li class="search__none">مفيش نتايج لـ «${esc(input.value.trim())}». <a href="${document.body.dataset.request}">اطلبيه مخصوص</a></li>`;
     };
     const setOpen = (open) => {
       searchBox.hidden = !open;
@@ -104,7 +107,7 @@
     const n = cart.reduce((s, l) => s + l.qty, 0);
     $$('[data-cart-count]').forEach((el) => { el.textContent = n; el.hidden = n === 0; });
     const link = $('.cartlink');
-    if (link) link.setAttribute('aria-label', n ? `السلة، فيها ${n}` : 'السلة');
+    if (link) link.setAttribute('aria-label', english ? (n ? `Bag, ${n} ${n === 1 ? 'item' : 'items'}` : 'Bag') : (n ? `السلة، فيها ${n}` : 'السلة'));
   };
   updateCount();
 
@@ -112,7 +115,7 @@
   const toast = $('.toast');
   let toastTimer;
   const showToast = (msg) => {
-    toast.innerHTML = `<span>${esc(msg)}</span><a href="${CART}">شوفي السلة</a>`;
+    toast.innerHTML = `<span>${esc(msg)}</span><a href="${CART}">${english ? 'View Bag' : 'شوفي السلة'}</a>`;
     toast.hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toast.hidden = true; }, 3500);
@@ -132,7 +135,7 @@
     if (!btn) return;
     const { kind, id } = btn.dataset;
     addToCart([{ kind, id }]);
-    showToast(kind === 'bundle' ? 'الباكيج اتضاف للسلة' : 'اتضاف للسلة');
+    showToast(english ? (kind === 'bundle' ? 'The set has been added to your bag.' : 'Added to your bag.') : (kind === 'bundle' ? 'الباكيج اتضاف للسلة' : 'اتضاف للسلة'));
   });
 
   /* ---------- Brands filters ---------- */
@@ -567,3 +570,4 @@ ${picked.length ? `<div class="summary">
     });
   }
 })();
+

@@ -10,7 +10,7 @@
   const products = [...root.querySelectorAll('[data-product-type]')];
   const allowedBrands = new Set(brands.map(el => el.dataset.rozyBrand));
   const allowedTypes = new Set(types.map(el => el.dataset.rozyType));
-  const labels = { skin: 'البشرة', hair: 'الشعر', body: 'الجسم', makeup: 'المكياج' };
+  const labels = { skin: 'Skin Care', hair: 'Hair Care', body: 'Body Care', makeup: 'Makeup' };
   const panel = root.querySelector('[data-rozy-panel]');
   const gallery = root.querySelector('[data-rozy-gallery]');
   const brandTools = root.querySelector('[data-rozy-brandtools]');
@@ -59,9 +59,9 @@
       if (!product.hidden) productCount++;
     });
     productSection.hidden = productCount === 0;
-    count.textContent = brandCount === 1 ? 'علامة واحدة' : brandCount === 2 ? 'علامتان' : `${brandCount} علامات`;
-    heading.textContent = state.mode === 'types' && state.type !== 'all' ? `علامات ${labels[state.type]}` : 'العلامات في ROZY';
-    root.querySelector('#type-products-title').textContent = state.type !== 'all' ? `اكتشفي منتجات ${labels[state.type]}` : 'منتجات تستحق الاكتشاف';
+    count.textContent = `${brandCount} ${brandCount === 1 ? 'brand' : 'brands'}`;
+    heading.textContent = state.mode === 'types' && state.type !== 'all' ? `${labels[state.type]} · The brands` : 'The brand directory';
+    root.querySelector('#type-products-title').textContent = state.type !== 'all' ? `${labels[state.type]} · The edit` : 'Objects of your ritual';
     navLinks.forEach(link => {
       const url = new URL(link.href);
       if (url.pathname.replace(/\/$/, '') !== location.pathname.replace(/\/$/, '')) return;
@@ -93,7 +93,7 @@
     else if (button.dataset.rozyType) navigate({ mode: 'types', type: button.dataset.rozyType, brand: 'all' });
   });
   root.querySelector('[data-rozy-tabs]').addEventListener('keydown', event => {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || !tabs.includes(event.target)) return;
+    if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || !tabs.includes(event.target)) return;
     event.preventDefault();
     const tab = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[tabs.length - 1] : tabs.find(item => item !== event.target);
     navigate({ mode: tab.dataset.rozyMode, brand: 'all', type: 'all' });

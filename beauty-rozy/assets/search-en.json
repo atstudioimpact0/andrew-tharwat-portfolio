@@ -1,0 +1,178 @@
+[
+  {
+    "kind": "brand",
+    "title": "Balea",
+    "sub": "Skin Care · Hair Care · Body Care",
+    "url": "/beauty-rozy/brands/balea/",
+    "terms": "Balea Skin Care · Hair Care · Body Care",
+    "image": "/beauty-rozy/assets/img/brands/balea.webp"
+  },
+  {
+    "kind": "brand",
+    "title": "Medicube",
+    "sub": "Skin Care",
+    "url": "/beauty-rozy/brands/medicube/",
+    "terms": "Medicube Skin Care",
+    "image": "/beauty-rozy/assets/img/brands/medicube.webp"
+  },
+  {
+    "kind": "brand",
+    "title": "lavera",
+    "sub": "Skin Care · Hair Care · Makeup",
+    "url": "/beauty-rozy/brands/lavera/",
+    "terms": "lavera Skin Care · Hair Care · Makeup",
+    "image": "/beauty-rozy/assets/img/brands/lavera.webp"
+  },
+  {
+    "kind": "brand",
+    "title": "e.l.f.",
+    "sub": "Makeup · Skin Care",
+    "url": "/beauty-rozy/brands/elf/",
+    "terms": "e.l.f. Makeup · Skin Care",
+    "image": "/beauty-rozy/assets/img/brands/elf.webp"
+  },
+  {
+    "kind": "brand",
+    "title": "Huda Beauty",
+    "sub": "Makeup",
+    "url": "/beauty-rozy/brands/huda-beauty/",
+    "terms": "Huda Beauty Makeup",
+    "image": "/beauty-rozy/assets/img/brands/huda-beauty.webp"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Aqua Feuchtigkeits Creme-Gel",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-aqua-feuchtigkeits-creme-gel/",
+    "image": "/beauty-rozy/assets/img/products/balea-aqua-feuchtigkeits-creme-gel/card.webp",
+    "terms": "Balea Aqua Feuchtigkeits Creme-Gel Balea · Skin Care cream moisturiser moisturizer"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Aqua Feuchtigkeits Serum",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-aqua-feuchtigkeits-serum/",
+    "image": "/beauty-rozy/assets/img/products/balea-aqua-feuchtigkeits-serum/card.webp",
+    "terms": "Balea Aqua Feuchtigkeits Serum Balea · Skin Care serum"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Beauty Expert Ceramide Serum",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-beauty-expert-ceramide-serum/",
+    "image": "/beauty-rozy/assets/img/products/balea-beauty-expert-ceramide-serum/card.webp",
+    "terms": "Balea Beauty Expert Ceramide Serum Balea · Skin Care serum"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Beauty Expert Liquid Peeling 2% BHA",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-beauty-expert-liquid-peeling-2-bha/",
+    "image": null,
+    "terms": "Balea Beauty Expert Liquid Peeling 2% BHA Balea · Skin Care"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Bodylotion Urea 5%",
+    "sub": "Balea · Body Care",
+    "url": "/beauty-rozy/products/balea-bodylotion-urea-5/",
+    "image": "/beauty-rozy/assets/img/products/balea-bodylotion-urea-5/card.webp",
+    "terms": "Balea Bodylotion Urea 5% Balea · Body Care body lotion"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Duschöl",
+    "sub": "Balea · Body Care",
+    "url": "/beauty-rozy/products/balea-duschoel/",
+    "image": "/beauty-rozy/assets/img/products/balea-duschoel/card.webp",
+    "terms": "Balea Duschöl Balea · Body Care shower oil body wash"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Feuchtigkeit Shampoo",
+    "sub": "Balea · Hair Care",
+    "url": "/beauty-rozy/products/balea-feuchtigkeit-shampoo/",
+    "image": "/beauty-rozy/assets/img/products/balea-feuchtigkeit-shampoo/card.webp",
+    "terms": "Balea Feuchtigkeit Shampoo Balea · Hair Care shampoo hair wash"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Med Intensivcreme 7% Urea",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-med-intensivcreme-7-urea/",
+    "image": "/beauty-rozy/assets/img/products/balea-med-intensivcreme-7-urea/card.webp",
+    "terms": "Balea Med Intensivcreme 7% Urea Balea · Skin Care cream moisturiser moisturizer"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Med Ultra Sensitive Tagescreme LSF 50",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-med-ultra-sensitive-tagescreme-lsf-50/",
+    "image": "/beauty-rozy/assets/img/products/balea-med-ultra-sensitive-tagescreme-lsf-50/card.webp",
+    "terms": "Balea Med Ultra Sensitive Tagescreme LSF 50 Balea · Skin Care cream moisturiser moisturizer day cream sunscreen"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Med Ultra Sensitive Waschgel",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-med-ultra-sensitive-waschgel/",
+    "image": "/beauty-rozy/assets/img/products/balea-med-ultra-sensitive-waschgel/card.webp",
+    "terms": "Balea Med Ultra Sensitive Waschgel Balea · Skin Care cleansing gel face wash"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Niacinamide Serum 10% + Zinc",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-niacinamide-serum-10-zinc/",
+    "image": "/beauty-rozy/assets/img/products/balea-niacinamide-serum-10-zinc/card.webp",
+    "terms": "Balea Niacinamide Serum 10% + Zinc Balea · Skin Care serum"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Plex Care Haaröl / Serum",
+    "sub": "Balea · Hair Care",
+    "url": "/beauty-rozy/products/balea-plex-care-haaroel/",
+    "image": "/beauty-rozy/assets/img/products/balea-plex-care-haaroel/card.webp",
+    "terms": "Balea Plex Care Haaröl / Serum Balea · Hair Care hair oil"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Q10 Anti-Falten Nachtcreme",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-q10-anti-falten-nachtcreme/",
+    "image": "/beauty-rozy/assets/img/products/balea-q10-anti-falten-nachtcreme/card.webp",
+    "terms": "Balea Q10 Anti-Falten Nachtcreme Balea · Skin Care cream moisturiser moisturizer night cream"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Reinigungsöl",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-reinigungsoel/",
+    "image": "/beauty-rozy/assets/img/products/balea-reinigungsoel/card.webp",
+    "terms": "Balea Reinigungsöl Balea · Skin Care cleansing oil cleanser"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Retinol Konzentrat",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-retinol-konzentrat/",
+    "image": "/beauty-rozy/assets/img/products/balea-retinol-konzentrat/card.webp",
+    "terms": "Balea Retinol Konzentrat Balea · Skin Care retinol concentrate"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Tiefenreinigung Shampoo",
+    "sub": "Balea · Hair Care",
+    "url": "/beauty-rozy/products/balea-tiefenreinigung-shampoo/",
+    "image": "/beauty-rozy/assets/img/products/balea-tiefenreinigung-shampoo/card.webp",
+    "terms": "Balea Tiefenreinigung Shampoo Balea · Hair Care shampoo hair wash"
+  },
+  {
+    "kind": "product",
+    "title": "Balea Vitamin C Serum",
+    "sub": "Balea · Skin Care",
+    "url": "/beauty-rozy/products/balea-vitamin-c-serum/",
+    "image": "/beauty-rozy/assets/img/products/balea-vitamin-c-serum/card.webp",
+    "terms": "Balea Vitamin C Serum Balea · Skin Care serum"
+  }
+]
