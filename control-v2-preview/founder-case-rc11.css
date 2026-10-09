@@ -49,3 +49,6 @@
 @media(max-width:840px){.rc11-case{padding:20px}.rc11-knowledge{grid-template-columns:1fr}.rc11-knowledge-card p{min-height:0}.rc11-problem p{font-size:19px}}
 @media(max-width:520px){.rc11-case{padding:15px}.rc11-case .case-head{align-items:flex-start}.rc11-case .case-head h2{font-size:23px}.rc11-problem{padding:21px}.rc11-problem p{font-size:18px}.rc11-knowledge-card{padding:19px}.rc11-decision{padding:20px}.rc11-decision h3{font-size:17px}.rc11-decision .action-row{display:block}.rc11-decision .action-row .btn{width:100%;justify-content:center}}
 @media(prefers-reduced-motion:reduce){.rc11-progressive .rc11-summary-icon{transition:none}}
+
+.rc11-handled{border-inline-start:3px solid #718c7e;background:#fff;padding:10px 14px;margin:0 0 12px;color:#36584a;font-size:12px;line-height:1.8}
+.rc11-handled[hidden]{display:none!important}
