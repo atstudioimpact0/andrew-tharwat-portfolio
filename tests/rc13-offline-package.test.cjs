@@ -34,6 +34,11 @@ test('RC13 portable visual preview builds as a SAFE mock, with no real-network b
   assert.match(picker,/data-offline-source="rc14-synthetic-only"/);
   assert.match(picker,/data-offline-source="founder-clients-rc14\.js"/);
   assert.match(picker,/founder-rc13-offline\.html/);
+  assert.match(picker,/const first=/);
+  assert.match(picker,/const after=/);
+  assert.match(picker,/id="rc15-more"/);
+  assert.match(picker,/path\.includes\("\?cursor="\)/);
+  assert.match(readme,/load 25 FICTIONAL clients/);
   assert.doesNotMatch(picker,/fetchFn:window\.fetch|<script src=|<link rel="stylesheet" href=|Bearer [A-Za-z0-9]/);
  }finally{fs.rmSync(output,{recursive:true,force:true})}
 });
