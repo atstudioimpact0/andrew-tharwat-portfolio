@@ -1,5 +1,9 @@
 
 (() => {
+  // Release A safety lock. This old Admin screen remains legacy; future AI actions
+  // require a separately reviewed, server-authorized, explicit Release B flow.
+  // UI gating is defense-in-depth only; it does NOT replace backend enforcement.
+  const LEGACY_AI_RELEASE_A_LOCK = true;
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
   const esc=(v='')=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
   const money=v=>window.ATS_I18N?.formatNumber?.(v)??new Intl.NumberFormat('en-US').format(Number(v||0));
@@ -393,11 +397,16 @@
     const btn=$('#run-diagnostic-engine');
     if(btn){
       const analyzing=stateName==='analyzing';
-      btn.disabled=analyzing;
-      btn.textContent=analyzing?'ANALYZING…':stateName==='ready'?'REFRESH ATS DIAGNOSIS':'RUN ATS DIAGNOSIS';
+      btn.disabled=LEGACY_AI_RELEASE_A_LOCK||analyzing;
+      btn.textContent=LEGACY_AI_RELEASE_A_LOCK?'AI PAUSED · RELEASE A':analyzing?'ANALYZING…':stateName==='ready'?'REFRESH ATS DIAGNOSIS':'RUN ATS DIAGNOSIS';
     }
   }
   async function ensureDeliveryBlueprint(leadId,{force=false,silent=true}={}){
+    // Release A must never call a generating function automatically or manually.
+    if(LEGACY_AI_RELEASE_A_LOCK){
+      if(!silent)notify('Blueprint generation is paused in Release A. Review existing evidence and tasks.','error');
+      return state.currentLead?.id===leadId ? state.deliveryBlueprint : null;
+    }
     if(!leadId||!sb())return null;
     const {data,error}=await sb().functions.invoke('ats-delivery-blueprint',{body:{lead_id:leadId,force}});
     if(error){
@@ -413,6 +422,10 @@
   }
 
   async function runDiagnosticEngine(silent=false){
+    if(LEGACY_AI_RELEASE_A_LOCK){
+      if(!silent)notify('AI diagnosis is paused in Release A. Use the existing client evidence and manual review.','error');
+      return;
+    }
     const lead=state.currentLead;if(!lead||!sb())return;
     const btn=$('#run-diagnostic-engine'),old=btn?.textContent;
     if(btn){btn.disabled=true;btn.textContent='ANALYZING…'}
@@ -420,7 +433,7 @@
     try{
       const {data,error}=await sb().functions.invoke('ats-problem-solver',{body:{lead_id:lead.id}});
       if(error)throw error;
-      await loadLeadDiagnosis(lead.id,{autoAnalyze:false});
+      await loadLeadDiagnosis(lead.id);
       if(String(state.discoveryCase?.analysis_state||'')==='ready'){
         const regenerateBlocked=state.deliveryBlueprint?.status==='needs_evidence'&&String(state.discoveryCase?.decision_stage||'needs_evidence')!=='needs_evidence';
         try{await ensureDeliveryBlueprint(lead.id,{force:!data?.cached||regenerateBlocked,silent:true})}catch(_){}
@@ -549,7 +562,7 @@
     renderLeadExecutionPath(executionCtx);
   }
 
-  async function loadLeadDiagnosis(leadId,{autoAnalyze=true}={}){
+  async function loadLeadDiagnosis(leadId){
     state.discoveryCase=null;state.discoveryAnswers=[];state.rootCauses=[];state.solutionTasks=[];state.diagnosticRun=null;state.deliveryBlueprint=null;
     $('#diagnosis-dimensions').innerHTML='<div class="loading-line">Loading discovery evidence…</div>';
     let cq=await sb().from('studio_discovery_cases').select('*').eq('lead_id',leadId).maybeSingle();
@@ -582,14 +595,8 @@
     const unread=state.discoveryAnswers.filter(x=>x.actor_type==='prospect'&&!x.is_read_by_admin).map(x=>x.id);
     if(unread.length){await sb().from('studio_discovery_answers').update({is_read_by_admin:true}).in('id',unread);state.discoveryAnswers.forEach(x=>{if(unread.includes(x.id))x.is_read_by_admin=true});state.loaded.inbox=false}
     renderLeadDiagnosis();updateLeadWorkspaceState();
-    if(autoAnalyze&&state.currentLead?.id===leadId&&['never_analyzed','stale'].includes(String(state.discoveryCase?.analysis_state||''))){
-      void runDiagnosticEngine(true);
-    }else if(
-      autoAnalyze&&state.currentLead?.id===leadId&&String(state.discoveryCase?.analysis_state||'')==='ready'&&
-      (!state.deliveryBlueprint||(state.deliveryBlueprint.status==='needs_evidence'&&String(state.discoveryCase?.decision_stage||'needs_evidence')!=='needs_evidence'))
-    ){
-      void ensureDeliveryBlueprint(leadId,{force:state.deliveryBlueprint?.status==='needs_evidence',silent:true});
-    }
+    // Passive by design: opening a client cannot invoke AI or rebuild a blueprint.
+    // The existing manual records are rendered above without starting a new run.
   }
   async function syncDiagnosisPhase(){
     const c=state.discoveryCase;if(!c)return;
@@ -640,7 +647,7 @@
     const source=['whatsapp','email','call','portal'].includes(channel)?channel:'admin';
     const ins=await sb().from('studio_discovery_answers').insert({case_id:c.id,question_key:key,answer,actor_type:'admin',source_channel:source,is_read_by_admin:true}).select('*').single();if(ins.error)return notify(ins.error.message,'error');
     const up=await sb().from('studio_discovery_cases').update({[key]:answer}).eq('id',c.id).select('*').single();if(up.error)return notify(up.error.message,'error');
-    state.discoveryCase=up.data;state.discoveryAnswers.unshift(ins.data);await logLeadActivity('discovery_signal_added',{question_key:key,source_channel:source,answer_preview:answer.slice(0,220)});renderLeadDiagnosis();void runDiagnosticEngine(true);
+    state.discoveryCase=up.data;state.discoveryAnswers.unshift(ins.data);await logLeadActivity('discovery_signal_added',{question_key:key,source_channel:source,answer_preview:answer.slice(0,220)});renderLeadDiagnosis(); // No auto-AI on save in Release A.
   }
 
   function setLeadFocusMode(on){
@@ -698,6 +705,7 @@
       if(existing.error)throw existing.error;
       if(existing.data)return existing.data;
     }
+    if(LEGACY_AI_RELEASE_A_LOCK)throw new Error('Playbook generation is paused in Release A. Review existing task evidence.');
     const generated=await sb().functions.invoke('ats-task-playbook',{body:{task_id:taskId,force}});
     if(generated.error)throw generated.error;
     if(!generated.data?.playbook)throw new Error(generated.data?.error||'ATS could not generate a task playbook.');
@@ -827,6 +835,13 @@
   async function openCurrentLeadTaskWorkspace(taskId=null){
     let task=(taskId?state.solutionTasks.find(x=>x.id===taskId):currentInternalLeadTask())||internalLeadTasks().find(x=>x.status==='todo');
     if(!task)return notify('No active ATS task found.','error');
+    // Do not move a task to in_progress if opening it would require
+    // automatic generation of a missing playbook.
+    if(LEGACY_AI_RELEASE_A_LOCK){
+      const existing=await sb().from('studio_task_playbooks').select('id').eq('task_id',task.id).maybeSingle();
+      if(existing.error)return notify(existing.error.message,'error');
+      if(!existing.data)return notify('No existing playbook. Automatic generation is paused in Release A.','error');
+    }
     if(task.status==='todo'){
       const now=new Date().toISOString();
       const r=await sb().from('studio_solution_tasks').update({status:'in_progress',started_at:now,updated_at:now}).eq('id',task.id).eq('status','todo').select('*').single();
