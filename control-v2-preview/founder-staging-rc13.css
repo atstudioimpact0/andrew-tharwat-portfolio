@@ -1,0 +1,35 @@
+/* AT Studio / RC13 protected staging read-only view.
+   Layered on existing RC11 premium case surfaces. No remote fonts or assets. */
+.rc13-body{min-height:100vh;margin:0;background:#f6f7f4;color:#18313b;font-family:Cairo,"Segoe UI",Tahoma,sans-serif}
+.rc13-body[hidden],.rc13-body [hidden]{display:none!important}
+.rc13-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px clamp(20px,4vw,60px);background:#071b2a;color:#fff;border-bottom:2px solid #b9a17c}
+.rc13-brand,.rc13-header-right{display:flex;align-items:center;gap:14px;min-width:0}
+.rc13-emblem{display:grid;place-items:center;width:42px;height:42px;border:1px solid #b9a17c;color:#b9a17c;font:700 16px "Segoe UI",sans-serif}
+.rc13-brand strong{display:block;font-family:Montserrat,"Segoe UI",sans-serif;font-size:12px;letter-spacing:.15em}
+.rc13-brand small{display:block;margin-top:4px;color:#a8b5bc;font-size:9px;letter-spacing:.08em}
+.rc13-tag{font-size:10px;letter-spacing:.12em;color:#c9d3d3;white-space:normal}
+.rc13-lang-btn{background:transparent;border:1px solid #70828a;color:#fff;padding:8px 11px;min-height:40px;min-width:50px;cursor:pointer}
+.rc13-lang-btn:focus-visible,.rc13-body button:focus-visible{outline:2px solid #b9a17c;outline-offset:3px}
+.rc13-container{width:min(100% - 38px,1050px);margin:0 auto;padding:clamp(22px,4vw,48px) 0 60px}
+.rc13-heading .eyebrow{color:#9d8765;font-family:Montserrat,sans-serif}
+.rc13-heading h1{font-size:clamp(26px,3vw,36px);margin:5px 0 2px;color:#142c38;line-height:1.4}
+.rc13-heading-sub{color:#71818a;font-family:Montserrat,"Segoe UI",sans-serif;font-size:11px;letter-spacing:.05em}
+.rc13-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:58px;margin:22px 0 15px}
+.rc13-safety{font-size:10px;font-weight:700;letter-spacing:.09em;color:#67817b}
+.rc13-state{border:1px solid #dce3de;background:#fff;padding:26px;min-height:135px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.rc13-state p{margin:0;font-size:14px;line-height:2;color:#4d666b}
+.rc13-footer{border-top:1px solid #e1e5df;margin-top:31px;padding-top:17px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:11px;color:#73818a}
+.rc13-metrics{padding:20px 21px;color:#415860;font-size:13px;line-height:2;overflow-wrap:anywhere}
+.rc13-context-warning{padding:0 21px 20px;color:#7b878b;font-size:11px;line-height:1.7}
+.rc13-body .case-detail{overflow:visible}
+.rc13-body .case-head{align-items:center}
+.rc13-body .rc11-problem{border-radius:2px}
+.rc13-body .rc11-decision{border-radius:2px}
+.rc13-body .rc11-decision p{overflow-wrap:anywhere}
+@media(max-width:690px){
+ .rc13-header{flex-wrap:wrap;padding:14px 18px}.rc13-tag{max-width:140px}
+ .rc13-header-right{margin-inline-start:auto}.rc13-container{width:min(100% - 24px,1050px)}
+ .rc13-toolbar{align-items:flex-start;flex-direction:column}.rc13-toolbar .btn{min-width:150px}
+ .rc13-brand small{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.rc13-body *{scroll-behavior:auto!important;transition-duration:.01ms!important}}
