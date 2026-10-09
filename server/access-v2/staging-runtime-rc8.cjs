@@ -10,7 +10,8 @@ const {createPgStaffStore}=require('./pg-staff-store-rc8.cjs');
 const {createPgOidcPendingEncrypted}=require('./pg-oidc-pending-encrypted.cjs');
 const {createRc5AuthBoundary}=require('./rc5-auth-boundary.cjs');
 const {createFounderWorkspaceRead}=require('./founder-workspace-rc8.cjs');
-const {createFounderCaseIndex}=require('./founder-case-index-rc14.cjs');
+const {createFounderCaseIndexRc15}=require('./founder-case-index-rc15.cjs');
+const crypto=require('node:crypto');
 const {createReleaseAAiControl}=require('./ai-control-rc10.cjs');
 const {beginStaffLogin,finishStaffLogin}=require('./zoho-directory-flow.cjs');
 const {issueStaffSession,authenticateStaffSession,revokeStaffSession}=require('./session.cjs');
@@ -49,7 +50,8 @@ function createStagingAuthRuntime({pool,encryptionKey,settings,oidc,oidcConfig})
   pool,sessionStore:staff,lookupStaff:staff.lookupStaff,
   origin:STAGING_ORIGIN
  });
- const listCases=createFounderCaseIndex({pool,sessionStore:staff,lookupStaff:staff.lookupStaff});
+ const pagingKey=Buffer.from(crypto.hkdfSync('sha256',encryptionKey,Buffer.alloc(0),Buffer.from('ats-rc15-index-cursor-v1'),32));
+ const listCases=createFounderCaseIndexRc15({pool,sessionStore:staff,lookupStaff:staff.lookupStaff,cursorKey:pagingKey});
  const rejectAi=createReleaseAAiControl({
   sessionStore:staff,lookupStaff:staff.lookupStaff
  });
