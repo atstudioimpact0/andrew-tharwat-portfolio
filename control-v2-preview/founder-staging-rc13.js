@@ -121,6 +121,9 @@
       const id=++seq;if(abort)abort.abort();abort=null;
       translate();
       if(parsed.error){showStatus(parsed.error);return}
+      // Invalidate previous workspace immediately: changing language or a failed
+      // refresh must never re-display a stale authorized case.
+      model=null;raw=null;
       clearCase();dom('rc13-case').hidden=true;dom('rc13-state').hidden=false;
       dom('rc13-retry').hidden=true;dom('rc13-reload').disabled=true;
       setText('rc13-state',label('loading'));
