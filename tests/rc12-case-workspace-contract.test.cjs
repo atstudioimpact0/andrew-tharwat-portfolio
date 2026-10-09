@@ -56,6 +56,17 @@ test('RC12 maps explicit founder review and unknown action safely',()=>{
  const blank=bridge.toCaseView(dto({next_action:{kind:'collect_evidence',text:''}}));
  assert.equal(blank.action,'none','an empty actionable text must not produce a button');
 });
+test('RC12 honors every action kind returned by the verified Staging SQL function',()=>{
+ for(const kind of ['review_changes','review_error','review_ai','review_completed_work','request_manual_diagnosis']){
+  const v=bridge.toCaseView(dto({next_action:{kind,text:'Human review required'}}));
+  assert.equal(v.action,'review',kind);assert.equal(v.next.en,'Human review required');
+ }
+ for(const kind of ['diagnosis_running','continue_work']){
+  const v=bridge.toCaseView(dto({next_action:{kind,text:'Read the current state'}}));
+  assert.equal(v.action,'none',kind);
+  assert.equal(v.status,'pending');assert.equal(v.next.ar,'Read the current state');
+ }
+});
 test('RC12 does not invent evidence, project goals or a recommendation from missing data',()=>{
  const v=bridge.toCaseView(dto({
    intake_brief:{source:'unconfirmed_client_intake',service:null,project_goal:null},
