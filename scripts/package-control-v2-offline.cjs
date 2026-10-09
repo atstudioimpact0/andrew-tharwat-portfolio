@@ -91,8 +91,95 @@ function pack(page) {
   console.log('Created ' + page.output + ': ' + Buffer.byteLength(html) + ' bytes');
 }
 
+/**
+ * RC13 secure-staging-screen VISUAL REVIEW only. This third portable page
+ * replaces the real network request with a fixed synthetic response.
+ * Never inject customer data, credentials or a real connection into ZIPs.
+ */
+function packFounderStageOffline() {
+  const styles=['control-v2.css','premium.css','ultra.css',
+    'founder-case-rc11.css','founder-staging-rc13.css'];
+  let html=fs.readFileSync(path.join(source,'founder-staging-rc13.html'),'utf8');
+  for (const filename of styles) {
+    html=replaceExactly(html,
+      '<link rel="stylesheet" href="/control-v2-preview/'+filename+'">',
+      inlineCSS(filename));
+  }
+  for (const file of ['founder-case-contract-rc12.js',
+    'founder-staging-rc13.js','founder-staging-rc13-init.js']) {
+    html=replaceExactly(html,
+      '<script src="/control-v2-preview/'+file+'" defer></script>','');
+  }
+  const id='83b5d6ae-73c4-42de-9f78-78c2c5100001';
+  const sample={
+    case_id:id,input_version:1,analysis_state:'collecting',
+    intake_brief:{
+      source:'unconfirmed_client_intake',
+      service:'Digital / Customer journey',
+      project_goal:'A small business receives inquiries but cannot track each follow-up.',
+      current_assets:[],timeline:null
+    },
+    known:{
+      current_state:'Customer questions reach several channels with no shared owner.',
+      impact:'Responses may be delayed',desired_outcome:null,evidence:null
+    },
+    missing_fields:['evidence'],supporting_upload_count:0,
+    review_pending_count:0,active_work_count:0,
+    next_action:{kind:'collect_evidence',
+      text:'Request one real inquiry-to-follow-up example before recommending a system.',
+      task_hint:null}
+  };
+  const fixture=JSON.stringify(sample).replace(/</g,'\\u003c');
+  const demoScript=[
+    '(function(){',
+    '  "use strict";',
+    '  const sample='+fixture+';',
+    '  const app=window.ATS_RC13_CASE.create({',
+    '    locationHref:"https://staging.atstudioimpact.com/control-v2/cases/'+id+'",',
+    '    fetchFn:async()=>({status:200,',
+    '      headers:{get:()=> "application/json"},',
+    '      text:async()=>JSON.stringify(sample)}),',
+    '    bridge:window.ATS_RC12_CASE,documentRef:document,',
+    '    AbortControllerImpl:window.AbortController',
+    '  });',
+    '  window.addEventListener("pagehide",()=>app.dispose(),{once:true});',
+    '  void app.load();',
+    '})();'
+  ].join('\n');
+  html=replaceExactly(html,'</body>',
+    inlineJS('founder-case-contract-rc12.js')+'\n'+
+    inlineJS('founder-staging-rc13.js')+'\n'+
+    '<script data-offline-source="rc13-synthetic-only">\n'+demoScript+'\n</script>\n</body>');
+  html=replaceExactly(html,'<body class="rc13-body">',
+    '<body class="rc13-body"><div role="status" '+
+    'style="background:#fff4dc;color:#47381f;padding:12px 25px;font:700 13px Arial,sans-serif;text-align:center">'+
+    'OFFLINE MOCK — FAKE CLIENT / FAKE SESSION. NO API, NO DATABASE, NO LOGIN.</div>');
+  const policy=[
+    "default-src 'none'",
+    'img-src data:',
+    "style-src 'unsafe-inline'",
+    "script-src 'unsafe-inline'",
+    "connect-src 'none'",
+    "font-src 'none'",
+    "form-action 'none'",
+    "base-uri 'none'",
+    "object-src 'none'"
+  ].join('; ');
+  html=html.replace(/(<meta http-equiv="Content-Security-Policy" content=")[^"]+(">)/,
+    (_all,open,close)=>open+policy+close);
+  html=replaceExactly(html,'</head>',
+    '<meta name="ats-review-build" content="RC13 MOCK ONLY; NO NETWORK OR LOGIN">\n</head>');
+  if (/src="\/control-v2-preview\/|href="\/control-v2-preview\/|src="\/assets\//.test(html))
+    throw Error('RC13 offline output contains live asset links');
+  if(!html.includes("connect-src 'none'")||!html.includes('rc13-synthetic-only'))
+    throw Error('RC13 offline output failed network isolation');
+  fs.writeFileSync(path.join(output,'founder-rc13-offline.html'),html);
+  console.log('Created founder-rc13-offline.html: '+Buffer.byteLength(html)+' bytes');
+}
+
 fs.mkdirSync(output, {recursive:true});
 pages.forEach(pack);
+packFounderStageOffline();
 fs.writeFileSync(path.join(output, 'README.txt'), [
  'AT STUDIO — ULTRA-PREMIUM DESIGN REVIEW',
  '',
@@ -100,7 +187,8 @@ fs.writeFileSync(path.join(output, 'README.txt'), [
  '2. Double-click control-room-preview.html in Chrome or Edge.',
  '3. Use Ctrl+K to search and navigate. Explore Clients and Studio.',
  '4. Use Studio > Access Preview to open access-preview.html.',
- '5. Fonts may require internet access to load Google Fonts.',
+ '5. Open founder-rc13-offline.html to review the new server-scoped Founder case screen with FAKE data.',
+ '6. Fonts in some legacy preview pages may require Google Fonts; RC13 uses local fallback fonts.',
  '',
  'This is an OFFLINE DESIGN PREVIEW using MOCK DATA ONLY. It does not authenticate,',
  'send email, use Supabase, connect to Zoho or save real client information.',
