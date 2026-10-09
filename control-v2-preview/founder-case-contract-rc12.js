@@ -12,7 +12,11 @@
   'use strict';
   const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   const ASK_KINDS=new Set(['collect_evidence','request_information','request_info','ask_client','collect_context']);
-  const REVIEW_KINDS=new Set(['founder_review','human_review','review_direction','review']);
+  // Exact kinds confirmed against the private Staging RPC ats_read_case_workspace_v1.
+  // Review actions remain human-only; they NEVER call an AI provider.
+  const REVIEW_KINDS=new Set(['founder_review','human_review','review_direction','review',
+    'review_changes','review_error','review_ai','review_completed_work','request_manual_diagnosis']);
+  const READ_ONLY_KINDS=new Set(['diagnosis_running','continue_work']);
   const FIELDS=['current_state','desired_outcome','evidence'];
   const WORDS=Object.freeze({
     ar:{
@@ -78,7 +82,8 @@
       known:pair(info.join(' · ')||ar.noKnown,info.join(' · ')||en.noKnown),
       missing:pair(missing.map(key=>ar.gap[key]).join(' · ')||ar.noGap,
         missing.map(key=>en.gap[key]).join(' · ')||en.noGap),
-      next:pair(action==='none'?ar.noAction:proposed,action==='none'?en.noAction:proposed),
+      next:pair(action==='none'&&!READ_ONLY_KINDS.has(kind)?ar.noAction:proposed||ar.noAction,
+        action==='none'&&!READ_ONLY_KINDS.has(kind)?en.noAction:proposed||en.noAction),
       status:action==='ask'?'needs':action==='review'?'review':'pending',
       action,
       provenance:'unconfirmed_client_intake',
