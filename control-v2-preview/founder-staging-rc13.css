@@ -33,3 +33,7 @@
  .rc13-brand small{font-size:8px}
 }
 @media(prefers-reduced-motion:reduce){.rc13-body *{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+.rc13-back{color:#826f4b;text-decoration:none;font-size:12px;font-weight:750;white-space:nowrap}
+.rc13-back:hover{text-decoration:underline}
+.rc13-back:focus-visible{outline:2px solid #ad9670;outline-offset:4px}
