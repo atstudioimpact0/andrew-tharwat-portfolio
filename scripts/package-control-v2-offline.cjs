@@ -194,36 +194,37 @@ function packFounderClientIndexOffline() {
     html=replaceExactly(html,
       '<script src="/control-v2-preview/'+file+'" defer></script>','');
   }
-  const fake={
-    cases:[
-      {case_id:'83b5d6ae-73c4-42de-9f78-78c2c5100001',
-       label:'Eastline Demo — Fictional Client',service:'Digital / Customer journey',
-       problem_preview:'Client inquiries are not followed up consistently.',
-       analysis_state:'collecting',updated_at:'2026-10-09T18:00:00.000Z'},
-      {case_id:'83b5d6ae-73c4-42de-9f78-78c2c5100002',
-       label:'North Studio — Fictional Client',service:'Brand / Digital',
-       problem_preview:'Customer cannot distinguish the service proposition.',
-       analysis_state:'collecting',updated_at:'2026-10-08T11:00:00.000Z'}
-    ],
-    has_more:false
-  };
+  const syntheticCursor='A'.repeat(120)+'.'+'B'.repeat(43);
+  const createSample=i=>({
+    case_id:'83b5d6ae-73c4-42de-9f78-'+String(i).padStart(12,'0'),
+    label:i===1?'Eastline Demo — Fictional Client':'Fictional Client '+i,
+    service:'Digital / Customer journey',
+    problem_preview:'Client inquiry follow-up needs a clear next step (demo '+i+').',
+    analysis_state:'collecting',updated_at:'2026-10-09T18:00:00.000000Z'
+  });
+  const fake={cases:Array.from({length:25},(_,i)=>createSample(i+1)),
+    has_more:true,next_cursor:syntheticCursor};
+  const moreFake={cases:[createSample(26),createSample(27)],
+    has_more:false,next_cursor:null};
   const fixture=JSON.stringify(fake).replace(/</g,'\\u003c');
+  const nextFixture=JSON.stringify(moreFake).replace(/</g,'\\u003c');
   const script=[
     '(function(){',
     '  "use strict";',
-    '  const payload='+fixture+';',
+    '  const first='+fixture+';',
+    '  const after='+nextFixture+';',
     '  const app=window.ATS_RC14_LIST.create({',
     '    locationHref:"https://staging.atstudioimpact.com/control-v2/clients",',
-    '    fetchFn:async()=>({status:200,headers:{get:()=> "application/json"},',
-    '      text:async()=>JSON.stringify(payload)}),',
+    '    fetchFn:async (path)=>({status:200,headers:{get:()=> "application/json"},',
+    '      text:async()=>JSON.stringify(path.includes("?cursor=")?after:first)}),',
     '    documentRef:document,AbortControllerImpl:window.AbortController',
     '  });',
-    '  window.addEventListener("pagehide",()=>app.dispose(),{once:true});',
-    '  void app.load().then(()=>{',
-    '    for(const a of document.querySelectorAll("#rc14-list a")){',
-    '      a.href="./founder-rc13-offline.html";',
-    '    }',
+    '  document.addEventListener("click",event=>{',
+    '    const link=event.target.closest("#rc14-list a");',
+    '    if(link){event.preventDefault();window.location.href="./founder-rc13-offline.html"}',
     '  });',
+    '  window.addEventListener("pagehide",()=>app.dispose(),{once:true});',
+    '  void app.load();',
     '})();'
   ].join('\n');
   html=replaceExactly(html,'</body>',
@@ -261,7 +262,8 @@ fs.writeFileSync(path.join(output, 'README.txt'), [
  '2. Double-click control-room-preview.html in Chrome or Edge.',
  '3. Use Ctrl+K to search and navigate. Explore Clients and Studio.',
  '4. Use Studio > Access Preview to open access-preview.html.',
- '5. Open founder-rc14-offline.html: choose a FICTIONAL client, then open the RC13 offline case.',
+ '5. Open founder-rc14-offline.html: load 25 FICTIONAL clients, then click Load More for two more.',
+ '   Choose a fictional client to open the RC13 offline case. No live API connection.',
  '6. You can also open founder-rc13-offline.html directly (FAKE data only).',
  '   Both RC13/RC14 pages are mock demos, with no backend or real login.',
  '7. Some legacy preview fonts may require Google Fonts; RC13/RC14 use local fallbacks.',
