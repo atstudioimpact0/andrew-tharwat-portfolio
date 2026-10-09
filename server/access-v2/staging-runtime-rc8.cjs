@@ -10,6 +10,7 @@ const {createPgStaffStore}=require('./pg-staff-store-rc8.cjs');
 const {createPgOidcPendingEncrypted}=require('./pg-oidc-pending-encrypted.cjs');
 const {createRc5AuthBoundary}=require('./rc5-auth-boundary.cjs');
 const {createFounderWorkspaceRead}=require('./founder-workspace-rc8.cjs');
+const {createReleaseAAiControl}=require('./ai-control-rc10.cjs');
 const {beginStaffLogin,finishStaffLogin}=require('./zoho-directory-flow.cjs');
 const {issueStaffSession,authenticateStaffSession,revokeStaffSession}=require('./session.cjs');
 
@@ -47,6 +48,9 @@ function createStagingAuthRuntime({pool,encryptionKey,settings,oidc,oidcConfig})
   pool,sessionStore:staff,lookupStaff:staff.lookupStaff,
   origin:STAGING_ORIGIN
  });
+ const rejectAi=createReleaseAAiControl({
+  sessionStore:staff,lookupStaff:staff.lookupStaff
+ });
  async function handle(req){
   let url;
   try{url=new URL(req?.url)}catch{return error(404)}
@@ -57,6 +61,8 @@ function createStagingAuthRuntime({pool,encryptionKey,settings,oidc,oidcConfig})
    if(url.pathname==='/api/v2/auth/zoho/callback')return auth.callback(req);
    return auth.logout(req);
   }
+  // Route AI mutations to the server-side RC10 kill switch BEFORE any read dispatch.
+  if(/^\/api\/v2\/founder\/cases\/[^/]+\/ai\//.test(url.pathname))return rejectAi(req);
   if(/^\/api\/v2\/founder\/cases\//.test(url.pathname))return readCase(req);
   return error(404);
  }
