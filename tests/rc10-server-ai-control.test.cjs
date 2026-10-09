@@ -97,15 +97,15 @@ test('Replay of revoked cookie cannot run generator',async()=>{
  const gone=await revokeStaffSession({cookieHeader:cookie,store:h.store});
  assert.match(gone,/Max-Age=0/);
  assert.equal(h.sessions.size,0);
- assert.equal((await h.gate(h.req({cookie})).status),401);
+ assert.equal((await h.gate(h.req({cookie}))).status,401);
 });
 test('Offboarding or role downgrade is checked on each AI request',async()=>{
  const h=harness(),cookie=await h.login();
  h.staff.active=false;
- assert.equal((await h.gate(h.req({cookie})).status),401);
+ assert.equal((await h.gate(h.req({cookie}))).status,401);
  h.staff.active=true;
  const second=await h.login();h.staff.role='reviewer';
- assert.equal((await h.gate(h.req({cookie:second})).status),401);
+ assert.equal((await h.gate(h.req({cookie:second}))).status,401);
 });
 test('Forged role, email, tenant, headers, approvals, and authorization do not create a server session',async()=>{
  const h=harness();
