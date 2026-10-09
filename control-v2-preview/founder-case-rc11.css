@@ -1,0 +1,51 @@
+/*
+ * AT STUDIO — RC11 FOUNDER CASE WORKSPACE
+ * Progressive disclosure on EXISTING Control Room V2 Clients view.
+ * Read-only visual prototype. No network/auth/client writes/AI.
+ * Loaded after ultra.css to preserve the approved ATS identity.
+ */
+.rc11-case{border:1px solid #e1e6df;background:#fff;padding:clamp(20px,3vw,34px)}
+.rc11-case .case-head{border-bottom:0;padding-bottom:10px;align-items:center}
+.rc11-case .case-head h2{font-size:clamp(24px,2.35vw,30px);font-weight:800;letter-spacing:-.03em}
+.rc11-case .case-head .eyebrow{letter-spacing:.14em}
+.rc11-source{font-size:11px;color:#718087;line-height:1.8;letter-spacing:.01em;margin:0 0 24px}
+.rc11-index{font-family:Montserrat,Arial,sans-serif;font-weight:700;letter-spacing:.08em;font-size:10px;color:#a7916e}
+.rc11-section-meta{display:flex;gap:11px;align-items:center;margin-bottom:12px;color:#7a898e;text-transform:uppercase;letter-spacing:.08em;font-size:10px}
+.rc11-problem{background:#102937;color:#fff;padding:clamp(22px,3vw,32px);position:relative;overflow:hidden}
+.rc11-problem::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:#b9a17c}
+.rc11-problem .rc11-section-meta,.rc11-problem .rc11-index{color:#c7b58e}
+.rc11-problem h3{color:#b9c8c8;font-size:12px;font-weight:700;margin:0 0 12px}
+.rc11-problem p{color:#fff;margin:0;font-size:clamp(18px,1.9vw,23px);font-weight:750;line-height:1.85;max-width:660px}
+.rc11-knowledge{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:13px}
+.rc11-knowledge-card{border:1px solid #e4e7e1;padding:23px 24px 19px;background:#fbfcfa;min-width:0}
+.rc11-known{border-top:2px solid #718c7e}
+.rc11-missing{border-top:2px solid #ba9f74;background:#f9f8f4}
+.rc11-card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.rc11-knowledge-symbol{font-family:Montserrat,Arial,sans-serif;width:28px;height:28px;border:1px solid #e2e7df;display:grid;place-items:center;color:#48685a;font-size:13px}
+.rc11-missing .rc11-knowledge-symbol{color:#907750;border-color:#e9e0cc}
+.rc11-knowledge-card h3{font-size:13px;font-weight:750;line-height:1.7;color:#192f39;margin:0 0 12px}
+.rc11-knowledge-card p{font-size:14px;line-height:1.95;color:#455962;margin:0;min-height:67px}
+.rc11-knowledge-card small{display:block;font-size:11px;line-height:1.7;color:#7a898d;margin-top:21px;border-top:1px solid #e4e9e3;padding-top:13px}
+.rc11-decision{margin-top:14px;background:#f5f7f4;border:1px solid #dee5df;padding:clamp(22px,2.6vw,31px);box-shadow:none}
+.rc11-decision-header{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.rc11-decision-mark{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;background:#14323d;color:#fff;font-family:Montserrat,sans-serif;font-size:19px}
+.rc11-decision .action-kicker{color:#758681;letter-spacing:.10em;font-size:10px;font-weight:800}
+.rc11-decision h3{font-weight:800;font-size:19px;color:#17313a;margin:4px 0 0;line-height:1.5}
+.rc11-decision p#case-recommendation{font-size:15px;line-height:2;font-weight:550;color:#2d4248;max-width:720px;margin:11px 0 20px}
+.rc11-decision .action-row{display:flex;gap:8px;flex-wrap:wrap}
+.rc11-decision .action-row .btn{font-size:12px;min-height:44px;padding-inline:22px}
+.rc11-decision .action-row [hidden]{display:none!important}
+.rc11-approval-note{font-size:11px!important;margin:15px 0 0!important;color:#7b8688!important;line-height:1.8!important}
+.rc11-progressive{border:1px solid #e4e9e4;margin-top:14px;padding:0;background:#fff}
+.rc11-progressive summary{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:56px;padding:14px 20px;cursor:pointer;color:#243e47;font-size:13px;font-weight:700;list-style:none}
+.rc11-progressive summary::-webkit-details-marker{display:none}
+.rc11-progressive summary:focus-visible{outline:2px solid #b9a17c;outline-offset:3px}
+.rc11-progressive .rc11-summary-icon{font-family:Montserrat,sans-serif;font-size:18px;color:#9a896f;transition:transform .2s}
+.rc11-progressive[open] .rc11-summary-icon{transform:rotate(45deg)}
+.rc11-progressive .case-journal{margin:0;padding:24px 20px;border-top:1px solid #edf0ec}
+.rc11-progressive .journal-heading{margin-bottom:20px}
+.rc11-progressive .journal-heading h3{font-size:17px}
+.rc11-safe{font-size:11px;line-height:1.9;color:#7c898d;margin-top:17px}
+@media(max-width:840px){.rc11-case{padding:20px}.rc11-knowledge{grid-template-columns:1fr}.rc11-knowledge-card p{min-height:0}.rc11-problem p{font-size:19px}}
+@media(max-width:520px){.rc11-case{padding:15px}.rc11-case .case-head{align-items:flex-start}.rc11-case .case-head h2{font-size:23px}.rc11-problem{padding:21px}.rc11-problem p{font-size:18px}.rc11-knowledge-card{padding:19px}.rc11-decision{padding:20px}.rc11-decision h3{font-size:17px}.rc11-decision .action-row{display:block}.rc11-decision .action-row .btn{width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){.rc11-progressive .rc11-summary-icon{transition:none}}
