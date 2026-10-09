@@ -52,6 +52,9 @@ test('RC12 maps explicit founder review and unknown action safely',()=>{
  assert.equal(yes.action,'review');assert.equal(yes.status,'review');
  const no=bridge.toCaseView(dto({next_action:{kind:'unexpected_paid_run',text:'run AI'}}));
  assert.equal(no.action,'none');assert.equal(no.status,'pending');
+ assert.notEqual(no.next.en,'run AI','unknown action must not appear as a recommendation');
+ const blank=bridge.toCaseView(dto({next_action:{kind:'collect_evidence',text:''}}));
+ assert.equal(blank.action,'none','an empty actionable text must not produce a button');
 });
 test('RC12 does not invent evidence, project goals or a recommendation from missing data',()=>{
  const v=bridge.toCaseView(dto({
