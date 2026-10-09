@@ -18,7 +18,7 @@ const pages = [
   {
     file: 'index.html',
     output: 'control-room-preview.html',
-    styles: ['control-v2.css', 'premium.css', 'ultra.css'],
+    styles: ['control-v2.css', 'premium.css', 'ultra.css', 'founder-case-rc11.css'],
     javascript: 'control-v2.js'
   },
   {
