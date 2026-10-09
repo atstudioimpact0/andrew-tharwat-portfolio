@@ -49,6 +49,11 @@ function pack(page) {
   for (const filename of page.styles) {
     html = replaceExactly(html, '<link rel="stylesheet" href="/control-v2-preview/' + filename + '">', inlineCSS(filename));
   }
+  if (page.file === 'index.html') {
+    html = replaceExactly(html,
+      '<script src="/control-v2-preview/founder-case-contract-rc12.js" defer></script>',
+      inlineJS('founder-case-contract-rc12.js'));
+  }
   html = replaceExactly(html, '<script src="/control-v2-preview/' + page.javascript + '" defer></script>', '');
   html = replaceExactly(html, '</body>', inlineJS(page.javascript) + '\n</body>');
   html = html.replaceAll('/assets/logo-mark-official.png?v=24', logoURI);
@@ -76,7 +81,7 @@ function pack(page) {
   html = replaceExactly(html, '</head>',
     '<meta name="ats-review-build" content="OFFLINE DESIGN REVIEW; MOCK DATA ONLY; NO LOGIN OR NETWORK">\n</head>');
 
-  for (const file of page.styles.concat([page.javascript])) {
+  for (const file of page.styles.concat(page.file === 'index.html' ? ['founder-case-contract-rc12.js', page.javascript] : [page.javascript])) {
     if (!html.includes('data-offline-source="' + file + '"')) throw new Error('Missing inline resource: ' + file);
   }
   if (/src="\/control-v2-preview\/|href="\/control-v2-preview\/|src="\/assets\//.test(html)) {
