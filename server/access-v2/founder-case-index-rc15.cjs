@@ -42,7 +42,8 @@ function decodeCursor(secret,token,principal,now){
  let claimed;
  try{claimed=Buffer.from(mac,'base64url')}catch{return null}
  const expected=signature(secret,encoded);
- if(claimed.length!==expected.length||!crypto.timingSafeEqual(claimed,expected))return null;
+ if(claimed.length!==expected.length||claimed.toString('base64url')!==mac||
+   !crypto.timingSafeEqual(claimed,expected))return null;
  try{
   const json=Buffer.from(encoded,'base64url').toString('utf8');
   if(Buffer.from(json,'utf8').toString('base64url')!==encoded)return null;
