@@ -100,6 +100,7 @@ function packFounderStageOffline() {
   const styles=['control-v2.css','premium.css','ultra.css',
     'founder-case-rc11.css','founder-staging-rc13.css'];
   let html=fs.readFileSync(path.join(source,'founder-staging-rc13.html'),'utf8');
+  html=replaceExactly(html,'href="/control-v2/clients"','href="./founder-rc14-offline.html"');
   for (const filename of styles) {
     html=replaceExactly(html,
       '<link rel="stylesheet" href="/control-v2-preview/'+filename+'">',
@@ -177,9 +178,82 @@ function packFounderStageOffline() {
   console.log('Created founder-rc13-offline.html: '+Buffer.byteLength(html)+' bytes');
 }
 
+/**
+ * RC14 selectable Founder client index — FAKE cases, FAKE sessions,
+ * zero outbound network. The listed demo client opens RC13 offline.
+ */
+function packFounderClientIndexOffline() {
+  const styles=['control-v2.css','premium.css','ultra.css',
+    'founder-case-rc11.css','founder-staging-rc13.css','founder-clients-rc14.css'];
+  let html=fs.readFileSync(path.join(source,'founder-clients-rc14.html'),'utf8');
+  for(const file of styles){
+    html=replaceExactly(html,'<link rel="stylesheet" href="/control-v2-preview/'+file+'">',
+      inlineCSS(file));
+  }
+  for(const file of ['founder-clients-rc14.js','founder-clients-rc14-init.js']){
+    html=replaceExactly(html,
+      '<script src="/control-v2-preview/'+file+'" defer></script>','');
+  }
+  const fake={
+    cases:[
+      {case_id:'83b5d6ae-73c4-42de-9f78-78c2c5100001',
+       label:'Eastline Demo — Fictional Client',service:'Digital / Customer journey',
+       problem_preview:'Client inquiries are not followed up consistently.',
+       analysis_state:'collecting',updated_at:'2026-10-09T18:00:00.000Z'},
+      {case_id:'83b5d6ae-73c4-42de-9f78-78c2c5100002',
+       label:'North Studio — Fictional Client',service:'Brand / Digital',
+       problem_preview:'Customer cannot distinguish the service proposition.',
+       analysis_state:'collecting',updated_at:'2026-10-08T11:00:00.000Z'}
+    ],
+    has_more:false
+  };
+  const fixture=JSON.stringify(fake).replace(/</g,'\\u003c');
+  const script=[
+    '(function(){',
+    '  "use strict";',
+    '  const payload='+fixture+';',
+    '  const app=window.ATS_RC14_LIST.create({',
+    '    locationHref:"https://staging.atstudioimpact.com/control-v2/clients",',
+    '    fetchFn:async()=>({status:200,headers:{get:()=> "application/json"},',
+    '      text:async()=>JSON.stringify(payload)}),',
+    '    documentRef:document,AbortControllerImpl:window.AbortController',
+    '  });',
+    '  window.addEventListener("pagehide",()=>app.dispose(),{once:true});',
+    '  void app.load().then(()=>{',
+    '    for(const a of document.querySelectorAll("#rc14-list a")){',
+    '      a.href="./founder-rc13-offline.html";',
+    '    }',
+    '  });',
+    '})();'
+  ].join('\n');
+  html=replaceExactly(html,'</body>',
+    inlineJS('founder-clients-rc14.js')+'\n'+
+    '<script data-offline-source="rc14-synthetic-only">\n'+script+'\n</script>\n</body>');
+  html=replaceExactly(html,'<body class="rc13-body rc14-body">',
+    '<body class="rc13-body rc14-body"><div role="status" '+
+    'style="background:#fff4dc;color:#47381f;padding:12px 25px;font:700 13px Arial,sans-serif;text-align:center">'+
+    'OFFLINE MOCK — FICTIONAL CLIENTS. NO REAL SESSION, API, DATABASE OR AI.</div>');
+  const policy=[
+    "default-src 'none'",'img-src data:',"style-src 'unsafe-inline'",
+    "script-src 'unsafe-inline'","connect-src 'none'","font-src 'none'",
+    "form-action 'none'","base-uri 'none'","object-src 'none'"
+  ].join('; ');
+  html=html.replace(/(<meta http-equiv="Content-Security-Policy" content=")[^"]+(">)/,
+    (_whole,start,end)=>start+policy+end);
+  html=replaceExactly(html,'</head>',
+    '<meta name="ats-review-build" content="RC14 MOCK ONLY; ZERO NETWORK">\n</head>');
+  if(/src="\/control-v2-preview\/|href="\/control-v2-preview\/|src="\/assets\//.test(html))
+    throw Error('RC14 offline build contains root-absolute assets');
+  if(!html.includes("connect-src 'none'")||!html.includes('rc14-synthetic-only'))
+    throw Error('RC14 offline network isolation failed');
+  fs.writeFileSync(path.join(output,'founder-rc14-offline.html'),html);
+  console.log('Created founder-rc14-offline.html: '+Buffer.byteLength(html)+' bytes');
+}
+
 fs.mkdirSync(output, {recursive:true});
 pages.forEach(pack);
 packFounderStageOffline();
+packFounderClientIndexOffline();
 fs.writeFileSync(path.join(output, 'README.txt'), [
  'AT STUDIO — ULTRA-PREMIUM DESIGN REVIEW',
  '',
@@ -187,8 +261,9 @@ fs.writeFileSync(path.join(output, 'README.txt'), [
  '2. Double-click control-room-preview.html in Chrome or Edge.',
  '3. Use Ctrl+K to search and navigate. Explore Clients and Studio.',
  '4. Use Studio > Access Preview to open access-preview.html.',
- '5. Open founder-rc13-offline.html to review the new server-scoped Founder case screen with FAKE data.',
- '6. Fonts in some legacy preview pages may require Google Fonts; RC13 uses local fallback fonts.',
+ '5. Open founder-rc14-offline.html: choose a FICTIONAL client, then open the RC13 offline case.',
+ '6. Both RC13/RC14 screenshots and demos are fake, no backend or real login.',
+ '7. Some legacy preview fonts may require Google Fonts; RC13/RC14 use local fallbacks.',
  '',
  'This is an OFFLINE DESIGN PREVIEW using MOCK DATA ONLY. It does not authenticate,',
  'send email, use Supabase, connect to Zoho or save real client information.',
