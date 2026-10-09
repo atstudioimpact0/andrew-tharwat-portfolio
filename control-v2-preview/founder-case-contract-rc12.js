@@ -60,9 +60,12 @@
     const missing=Array.isArray(dto.missing_fields)
       ? FIELDS.filter(key=>dto.missing_fields.includes(key)):FIELDS.slice(); 
     const kind=clean(n.kind,50);
+    const proposed=clean(n.text,400);
     let action='none';
-    if(ASK_KINDS.has(kind))action='ask';
-    else if(REVIEW_KINDS.has(kind))action='review';
+    // A button without a specific, approved next action is unsafe UX.
+    // Never show the free-text suggestion for an unknown action kind.
+    if(proposed && ASK_KINDS.has(kind))action='ask';
+    else if(proposed && REVIEW_KINDS.has(kind))action='review';
     const en=WORDS.en,ar=WORDS.ar;
     const pair=(a,b)=>({ar:a,en:b});
     const caseCode=dto.case_id.slice(0,8);
@@ -75,7 +78,7 @@
       known:pair(info.join(' · ')||ar.noKnown,info.join(' · ')||en.noKnown),
       missing:pair(missing.map(key=>ar.gap[key]).join(' · ')||ar.noGap,
         missing.map(key=>en.gap[key]).join(' · ')||en.noGap),
-      next:pair(clean(n.text,400)||ar.noAction,clean(n.text,400)||en.noAction),
+      next:pair(action==='none'?ar.noAction:proposed,action==='none'?en.noAction:proposed),
       status:action==='ask'?'needs':action==='review'?'review':'pending',
       action,
       provenance:'unconfirmed_client_intake',
