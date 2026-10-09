@@ -1,5 +1,5 @@
 /* AT STUDIO RC14 — Staging-only Founder case selector.
- * Read-only client browser. No bearer token, service keys, localStorage,
+ * Read-only client browser. No bearer token, service keys, client-side cache,
  * analytics, payment, POST, AI, or XSS-prone HTML insertion.
  * Only runs at https://staging.atstudioimpact.com/control-v2/clients
  */
