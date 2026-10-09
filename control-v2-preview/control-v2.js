@@ -115,6 +115,51 @@
      next:{ar:'مراجعة بشرية متخصصة لتحديد اختبار صغير يقيس اتخاذ القرار.',en:'Qualified human review to design a small decision-making pilot.'},
      status:'review',action:'review'}
   ];
+  // RC12 example exercises the SAME response DTO contract returned by RC8.
+  // These are two translated SYNTHETIC fixtures with one UUID, never customer data.
+  // Preview remains offline: no fetch, auth, storage, AI or server calls.
+  if(window.ATS_RC12_CASE && typeof window.ATS_RC12_CASE.fromResponse==='function'){
+    const mockId='83b5d6ae-73c4-42de-9f78-78c2c5100001';
+    function mockRC8(ar){
+      return {
+        case_id:mockId,input_version:1,analysis_state:'collecting',
+        intake_brief:{
+          source:'unconfirmed_client_intake',service:'Digital / Customer journey',
+          project_goal:ar
+            ?'العميل مش قادر يحدد هل محتاج موقع جديد ولا تحسين رحلة متابعة الطلبات.'
+            :'The client cannot yet tell whether they need a new website or a clearer inquiry follow-up journey.',
+          current_assets:[],timeline:null
+        },
+        known:{
+          current_state:ar?'الطلبات بتدخل من أكثر من قناة، والمتابعة غير موحدة.':'Requests arrive from several channels with no consistent follow-up.',
+          impact:null,desired_outcome:null,evidence:null
+        },
+        missing_fields:['evidence'],
+        supporting_upload_count:0,
+        next_action:{
+          kind:'collect_evidence',
+          text:ar
+            ?'اطلب مثالًا واحدًا لمسار استفسار حقيقي قبل اقتراح CRM أو إعادة بناء الموقع.'
+            :'Request one real inquiry-to-follow-up example before recommending a CRM or a website rebuild.',
+          task_hint:null
+        },
+        review_pending_count:0,active_work_count:0
+      };
+    }
+    const arabicResult=window.ATS_RC12_CASE.fromResponse(200,mockRC8(true),'ar');
+    const englishResult=window.ATS_RC12_CASE.fromResponse(200,mockRC8(false),'en');
+    if(arabicResult.state==='ready' && englishResult.state==='ready'){
+      const a=arabicResult.caseView,e=englishResult.caseView;
+      const bilingual=key=>({ar:a[key].ar,en:e[key].en});
+      sampleCases.push({
+        id:a.id,name:bilingual('name'),subtitle:bilingual('subtitle'),
+        problem:bilingual('problem'),known:bilingual('known'),
+        missing:bilingual('missing'),next:bilingual('next'),
+        status:a.status,action:a.action,
+        provenance:'unconfirmed_client_intake'
+      });
+    }
+  }
   const state={lang:'ar',view:'today',selectedCase:'c1',lastDetailCase:null,caseFilter:'all',dialogAction:null,completed:new Set(),outcomes:new Map(),journal:new Map(),notes:new Map()};
   const translations=(key)=>copy[state.lang][key]||key;
   const textFor=(field)=>typeof field==='object'&&field!==null?field[state.lang]:String(field??'');
