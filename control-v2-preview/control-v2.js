@@ -19,7 +19,7 @@
       activeCases:'ملفات العملاء',searchLabel:'ابحث في الملفات',noCases:'لا توجد نتائج مطابقة.',commandTrigger:'وصول سريع',commandTitle:'اذهب لما يهمك',commandSearchLabel:'ابحث في الأقسام وملفات العملاء التجريبية',commandEmpty:'مفيش نتائج مطابقة.',commandHint:'↑ ↓ للتنقل · Enter للفتح · Esc للإغلاق',commandSearchPlaceholder:'ابحث عن قسم أو ملف...',commandCaseLabel:'افتح ملف العميل',commandSectionLabel:'اذهب إلى القسم', 
       clientCase:'ملف العميل',challenge:'المشكلة اللي بنحلّها',known:'إيه اللي نعرفه بالفعل؟',
       missing:'إيه اللي محتاج توضيح؟',suggestedNext:'الخطوة المقترحة — تحتاج مراجعتك',
-      reviewAction:'راجع الاتجاه',askAction:'اطلب معلومة',demoDisclaimer:'أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.',
+      caseSource:'مثال توضيحي — بيانات غير مؤكدة، وليست ملف عميل حقيقي.',rc11CurrentChallenge:'افهم المشكلة قبل التفكير في الحل',rc11Unconfirmed:'معلومة أولية — لا تعاملها كحقيقة مثبتة بلا دليل',rc11OnlyOneQuestion:'اسأل عن المعلومة المؤثرة على القرار فقط',rc11OneNextAction:'خطوة واحدة واضحة',rc11HumanReview:'مراجعتك مطلوبة — لا إرسال أو اعتماد أو تحليل AI تلقائي.',rc11MoreContext:'اعرض سجل المتابعة والتفاصيل',rc11AlreadyHandled:'تمت متابعة هذه الخطوة داخل العرض التجريبي. سجلها متاح في التفاصيل.',reviewAction:'راجع الاتجاه',askAction:'اطلب معلومة',demoDisclaimer:'أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.',
       deliveryTitle:'كل مهمة لها مسؤول ونتيجة.',deliverySub:'التنفيذ والمراجعات والاعتمادات، من غير تشتيت.',
       deliveryPrinciple:'تسليم واضح، مراجعة واضحة، ثم اعتماد.',
       deliveryDescription:'لا نعتبر المهمة منتهية لمجرد تحديث حالتها. لازم تسليم قابل للمراجعة، ومسؤول معتمد، ودليل على تحقق المطلوب.',
@@ -64,7 +64,7 @@
       activeCases:'Client cases',searchLabel:'Search cases',noCases:'No matches found.',commandTrigger:'Quick open',commandTitle:'Go where it matters',commandSearchLabel:'Search sections and illustrative case files',commandEmpty:'No matches found.',commandHint:'↑ ↓ to navigate · Enter to open · Esc to close',commandSearchPlaceholder:'Search sections or cases...',commandCaseLabel:'Open client case',commandSectionLabel:'Open section', 
       clientCase:'Client case',challenge:'The challenge',known:'What we already know',
       missing:'What needs clarification',suggestedNext:'Suggested next step — requires your review',
-      reviewAction:'Review direction',askAction:'Request context',demoDisclaimer:'All approvals and messages are simulated. Nothing is saved to the live system.',
+      caseSource:'Illustrative example — unverified information, not a real client case.',rc11CurrentChallenge:'Understand the problem before suggesting a solution',rc11Unconfirmed:'Initial client statement — evidence is still needed',rc11OnlyOneQuestion:'Ask only the question that changes the decision',rc11OneNextAction:'One clear next step',rc11HumanReview:'Founder review required — no automatic AI, sending or approval.',rc11MoreContext:'View history and supporting context',rc11AlreadyHandled:'This step was simulated locally. Review its entry in the history.',reviewAction:'Review direction',askAction:'Request context',demoDisclaimer:'All approvals and messages are simulated. Nothing is saved to the live system.',
       deliveryTitle:'Clear ownership. Meaningful outcomes.',deliverySub:'Work, reviews and approvals without noise.',
       deliveryPrinciple:'Clear deliverable. Clear review. Then approval.',
       deliveryDescription:'A task is not complete because someone changes its status. It needs a reviewable deliverable, a named reviewer and evidence of acceptance.',
@@ -115,7 +115,7 @@
      next:{ar:'مراجعة بشرية متخصصة لتحديد اختبار صغير يقيس اتخاذ القرار.',en:'Qualified human review to design a small decision-making pilot.'},
      status:'review',action:'review'}
   ];
-  const state={lang:'ar',view:'today',selectedCase:'c1',caseFilter:'all',dialogAction:null,completed:new Set(),outcomes:new Map(),journal:new Map(),notes:new Map()};
+  const state={lang:'ar',view:'today',selectedCase:'c1',lastDetailCase:null,caseFilter:'all',dialogAction:null,completed:new Set(),outcomes:new Map(),journal:new Map(),notes:new Map()};
   const translations=(key)=>copy[state.lang][key]||key;
   const textFor=(field)=>typeof field==='object'&&field!==null?field[state.lang]:String(field??'');
   const elt=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
@@ -203,6 +203,12 @@
       return;
     }
     detail.hidden=false;
+    // A newly selected case always starts with the one-page decision focus.
+    // Historical context remains available via optional progressive disclosure.
+    if(state.lastDetailCase!==selected.id){
+      $('#case-detail-more').open=false;
+      state.lastDetailCase=selected.id;
+    }
     $('#case-title').textContent=textFor(selected.name);
     $('#case-subtitle').textContent=textFor(selected.subtitle);
     $('#case-status').textContent=caseLabel(selected);
@@ -210,6 +216,12 @@
     $('#case-known').textContent=textFor(selected.known);
     $('#case-missing').textContent=textFor(selected.missing);
     $('#case-recommendation').textContent=textFor(selected.next);
+    const handled=state.completed.has(selected.id);
+    // Only ONE primary decision at a time. No generating AI button exists.
+    $('#review-direction').hidden=handled||selected.action!=='review';
+    $('#request-context').hidden=handled||selected.action!=='ask';
+    $('#case-action-status').hidden=!handled;
+    $('#case-action-status').textContent=handled?translations('rc11AlreadyHandled'):'';
     renderJournal(selected);
   }
   function card(root,{symbol,title,desc,meta}){
