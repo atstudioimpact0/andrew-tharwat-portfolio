@@ -47,7 +47,7 @@ function runtimeFixture(){
  const state={selectedCase:'a',lastDetailCase:null,caseFilter:'all',lang:'ar',
    completed:new Set(),outcomes:new Map(),journal:new Map()};
  const elt=fakeElement;
- const context={$, ['$']: $, elt,sampleCases:cases,state,textFor:x=>x,
+ const context={ $: $, [String.fromCharCode(36,36)]: (selector)=>selector==='.case-filter'?filters:[], elt,sampleCases:cases,state,textFor:x=>x,
    caseLabel:c=>c.status,translations:k=>k,renderJournal:()=>{}};
  const func=vm.runInNewContext('('+extractFunction('function renderCases(){','function card(')+')',context);
  return {func,state,dom,filters,handlers:dom,byId:id=>$(id)};
