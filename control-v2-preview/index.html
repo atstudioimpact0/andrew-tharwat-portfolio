@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/control-v2-preview/control-v2.css">
   <link rel="stylesheet" href="/control-v2-preview/premium.css">
   <link rel="stylesheet" href="/control-v2-preview/ultra.css">
+  <link rel="stylesheet" href="/control-v2-preview/founder-case-rc11.css">
   <script src="/control-v2-preview/control-v2.js" defer></script>
 </head>
 <body>
@@ -87,18 +88,61 @@
               <div class="case-list" id="case-list"></div>
               <p class="empty" id="case-empty" hidden data-i18n="noCases">لا توجد نتائج مطابقة.</p>
             </div>
-            <article class="panel case-detail" id="case-detail" aria-live="polite">
-              <div class="case-head"><div><p class="eyebrow" data-i18n="clientCase">ملف العميل</p><h2 id="case-title">—</h2><p id="case-subtitle"></p></div><span id="case-status" class="status-label"></span></div>
-              <div class="case-section"><span class="section-number">01</span><div><h3 data-i18n="challenge">المشكلة اللي بنحلّها</h3><p id="case-problem"></p></div></div>
-              <div class="case-section"><span class="section-number">02</span><div><h3 data-i18n="known">إيه اللي نعرفه بالفعل؟</h3><p id="case-known"></p></div></div>
-              <div class="case-section"><span class="section-number">03</span><div><h3 data-i18n="missing">إيه اللي محتاج توضيح؟</h3><p id="case-missing"></p></div></div>
-              <section class="case-journal" aria-labelledby="case-journal-title">
-                <div class="journal-heading"><div><p class="eyebrow">DECISION HISTORY / THIS CASE</p><h3 id="case-journal-title" data-i18n="journalTitle">سجل القرار والمتابعة</h3></div><span class="journal-count" id="journal-count">01</span></div>
-                <ol id="case-journal-list" class="journal-list" aria-live="polite"></ol>
-                <p class="journal-caveat" data-i18n="journalCaveat">السجل ده توضيحي وبيختفي لما تقفل المعاينة. مش متصل بملفات عملاء حقيقية.</p>
+            <article class="panel case-detail rc11-case" id="case-detail" aria-labelledby="case-title">
+              <div class="case-head">
+                <div><p class="eyebrow" data-i18n="clientCase">ملف العميل</p><h2 id="case-title">—</h2><p id="case-subtitle"></p></div>
+                <span id="case-status" class="status-label"></span>
+              </div>
+              <p class="rc11-source" data-i18n="caseSource">بيانات توضيحية غير مؤكدة — راجع الأدلة قبل أي قرار.</p>
+
+              <section class="rc11-problem" aria-labelledby="case-challenge-heading">
+                <div class="rc11-section-meta"><span class="rc11-index">01</span><span data-i18n="rc11CurrentChallenge">المشكلة أولًا</span></div>
+                <h3 id="case-challenge-heading" data-i18n="challenge">المشكلة اللي بنحلّها</h3>
+                <p id="case-problem"></p>
               </section>
-              <div class="case-action-block"><div class="action-kicker" data-i18n="suggestedNext">الخطوة المقترحة — تحتاج مراجعتك</div><p id="case-recommendation"></p><div class="action-row"><button type="button" class="btn btn-primary" id="review-direction" data-i18n="reviewAction">راجع الاتجاه</button><button type="button" class="btn btn-outline" id="request-context" data-i18n="askAction">اطلب معلومة</button></div></div>
-              <p class="safety-note" data-i18n="demoDisclaimer">أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.</p>
+
+              <div class="rc11-knowledge" aria-label="Case evidence">
+                <section class="rc11-knowledge-card rc11-known" aria-labelledby="rc11-known-title">
+                  <div class="rc11-card-top"><span class="rc11-index">02</span><span class="rc11-knowledge-symbol" aria-hidden="true">✓</span></div>
+                  <h3 id="rc11-known-title" data-i18n="known">إيه اللي نعرفه بالفعل؟</h3>
+                  <p id="case-known"></p>
+                  <small data-i18n="rc11Unconfirmed">معلومة من الطلب، مش حقيقة مؤكدة إلا بدليل</small>
+                </section>
+                <section class="rc11-knowledge-card rc11-missing" aria-labelledby="rc11-missing-title">
+                  <div class="rc11-card-top"><span class="rc11-index">03</span><span class="rc11-knowledge-symbol" aria-hidden="true">?</span></div>
+                  <h3 id="rc11-missing-title" data-i18n="missing">إيه اللي محتاج توضيح؟</h3>
+                  <p id="case-missing"></p>
+                  <small data-i18n="rc11OnlyOneQuestion">اسأل عن المعلومة اللي تغيّر القرار بس</small>
+                </section>
+              </div>
+
+              <section class="case-action-block rc11-decision" aria-labelledby="case-decision-heading">
+                <div class="rc11-decision-header">
+                  <span class="rc11-decision-mark" aria-hidden="true">↗</span>
+                  <div><span class="action-kicker" data-i18n="suggestedNext">الخطوة المقترحة — تحتاج مراجعتك</span>
+                  <h3 id="case-decision-heading" data-i18n="rc11OneNextAction">قرار واحد واضح</h3></div>
+                </div>
+                <p id="case-recommendation"></p>
+                <div class="action-row">
+                  <button type="button" class="btn btn-primary" id="review-direction" data-i18n="reviewAction">راجع الاتجاه</button>
+                  <button type="button" class="btn btn-primary" id="request-context" data-i18n="askAction">اطلب معلومة</button>
+                </div>
+                <p class="rc11-approval-note" data-i18n="rc11HumanReview">اقتراح يحتاج مراجعتك — لا إرسال، ولا اعتماد، ولا تشغيل AI تلقائيًا.</p>
+              </section>
+
+              <details class="rc11-progressive" id="case-detail-more">
+                <summary><span data-i18n="rc11MoreContext">التفاصيل وسجل القرارات</span><span class="rc11-summary-icon" aria-hidden="true">+</span></summary>
+                <section class="case-journal" aria-labelledby="case-journal-title">
+                  <div class="journal-heading">
+                    <div><p class="eyebrow">DECISION HISTORY / THIS CASE</p><h3 id="case-journal-title" data-i18n="journalTitle">سجل القرار والمتابعة</h3></div>
+                    <span class="journal-count" id="journal-count">01</span>
+                  </div>
+                  <ol id="case-journal-list" class="journal-list" aria-live="polite"></ol>
+                  <p class="journal-caveat" data-i18n="journalCaveat">السجل ده توضيحي وبيختفي لما تقفل المعاينة. مش متصل بملفات عملاء حقيقية.</p>
+                </section>
+              </details>
+
+              <p class="safety-note rc11-safe" data-i18n="demoDisclaimer">أي موافقة أو رسالة هنا محاكاة فقط. لا يتم حفظ شيء في النظام الفعلي.</p>
             </article>
           </div>
         </section>
