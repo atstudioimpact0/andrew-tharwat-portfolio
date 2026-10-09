@@ -48,7 +48,7 @@
       intelTwo:'نقترح',intelTwoDesc:'نحدد نقصًا مؤثرًا، واتجاهًا أوليًا مدعومًا بأدلة.',
       intelThree:'نراجع',intelThreeDesc:'القرار النهائي مسؤولية ATS، وليس الذكاء الاصطناعي.',
       toastDemo:'تم تحديث العرض التجريبي على هذه الصفحة فقط — لا إرسال أو حفظ فعلي.',
-      noPending:'كل الحالات التجريبية اتراجعت. تقدر ترجع لقسم العملاء.'
+      rc12ReadOnly:'متابعة بشرية · للقراءة فقط',noPending:'كل الحالات التجريبية اتراجعت. تقدر ترجع لقسم العملاء.'
     },
     en: {
       strip:'Illustrative data only — no client or database connection',
@@ -92,7 +92,7 @@
       intelOne:'Listen',intelOneDesc:'Record the client’s words and distinguish facts from assumptions.',
       intelTwo:'Propose',intelTwoDesc:'Identify a meaningful gap and evidence-based direction.',
       intelThree:'Review',intelThreeDesc:'Final responsibility belongs to ATS, not an automated engine.',
-      toastDemo:'Updated this browser-only demonstration. No real action or persistent change.'
+      rc12ReadOnly:'Human follow-up · read-only',toastDemo:'Updated this browser-only demonstration. No real action or persistent change.'
     }
   };
   const sampleCases = [
@@ -197,6 +197,7 @@
   function caseLabel(c){
     if(state.outcomes.get(c.id)==='ask')return translations('awaitingInfo');
     if(state.outcomes.get(c.id)==='review')return translations('directionReviewed');
+    if(c.status==='pending')return translations('rc12ReadOnly');
     return translations(c.status==='needs'?'needsInfo':'readyReview');
   }
   function renderJournal(c){
