@@ -72,6 +72,7 @@
       dom('rc13-case').hidden=true;
       dom('rc13-state').hidden=false;
       setText('rc13-state',label(key));
+      dom('rc13-state').dataset.stateKey=key;
       dom('rc13-retry').hidden=key!=='failed'&&key!=='invalid';
       dom('rc13-reload').disabled=true;
       dom('rc13-extra').open=false;
@@ -123,6 +124,7 @@
       clearCase();dom('rc13-case').hidden=true;dom('rc13-state').hidden=false;
       dom('rc13-retry').hidden=true;dom('rc13-reload').disabled=true;
       setText('rc13-state',label('loading'));
+      dom('rc13-state').dataset.stateKey='loading';
       const requestAbort=new AbortControllerImpl();abort=requestAbort;
       try{
         const relative='/api/v2/founder/cases/'+parsed.caseId+'/workspace';
