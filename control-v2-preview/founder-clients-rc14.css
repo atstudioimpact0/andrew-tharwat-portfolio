@@ -1,0 +1,29 @@
+/* ATS RC14 Founder Case Index — premium extension of existing RC13 */
+.rc14-controls{display:flex;align-items:end;gap:14px;margin:24px 0 16px}
+.rc14-input-wrap{flex:1;min-width:0}
+.rc14-input-wrap label{display:block;font-size:10px;letter-spacing:.10em;color:#87938a;font-weight:700;margin-bottom:8px}
+.rc14-input-wrap input{display:block;width:100%;font:inherit;font-size:13px;min-height:47px;padding:10px 14px;color:#193540;border:1px solid #d9e0d9;background:#fff;border-radius:2px}
+.rc14-controls .btn{min-height:47px;min-width:105px}
+.rc14-input-wrap input:focus-visible,.rc14-entry-link:focus-visible{outline:2px solid #ac9575;outline-offset:3px}
+.rc14-panel{background:white;border:1px solid #e1e6e0;min-height:230px}
+.rc14-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #edf0eb;padding:17px 21px}
+.rc14-panel-head p{margin:0;color:#243f49;font-size:13px;font-weight:700}
+.rc14-panel-head small{color:#9a9184;letter-spacing:.08em;font-size:9px}
+.rc14-status{margin:25px 22px;color:#50676b;font-size:14px;line-height:1.9}
+.rc14-status[hidden],.rc14-retry[hidden]{display:none!important}
+.rc14-retry{margin:0 22px 24px}
+.rc14-list{list-style:none;margin:0;padding:0}
+.rc14-entry{border-bottom:1px solid #edf0eb;margin:0;padding:0}
+.rc14-entry:last-child{border-bottom:none}
+.rc14-entry-link{display:block;padding:22px 24px 20px;text-decoration:none;color:#1f3b46;transition:background .15s ease}
+.rc14-entry-link:hover{background:#f8f8f4}
+.rc14-entry-top{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.rc14-entry-top strong{font-size:17px;font-weight:800;overflow-wrap:anywhere}
+.rc14-entry-top small{font-size:11px;color:#758587}
+.rc14-preview{display:block;margin-top:9px;font-size:13px;color:#60767a;line-height:1.8;overflow-wrap:anywhere}
+.rc14-open{display:inline-block;margin-top:12px;color:#947b50;font-size:12px;font-weight:750}
+.rc14-limit{padding:0 22px;color:#8b754e;font-size:11px;line-height:1.9}
+.rc14-limit:empty{display:none}
+.rc14-caption{margin:17px 0;font-size:11px;color:#758487;line-height:1.9}
+@media(max-width:620px){.rc14-controls{display:block}.rc14-controls .btn{width:100%;margin-top:12px}.rc14-panel-head{display:block}.rc14-panel-head small{display:block;margin-top:6px}.rc14-entry-link{padding:19px 16px}.rc14-entry-top{align-items:start}}
+@media(prefers-reduced-motion:reduce){.rc14-entry-link{transition:none}}
