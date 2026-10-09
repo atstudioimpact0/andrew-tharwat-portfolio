@@ -14,7 +14,7 @@
   const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   const PATH=/^\/control-v2\/cases\/([0-9a-f-]{36})\/?$/i;
   const L={
-    ar:{page:'ملف العميل',source:'بيانات من طلب العميل — لم يتم تأكيدها بالأدلة',
+    ar:{back:'← قائمة العملاء',page:'ملف العميل',source:'بيانات من طلب العميل — لم يتم تأكيدها بالأدلة',
       problem:'المشكلة',known:'ما نعرفه',missing:'ما ينقصنا',next:'الخطوة التالية',
       more:'سياق إضافي',service:'مجال الطلب',uploads:'مرفقات مسجلة',
       state:'حالة التحليل',pending:'مراجعات تنتظر القرار',work:'مهام جارية',
@@ -29,7 +29,7 @@
       blocked:'ليست لديك صلاحية الوصول لهذا الملف.',
       unavailable:'الملف غير متاح أو لا ينتمي لنطاقك.',
       noCount:'غير معروف'},
-    en:{page:'Client case',source:'Client intake statement — evidence not yet verified',
+    en:{back:'← All clients',page:'Client case',source:'Client intake statement — evidence not yet verified',
       problem:'The challenge',known:'What we know',missing:'What is missing',next:'Next human action',
       more:'Additional context',service:'Service area',uploads:'Recorded uploads',
       state:'Analysis state',pending:'Pending review',work:'Active work',
@@ -83,6 +83,7 @@
         'rc13-missing','rc13-next','rc13-metrics','rc13-note'])setText(id,'');
     }
     function translate(){
+      if(dom('rc13-back'))setText('rc13-back',label('back'));
       setText('rc13-page-title',label('page'));
       setText('rc13-label-problem',label('problem'));
       setText('rc13-label-known',label('known'));
