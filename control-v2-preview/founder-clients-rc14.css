@@ -27,3 +27,9 @@
 .rc14-caption{margin:17px 0;font-size:11px;color:#758487;line-height:1.9}
 @media(max-width:620px){.rc14-controls{display:block}.rc14-controls .btn{width:100%;margin-top:12px}.rc14-panel-head{display:block}.rc14-panel-head small{display:block;margin-top:6px}.rc14-entry-link{padding:19px 16px}.rc14-entry-top{align-items:start}}
 @media(prefers-reduced-motion:reduce){.rc14-entry-link{transition:none}}
+
+/* RC15: human-triggered, no-auto-fetch continuation. */
+.rc15-pagination{display:flex;justify-content:center;align-items:center;padding:16px 20px 9px}
+.rc15-pagination [hidden]{display:none!important}
+.rc15-pagination .btn{min-width:210px;min-height:44px}
+@media(max-width:520px){.rc15-pagination .btn{width:100%}}
