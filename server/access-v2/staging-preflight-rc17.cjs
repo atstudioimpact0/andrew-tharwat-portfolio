@@ -27,7 +27,7 @@ function inspectStageRc17({settings={},clientSecret,oidcEncryptionKey,pool,oidc,
  // This is a PRIVATE server checklist: manual approvals must be evidenced
  // outside this shape-check. Never treat this result as auth authorization.
  const configured=[
-  ['zoho_issuer_supported',SUPPORTED_ZOHO_ORIGINS.has(settings?.issuer)],
+  ['zoho_issuer_supported',SUPPORTED_ZOHO_ORIGINS.includes(settings?.issuer)],
   ['zoho_client_id_present',requiredString(settings?.clientId,3,300)],
   ['zoho_secret_present',requiredString(clientSecret,8,1024)],
   ['staging_callback_exact',settings?.callbackUrl===CALLBACK],
