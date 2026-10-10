@@ -4,8 +4,15 @@
  */
 (function(){
 'use strict';
-const root='/ats-control-test/', casePage=location.pathname.endsWith('/case.html');
+const root='/ats-control-test/', casePage=/\/case(?:\.html)?\/?$/.test(location.pathname);
 const shell=window.ATS_RC20_SHELL.create({documentRef:document});
+// This route is a PUBLIC mock on Production: never imply real Founder authentication.
+const label=document.querySelector('.rc13-safety');
+if(label)label.textContent='PUBLIC UX TEST · FICTIONAL DATA · NO LOGIN';
+const listScope=document.querySelector('.rc14-panel-head small');
+if(listScope)listScope.textContent='SYNTHETIC CASES · NO DATABASE';
+const scope=document.getElementById('rc20-statusline');
+if(scope)scope.textContent='Official-site UX lab · Fictional data only · Nothing is saved';
 const id=n=>'83b5d6ae-73c4-42de-9f78-'+String(n).padStart(12,'0');
 const isDemoId=value=>/^83b5d6ae-73c4-42de-9f78-\d{12}$/.test(value)&&Number(value.slice(-12))>=1&&Number(value.slice(-12))<=27;
 const selected=new URLSearchParams(location.search).get('case')||id(1);
@@ -66,7 +73,7 @@ if(casePage){
   if(!anchor)return;
   event.preventDefault();
   const candidate=anchor.getAttribute('href')?.split('/').at(-1);
-  if(isDemoId(candidate))location.assign(root+'case.html?case='+encodeURIComponent(candidate));
+  if(isDemoId(candidate))location.assign(root+'case?case='+encodeURIComponent(candidate));
  });
 }
 document.getElementById('ats-lab-scenario').addEventListener('change',()=>{
