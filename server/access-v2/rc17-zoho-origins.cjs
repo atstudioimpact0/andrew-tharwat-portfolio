@@ -7,6 +7,7 @@ const SUPPORTED_ZOHO_ORIGINS=Object.freeze([
  'https://accounts.zoho.com','https://accounts.zoho.eu',
  'https://accounts.zoho.in','https://accounts.zoho.com.au',
  'https://accounts.zoho.jp','https://accounts.zoho.com.cn',
- 'https://accounts.zoho.ca','https://accounts.zoho.sa'
+ 'https://accounts.zohocloud.ca','https://accounts.zoho.sa',
+ 'https://accounts.zoho.uk','https://accounts.zoho.ae'
 ]);
 module.exports={SUPPORTED_ZOHO_ORIGINS};
