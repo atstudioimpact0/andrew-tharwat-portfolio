@@ -81,6 +81,7 @@
       return true;
     } catch(e) {
       Object.keys(rows).forEach(k=>{rows[k]=[];});
+      updateReturnLink(); // Never retain a project return link after access refresh fails.
       $('#team-metrics',root).innerHTML='';
       $('#team-content',root).innerHTML='<div class="team-empty">Workspace could not refresh. Check your access and try again.</div>';
       message(e.message || 'Could not load team workspace',true);
