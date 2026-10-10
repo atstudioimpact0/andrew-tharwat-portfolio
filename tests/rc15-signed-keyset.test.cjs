@@ -21,12 +21,12 @@ function setup({role='founder',rows=records()}={}){
  const lookupStaff=async({issuer,subject})=>issuer===user.issuer&&subject===user.subject?{...user}:null;
  const pool={async query(sql,args){
   queries.push({sql,args});
-  assert.match(sql,/WHERE sc.tenant_id=\$1/);
-  assert.match(sql,/ORDER BY c.updated_at DESC,c.id DESC LIMIT 26/);
+  assert.match(sql,/ats_core\.ats_list_scoped_case_index_v1/);
+  assert.doesNotMatch(sql,/JOIN ats_core\.|FROM ats_core\.studio_/);
   if(args[0]!=='tenant-scoped-ATS')return {rows:[]};
   let rs=rows;
-  if(args.length===3){
-   assert.match(sql,/c.updated_at,c.id\)<\(\$2::timestamptz,\$3::uuid\)/);
+  if(args[1]!==null){
+   assert.match(sql,/\$2::timestamptz,\$3::uuid/);
    rs=rs.filter(x=>x.cursor_updated<args[1]||(x.cursor_updated===args[1]&&x.case_id<args[2]));
   }
   return {rows:rs.slice(0,26)};
@@ -51,9 +51,9 @@ test('RC15 paginates 63 matching cases in exact keyset order, no duplicates or o
   tokens.add(r.body.next_cursor);cursor=r.body.next_cursor;
  }
  assert.equal(total,3);assert.equal(seen.length,63);assert.equal(new Set(seen).size,63);
- assert.deepEqual(f.queries.map(q=>q.args.length),[1,3,3]);
+ assert.deepEqual(f.queries.map(q=>q.args.length),[3,3,3]);
  assert.equal(f.queries[1].args[0],'tenant-scoped-ATS');
- assert.match(f.queries[0].sql,/to_char\(c.updated_at AT TIME ZONE 'UTC'/);
+ assert.match(f.queries[0].sql,/ats_core\.ats_list_scoped_case_index_v1/);
 });
 test('RC15 creates no cursor for empty/short list; no SQL for non-Founder',async()=>{
  const f=setup({rows:[]}),cookie=await f.login();
