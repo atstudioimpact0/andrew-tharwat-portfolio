@@ -25,7 +25,10 @@ const CONTENT={
  'founder-staging-rc13.js':'text/javascript; charset=utf-8',
  'founder-staging-rc13-init.js':'text/javascript; charset=utf-8',
  'founder-clients-rc14.js':'text/javascript; charset=utf-8',
- 'founder-clients-rc14-init.js':'text/javascript; charset=utf-8'
+ 'founder-clients-rc14-init.js':'text/javascript; charset=utf-8',
+ 'founder-shell-rc20.css':'text/css; charset=utf-8',
+ 'founder-shell-rc20.js':'text/javascript; charset=utf-8',
+ 'logo-mark-official.png':'image/png'
 };
 const CSP="default-src 'none'; script-src 'self'; style-src 'self'; "+
   "img-src 'self' data:; font-src 'self'; connect-src 'self'; "+
@@ -83,7 +86,8 @@ function createTrustedIngressRc16({runtime,sessionStore,lookupStaff,readStatic})
   const caseMatch=/^\/control-v2\/cases\/([0-9a-f-]{36})$/i.exec(u.pathname);
   const isCase=!!caseMatch&&UUID.test(caseMatch[1]);
   let file=null;
-  if(isIndex)file='founder-clients-rc14.html';
+  if(u.pathname==='/control-v2/assets/logo-mark-official.png')file='logo-mark-official.png';
+  else if(isIndex)file='founder-clients-rc14.html';
   else if(isCase)file='founder-staging-rc13.html';
   else if(u.pathname.startsWith('/control-v2-preview/')){
    const part=u.pathname.slice('/control-v2-preview/'.length);
@@ -109,8 +113,15 @@ function createTrustedIngressRc16({runtime,sessionStore,lookupStaff,readStatic})
    // readStatic receives a literal allowlisted filename, never a raw user
    // path. Production must ensure this resolves to bundled, immutable bytes.
    const content=await readStatic(file);
-   if(typeof content!=='string'||content.length>300000||content.length===0)
-    throw Error('unavailable static asset');
+   const logo=file==='logo-mark-official.png';
+   const pngSignature=Buffer.from([137,80,78,71,13,10,26,10]);
+   if(logo){
+     if(!Buffer.isBuffer(content)||content.length<24||content.length>300000||
+       !content.subarray(0,8).equals(pngSignature))
+       throw Error('invalid PNG asset');
+   }else if(typeof content!=='string'||content.length>300000||content.length===0){
+     throw Error('unavailable static asset');
+   }
    return respond(200,content,CONTENT[file]);
   }catch{return respond(503,{error:'temporarily_unavailable'})}
  };
