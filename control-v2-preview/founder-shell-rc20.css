@@ -1,0 +1,66 @@
+/* AT STUDIO / Release A RC20 — canonical Founder shell (RC13/RC14).
+   Founder-first design: problem > evidence > one next action.
+   This is the protected Staging candidate, not an offline template. */
+.rc20-layout{display:grid;grid-template-columns:254px minmax(0,1fr);min-height:100dvh;direction:inherit}
+.rc20-rail{background:#0c2633;color:#d8e5e4;padding:29px 17px 22px;position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;overflow-y:auto;z-index:24}
+.rc20-brand{display:flex;align-items:center;gap:13px;padding:0 10px;text-decoration:none;color:inherit;min-width:0}
+.rc20-brand img{width:39px;height:39px;object-fit:contain;border:1px solid #8a826d;padding:4px;flex-shrink:0}
+.rc20-brand strong{display:block;font:700 12px/1.5 "Segoe UI",Arial,sans-serif;letter-spacing:.19em;color:white}
+.rc20-brand small{display:block;margin-top:4px;font:500 8px/1.4 "Segoe UI",Arial,sans-serif;letter-spacing:.16em;color:#849faa}
+.rc20-rail-rule{height:1px;background:#304955;margin:29px 9px 24px}
+.rc20-rail-kicker{font-size:9px;font-weight:700;letter-spacing:.15em;color:#91a8b0;padding:0 12px;margin-bottom:12px}
+.rc20-nav{display:grid;gap:7px}
+.rc20-nav-link{display:flex;align-items:center;gap:11px;color:#bbd0d2;padding:13px 14px;min-height:46px;font-size:12px;font-weight:750;text-decoration:none;border:1px solid transparent;outline-offset:3px}
+.rc20-nav-link:hover{background:#183845;color:white}
+.rc20-nav-link[aria-current="page"]{color:white;background:#193e4a;border-color:#395766;box-shadow:inset 3px 0 #c0a47a}
+html[dir=rtl] .rc20-nav-link[aria-current="page"]{box-shadow:inset -3px 0 #c0a47a}
+.rc20-nav-link svg{width:18px;height:18px;color:#b7a27c;flex:none}
+.rc20-nav-link span{flex:1}
+.rc20-nav-link small{font:700 10px Arial,sans-serif;color:#70909a}
+.rc20-rail-footer{margin-top:auto;padding:22px 11px 0;border-top:1px solid #36515d}
+.rc20-rail-footer b{display:block;color:#c9ab7c;font:700 10px Arial,sans-serif;letter-spacing:.1em}
+.rc20-rail-footer p{margin:9px 0 13px;color:#bac9cb;font-size:11px;line-height:1.95}
+.rc20-rail-footer small{color:#7f9ba5;font-size:9px;letter-spacing:.06em}
+.rc20-main{min-width:0;background:#f6f7f4}
+.rc20-main .rc13-header{background:#fff;color:#19353e;border-bottom:1px solid #dfe6df;min-height:73px;padding:12px clamp(20px,3.1vw,52px)}
+.rc20-main .rc13-brand strong,.rc20-main .rc20-top-context strong{color:#314d56}
+.rc20-main .rc13-brand small,.rc20-main .rc20-top-context small{color:#83969b}
+.rc20-main .rc13-tag{color:#82765e}
+.rc20-main .rc13-lang-btn{color:#25434e;border:1px solid #d9e1dc}
+.rc20-top-context{display:flex;align-items:center;gap:14px;min-width:0}
+.rc20-top-context strong{display:block;font:700 10px "Segoe UI",Arial,sans-serif;letter-spacing:.12em}
+.rc20-top-context small{display:block;font-size:9px;line-height:1.6;margin-top:3px}
+.rc20-main .rc13-container{width:min(calc(100% - 44px),1130px);margin:0 auto}
+.rc20-main .rc13-heading h1{font-size:clamp(29px,3.2vw,40px)}
+.rc20-main .rc13-heading .eyebrow{letter-spacing:.17em}
+.rc20-statusline{margin:10px 0 17px;color:#687f82;font-size:12px;line-height:1.8;max-width:720px}
+.rc20-rail-dismiss{display:none}
+.rc20-menu{display:none;border:1px solid #d9e1dc;background:white;color:#153641;width:42px;height:42px;flex:none;font-size:21px;place-items:center}
+.rc20-overlay{display:none}
+.rc20-main .rc13-toolbar{min-width:0;flex-wrap:wrap}
+.rc20-main .rc13-footer{margin-top:40px}
+.rc20-main .rc11-knowledge{gap:16px}
+.rc20-main .rc11-problem{border-radius:2px}
+.rc20-main .rc11-decision{border-inline-start:3px solid #b89b6b}
+.rc20-main .rc14-panel{box-shadow:0 6px 23px rgba(13,35,41,.04)}
+.rc20-main .rc14-entry-link{border-inline-start:3px solid transparent}
+.rc20-main .rc14-entry-link:hover{border-inline-start-color:#ba9f74}
+.rc20-main .rc13-source{font-size:11px}
+@media(max-width:1080px){.rc20-layout{grid-template-columns:218px minmax(0,1fr)}.rc20-rail{padding-inline:11px}.rc20-main .rc13-header{padding-inline:23px}}
+@media(max-width:800px){
+ .rc20-layout{display:block}
+ .rc20-rail{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(288px,82vw);height:100dvh;transform:translateX(105%);box-shadow:none;transition:transform .2s ease}
+ html[dir=ltr] .rc20-rail{transform:translateX(-105%)}
+ .rc20-layout.rc20-nav-open .rc20-rail{transform:translateX(0);box-shadow:0 22px 80px rgba(4,19,29,.34)}
+ .rc20-rail-dismiss{display:grid;place-items:center;position:absolute;inset-inline-end:17px;top:28px;border:1px solid #45606a;color:white;background:transparent;width:34px;height:34px;font-size:19px}
+ .rc20-menu{display:grid}
+ .rc20-overlay{position:fixed;inset:0;z-index:23;background:rgba(3,17,23,.67)}
+ .rc20-layout.rc20-nav-open .rc20-overlay{display:block}
+ .rc20-main .rc13-header{min-height:67px;padding-inline:15px}
+ .rc20-main .rc13-container{width:calc(100% - 30px);padding-block:24px 42px}
+ .rc20-main .rc13-tag{display:none}
+ .rc20-main .rc13-heading h1{font-size:29px}
+ .rc20-main .rc13-toolbar{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:430px){.rc20-top-context strong{font-size:9px}.rc20-top-context small{font-size:8px}.rc20-main .rc13-container{width:calc(100% - 24px)}.rc20-main .rc13-header{gap:6px}}
+@media(prefers-reduced-motion:reduce){.rc20-rail{transition:none}}
