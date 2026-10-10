@@ -16,3 +16,11 @@
 .ats-readiness-item p{margin:5px 0;font-size:11px;line-height:1.65;color:#d1dce2}
 .ats-readiness-disclaimer,.ats-readiness-quiet{font-size:11px;color:#98adba;line-height:1.7;margin:14px 0 0}
 @media(max-width:760px){.ats-readiness-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ats-readiness-issues{grid-template-columns:1fr}.team-engine .ats-readiness{padding:14px}}
+
+/* RC24: next action reuses existing task dialog and never triggers status changes */
+.ats-readiness-next{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:0 0 16px;padding:14px 16px;border:1px solid rgba(104,178,204,.27);border-radius:11px;background:rgba(49,116,140,.09)}
+.ats-readiness-next-copy{min-width:0}
+.ats-readiness-next h4{margin:5px 0 3px;color:#edf6fa;font-size:15px;overflow-wrap:anywhere}
+.ats-readiness-next p{margin:5px 0 0;color:#afc5d0;font-size:12px;line-height:1.65}
+.team-engine .ats-readiness-next-open{flex:0 0 auto;background:#11364a;border-color:#51859b;color:#f5fafc;font-size:11px;font-weight:800;min-height:44px}
+@media(max-width:650px){.ats-readiness-next{align-items:stretch;flex-direction:column}.team-engine .ats-readiness-next-open{width:100%}}
