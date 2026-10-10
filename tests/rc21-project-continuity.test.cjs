@@ -133,3 +133,33 @@ test('RC21 changed actual operational scripts are syntactically valid',()=>{
   assert.doesNotThrow(()=>execFileSync(process.execPath,['--check',path.join(root,p)],{stdio:'pipe'}),p);
  }
 });
+
+
+test('RC21 round trip Project → Team → same authorized Project keeps existing permissions',()=>{
+ const admin=read('admin/admin-unified.js');
+ const team=read('team-v9/engine.js');
+ assert.match(team,/validProjectForReturn=admin&&/);
+ assert.match(team,/resume_project/);
+ assert.match(team,/← Return to this project/);
+ assert.match(admin,/new URLSearchParams\(location\.search\)\.get\('resume_project'\)/);
+ assert.match(admin,/state\.projects\.some\(p=>p\.id===resume\)/);
+ assert.match(admin,/window\.ATS_ADMIN\?\.switchTab\?\.\('studio-projects'\)/);
+ assert.match(admin,/history\.replaceState\(null,''\,location\.pathname\+'#studio-projects'\)/);
+ // No project ID entered in a URL can bypass the existing Trusted Device
+ // browser gate or approved database project list.
+ assert.ok(admin.indexOf("if(state.booted||!sb())return;")<
+  admin.indexOf("const resume=new URLSearchParams(location.search)"));
+ assert.doesNotMatch(team,/studio_token_ledger.*(?:insert|update|delete)/);
+ assert.doesNotMatch(read('admin/project-continuity-rc21.js'),/studio_team_command/);
+});
+test('RC21 both operational screens compile, and existing wallet/member tasks remain intact',()=>{
+ const team=read('team-v9/engine.js');
+ for(const token of ['studio_token_ledger','studio_team_command',
+  'studio_domain_command','studio_task_events','studio_task_dependencies',
+  "tab==='wallet'","tab==='reviews'","tab==='history'"]){
+  assert.ok(team.includes(token),token);
+ }
+ for(const p of ['team-v9/engine.js','admin/admin-unified.js']){
+  assert.doesNotThrow(()=>execFileSync(process.execPath,['--check',path.join(root,p)],{stdio:'pipe'}),p);
+ }
+});
