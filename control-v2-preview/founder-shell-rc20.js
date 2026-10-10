@@ -32,6 +32,9 @@
     overlay=el('rc20-overlay'),dismiss=el('rc20-dismiss');
   if(!rootEl||!sidebar||!button||!overlay||!dismiss)throw Error('RC20 shell markup missing');
   let open=false,disposed=false;
+  // Initialize ARIA state even before the first user interaction.
+  button.setAttribute('aria-expanded','false');
+  overlay.hidden=true;
   const getLang=()=>documentRef.documentElement.lang==='en'?'en':'ar';
   const words=()=>dict[getLang()];
   function translate(){
