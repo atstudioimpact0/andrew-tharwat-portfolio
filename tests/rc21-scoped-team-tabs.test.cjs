@@ -25,9 +25,9 @@ function renderHarness(tab='tasks',requestedProject=A){
  const $=sel=>(els[sel]??=(Object.assign({innerHTML:'',textContent:'',style:{}},{dataset:{}})));
  const metric=(name,n)=>'<span>'+name+': '+n+'</span>';
  const taskCard=t=>'<task>'+t.id+'</task>';
- const render=new Function('admin','requestedProject','rows','root','$','tab','me','myDomains','metric','openStates','overdue','escalated','load','taskCard','renderDomains','renderTaskBoard','renderWallet','context','name',
+ const render=new Function('admin','requestedProject','rows','root','$','tab','me','myDomains','metric','openStates','overdue','escalated','load','taskCard','renderDomains','renderTaskBoard','renderWallet','context','name','renderReadiness',
  renderSource+';return render;')(admin,requestedProject,rows,root,$,tab,me,()=>[],metric,['assigned','in_progress','review'],
- ()=>false,()=>false,()=>0,taskCard,()=>{},()=>{},()=>{},()=>({}),()=>'-');
+ ()=>false,()=>false,()=>0,taskCard,()=>{},()=>{},()=>{},()=>({}),()=>'-',()=>{});
  render();
  return els;
 }
