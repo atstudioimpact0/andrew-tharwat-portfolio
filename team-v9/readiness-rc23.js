@@ -63,6 +63,36 @@
      });
    });
    const count=k=>items.filter(t=>t.reasons.includes(k)).length;
+   // A meaningful first action can already exist even when ZERO new tasks
+   // are assignable. Never propose bypassing reviewer or dependency rules.
+   const unmetFor=t=>arr(edges.get(t.id)).filter(id=>!byId.has(id)||!finished(byId.get(id).status)).length;
+   const selected = scoped.find(t=>t.status==='review') ||
+     scoped.find(t=>t.status==='assigned'&&t.owner_id&&unmetFor(t)===0) ||
+     scoped.find(t=>t.status==='in_progress'&&t.owner_id) ||
+     scoped.find(t=>t.status==='available'&&items.some(x=>x.id===t.id&&x.ready)) ||
+     scoped.find(t=>t.status==='available'&&items.some(x=>x.id===t.id&&x.unmet===0&&x.reasons.includes('reviewer'))) ||
+     null;
+   const stepKind=selected?.status==='review'?'review':
+     selected?.status==='assigned'?'assigned':
+     selected?.status==='in_progress'?'in_progress':
+     selected?.status==='available'&&items.some(x=>x.id===selected.id&&x.ready)?'assign':
+     selected?.status==='available'?'reviewer_setup':'none';
+   const stepText=Object.freeze({
+     review:'A submitted task needs a decision from its authorized reviewer.',
+     assigned:'This task is already assigned and has no unmet prerequisites. The assigned employee can start it.',
+     in_progress:'Work is underway. The assigned employee must submit evidence before a reviewer can accept it.',
+     assign:'This task passes the advisory readiness checks. Founder can review assignment using existing controls.',
+     reviewer_setup:'Separate reviewer and owner before assigning this root task.',
+     none:'No actionable task is visible in the loaded project records.'
+   });
+   const nextStep=Object.freeze({
+     kind:stepKind,
+     taskId:selected?.id||null,
+     title:selected?.title?String(selected.title).slice(0,180):'',
+     instruction:stepText[stepKind],
+     // Real actions stay on the already-authorized Team task dialog.
+     action:stepKind==='reviewer_setup'?'task':'details'
+   });
    return Object.freeze({
      ready:true,projectId,available:items.length,
      canAssign:items.filter(t=>t.ready).length,
@@ -70,6 +100,7 @@
      noSkillMatch:count('skill'),
      waitingOnPrerequisites:count('prereq'),
      capacityBlocked:count('capacity'),
+     nextStep,
      items:Object.freeze(items)
    });
  }
@@ -87,6 +118,19 @@
    const title=add(header,'div','');
    add(title,'span','ats-readiness-kicker','PROJECT · ASSIGNMENT PREFLIGHT');
    add(title,'h3','','Know what blocks the next assignment.');
+   const step=model.nextStep;
+   if(step?.taskId){
+     const feature=add(node,'section','ats-readiness-next');
+     const detail=add(feature,'div','ats-readiness-next-copy');
+     add(detail,'span','ats-readiness-kicker','NEXT HUMAN ACTION · NO AUTOMATIC TRANSITION');
+     add(detail,'h4','',step.title);
+     add(detail,'p','',step.instruction);
+     const btn=add(feature,'button','ats-readiness-next-open',
+       step.action==='task'?'REVIEW TASK & REASSIGN REVIEWER →':'OPEN ORIGINAL TASK DETAILS →');
+     btn.type='button';
+     btn.dataset.teamAction=step.action;
+     btn.dataset.id=step.taskId;
+   }
    const sums=add(node,'div','ats-readiness-metrics');
    for(const [name,value] of [
      ['Ready for assignment',model.canAssign],
