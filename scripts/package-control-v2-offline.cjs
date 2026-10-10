@@ -98,16 +98,17 @@ function pack(page) {
  */
 function packFounderStageOffline() {
   const styles=['control-v2.css','premium.css','ultra.css',
-    'founder-case-rc11.css','founder-staging-rc13.css'];
+    'founder-case-rc11.css','founder-staging-rc13.css','founder-shell-rc20.css'];
   let html=fs.readFileSync(path.join(source,'founder-staging-rc13.html'),'utf8');
-  html=replaceExactly(html,'href="/control-v2/clients"','href="./founder-rc14-offline.html"');
+  html=replaceExactly(html,'href="/control-v2/clients"','href="./founder-rc14-offline.html"',2);
+  html=replaceExactly(html,'src="/control-v2/assets/logo-mark-official.png"','src="'+logoURI+'"');
   for (const filename of styles) {
     html=replaceExactly(html,
       '<link rel="stylesheet" href="/control-v2-preview/'+filename+'">',
       inlineCSS(filename));
   }
   for (const file of ['founder-case-contract-rc12.js',
-    'founder-staging-rc13.js','founder-staging-rc13-init.js']) {
+    'founder-staging-rc13.js','founder-staging-rc13-init.js','founder-shell-rc20.js']) {
     html=replaceExactly(html,
       '<script src="/control-v2-preview/'+file+'" defer></script>','');
   }
@@ -135,6 +136,7 @@ function packFounderStageOffline() {
     '(function(){',
     '  "use strict";',
     '  const sample='+fixture+';',
+    '  const shell=window.ATS_RC20_SHELL.create({documentRef:document});',
     '  const app=window.ATS_RC13_CASE.create({',
     '    locationHref:"https://staging.atstudioimpact.com/control-v2/cases/'+id+'",',
     '    fetchFn:async()=>({status:200,',
@@ -143,11 +145,12 @@ function packFounderStageOffline() {
     '    bridge:window.ATS_RC12_CASE,documentRef:document,',
     '    AbortControllerImpl:window.AbortController',
     '  });',
-    '  window.addEventListener("pagehide",()=>app.dispose(),{once:true});',
+    '  window.addEventListener("pagehide",()=>{app.dispose();shell.dispose();},{once:true});',
     '  void app.load();',
     '})();'
   ].join('\n');
   html=replaceExactly(html,'</body>',
+    inlineJS('founder-shell-rc20.js')+'\n'+
     inlineJS('founder-case-contract-rc12.js')+'\n'+
     inlineJS('founder-staging-rc13.js')+'\n'+
     '<script data-offline-source="rc13-synthetic-only">\n'+demoScript+'\n</script>\n</body>');
@@ -184,13 +187,15 @@ function packFounderStageOffline() {
  */
 function packFounderClientIndexOffline() {
   const styles=['control-v2.css','premium.css','ultra.css',
-    'founder-case-rc11.css','founder-staging-rc13.css','founder-clients-rc14.css'];
+    'founder-case-rc11.css','founder-staging-rc13.css','founder-clients-rc14.css','founder-shell-rc20.css'];
   let html=fs.readFileSync(path.join(source,'founder-clients-rc14.html'),'utf8');
+  html=replaceExactly(html,'href="/control-v2/clients"','href="./founder-rc14-offline.html"',2);
+  html=replaceExactly(html,'src="/control-v2/assets/logo-mark-official.png"','src="'+logoURI+'"');
   for(const file of styles){
     html=replaceExactly(html,'<link rel="stylesheet" href="/control-v2-preview/'+file+'">',
       inlineCSS(file));
   }
-  for(const file of ['founder-clients-rc14.js','founder-clients-rc14-init.js']){
+  for(const file of ['founder-clients-rc14.js','founder-clients-rc14-init.js','founder-shell-rc20.js']){
     html=replaceExactly(html,
       '<script src="/control-v2-preview/'+file+'" defer></script>','');
   }
@@ -213,6 +218,7 @@ function packFounderClientIndexOffline() {
     '  "use strict";',
     '  const first='+fixture+';',
     '  const after='+nextFixture+';',
+    '  const shell=window.ATS_RC20_SHELL.create({documentRef:document});',
     '  const app=window.ATS_RC14_LIST.create({',
     '    locationHref:"https://staging.atstudioimpact.com/control-v2/clients",',
     '    fetchFn:async (path)=>({status:200,headers:{get:()=> "application/json"},',
@@ -223,11 +229,12 @@ function packFounderClientIndexOffline() {
     '    const link=event.target.closest("#rc14-list a");',
     '    if(link){event.preventDefault();window.location.href="./founder-rc13-offline.html"}',
     '  });',
-    '  window.addEventListener("pagehide",()=>app.dispose(),{once:true});',
+    '  window.addEventListener("pagehide",()=>{app.dispose();shell.dispose();},{once:true});',
     '  void app.load();',
     '})();'
   ].join('\n');
   html=replaceExactly(html,'</body>',
+    inlineJS('founder-shell-rc20.js')+'\n'+
     inlineJS('founder-clients-rc14.js')+'\n'+
     '<script data-offline-source="rc14-synthetic-only">\n'+script+'\n</script>\n</body>');
   html=replaceExactly(html,'<body class="rc13-body rc14-body">',
@@ -262,7 +269,8 @@ fs.writeFileSync(path.join(output, 'README.txt'), [
  '2. Double-click control-room-preview.html in Chrome or Edge.',
  '3. Use Ctrl+K to search and navigate. Explore Clients and Studio.',
  '4. Use Studio > Access Preview to open access-preview.html.',
- '5. Open founder-rc14-offline.html: load 25 FICTIONAL clients, then click Load More for two more.',
+ '5. Open founder-rc14-offline.html: premium RC20 Founder shell with 25 FICTIONAL clients.',
+ '   Test mobile navigation and Arabic / English. Click Load More for two more demo clients.',
  '   Choose a fictional client to open the RC13 offline case. No live API connection.',
  '6. You can also open founder-rc13-offline.html directly (FAKE data only).',
  '   Both RC13/RC14 pages are mock demos, with no backend or real login.',
