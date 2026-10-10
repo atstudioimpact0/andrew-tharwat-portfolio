@@ -1,0 +1,16 @@
+/* RC21 · Small decision layer, not a replacement for existing operations. */
+.ats-pulse{padding:20px 23px;border:1px solid rgba(176,153,112,.35);background:linear-gradient(112deg,#0e2a3a,#173b48);color:#eaf1f0;margin:18px 0 22px;display:grid;gap:17px;min-width:0}
+.ats-pulse-top{display:flex;justify-content:space-between;gap:20px;align-items:start;flex-wrap:wrap}
+.ats-pulse-name h3{font-size:18px;line-height:1.45;margin:6px 0 0;color:#fff;font-weight:700}
+.ats-pulse-eyebrow{font-size:10px;letter-spacing:.16em;font-weight:750;color:#c9aa78}
+.ats-pulse-metrics{display:flex;gap:15px;flex-wrap:wrap}
+.ats-pulse-metric{display:grid;gap:2px;min-width:52px}
+.ats-pulse-metric strong{font-size:20px;color:white;font-weight:800}
+.ats-pulse-metric small{font-size:10px;color:#c5d5d6}
+.ats-pulse-next{display:flex;gap:18px;justify-content:space-between;align-items:center;padding-top:13px;border-top:1px solid #3d5864;flex-wrap:wrap}
+.ats-pulse-next p{color:#f7faf8;font-size:13px;line-height:1.65;margin:6px 0 0;max-width:720px}
+.ats-pulse-go{padding:11px 15px;min-height:42px;border:1px solid #cfb48b;color:#102b39;background:#d0b58e;font-size:11px;font-weight:800;white-space:normal;text-align:center;cursor:pointer}
+.ats-pulse-go:hover{background:#e1cda8}.ats-pulse-go:focus-visible{outline:3px solid white;outline-offset:3px}
+.ats-pulse-footer{margin:0;color:#b8d0d2;font-size:10px;line-height:1.7}
+.ats-pulse-empty{margin:0;color:#dce7e5;font-size:12px}
+@media(max-width:670px){.ats-pulse{padding:15px}.ats-pulse-metrics{gap:12px}.ats-pulse-metric{min-width:49px}.ats-pulse-go{width:100%}.ats-pulse-name h3{font-size:16px}}
