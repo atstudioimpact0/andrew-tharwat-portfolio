@@ -1,0 +1,19 @@
+/* RC22 — audience clarification; intentionally limited to the Arabic home hero. */
+.hero-copy > .ats-audience-note { display:none; }
+body[data-lang="ar"] .hero-copy > .ats-audience-note {
+  display:flex;
+  width:fit-content;
+  align-items:center;
+  gap:10px;
+  max-width:100%;
+  margin:12px 0 0;
+  color:#e3e9ee;
+  font:600 clamp(13px,1.25vw,16px)/1.8 Alexandria,Tahoma,Arial,sans-serif;
+  letter-spacing:0;
+}
+body[data-lang="ar"] .hero-copy > .ats-audience-note::before {
+  content:""; display:block;flex:0 0 22px;height:2px;background:#ff3349;
+}
+@media(max-width:760px) {
+  body[data-lang="ar"] .hero-copy > .ats-audience-note {margin-top:10px;font-size:13px;}
+}
