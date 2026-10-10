@@ -1,0 +1,11 @@
+# AT STUDIO — Public site discovery hints (not access controls).
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /team-v9/
+Disallow: /client-access/
+Disallow: /ats-control-test/
+Disallow: /move-now/admin/
+Disallow: /move-now/call-center/
+
+Sitemap: https://atstudioimpact.com/sitemap.xml
