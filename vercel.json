@@ -44,7 +44,7 @@
     },
     {
       "source": "/projects/move-now",
-      "destination": "/case-studies/move-now.html"
+      "destination": "/case-studies/move-now"
     },
     {
       "source": "/projects/:slug",
