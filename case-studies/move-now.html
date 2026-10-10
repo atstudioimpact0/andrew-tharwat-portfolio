@@ -1,199 +1,148 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Move Now — Client Operations Case Study | AT Studio</title>
-<link rel="canonical" href="https://atstudioimpact.com/projects/move-now">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Move Now — Digital Operations by AT Studio">
-<meta property="og:description" content="دراسة حالة: نظام استقبال طلبات العملاء وتنظيم العمليات لشركة Move Now.">
-<meta property="og:image" content="https://atstudioimpact.com/move-now/assets/property-transition.webp">
-<meta name="description" content="نظام طلبات عملاء ولوحة تحكم لشركة عقارات وتشطيبات — AT Studio">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06121d">
+  <meta name="description" content="اكتشف كيف بنت AT Studio منظومة رقمية لاستقبال وإدارة ومتابعة طلبات Move Now. جرّب محاكاة آمنة للنظام وشاهد عرض المشروع التفاعلي.">
+  <link rel="canonical" href="https://atstudioimpact.com/projects/move-now">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Move Now × AT Studio — From Request to Follow-up">
+  <meta property="og:description" content="جرّب رحلة الطلب وشاهد كيف تحولت احتياجات Move Now إلى نظام رقمي واحد.">
+  <meta property="og:image" content="https://atstudioimpact.com/move-now/assets/property-transition.webp">
+  <link rel="icon" href="/assets/at-studio-compact-approved.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>Move Now | Interactive Case Study — AT Studio</title>
 <style>
-:root{
-  --bg:#050b14; --card:#0a1420; --line:rgba(255,255,255,.08);
-  --text:#eef2f7; --soft:#c2cddb; --mute:#8a99ad; --red:#ff2a44; --red-soft:#ff5468;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo',system-ui,sans-serif}
-a{color:var(--red-soft)}
-.en{font-family:'Montserrat',sans-serif;direction:ltr}
-
-/* Integrated ATS portfolio case study */
-:focus-visible{outline:2px solid var(--red-soft);outline-offset:3px}
-.logo img{width:170px;height:auto;max-height:50px;object-fit:contain;object-position:left}
-.breadcrumb{display:flex;align-items:center;gap:10px;margin-bottom:26px;font-size:13px;color:#aab6c5}
-.breadcrumb a{text-decoration:none;color:inherit}.breadcrumb a:hover{color:#fff}
-.shot.preview{border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,#10263a,#08121f 65%);align-items:stretch;text-align:start;gap:22px;padding:clamp(22px,4vw,44px);min-height:350px;box-shadow:0 24px 70px rgba(0,0,0,.22)}
-.preview-header{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;direction:ltr;font-family:Montserrat,sans-serif;font-size:12px;letter-spacing:.12em;color:#aab6c5}
-.preview-header strong{color:#fff;font-size:21px;letter-spacing:.02em}
-.preview-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.preview-step{position:relative;min-height:180px;padding:26px 22px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.045)}
-.preview-step b{display:block;font:800 12px Montserrat,sans-serif;color:var(--red-soft);margin-bottom:24px}
-.preview-step strong{display:block;font-size:19px;color:#fff;margin-bottom:10px}
-.preview-step span{display:block;font-size:14px;color:#b7c7d8;line-height:1.7}
-.preview-notice{font-size:12px;color:#9eacbd;line-height:1.7;margin:0}
-@media(max-width:700px){
- .top-in{padding:14px 18px}.logo img{width:124px}
- main{padding:40px 20px 20px;gap:32px}
- h1{font-size:clamp(32px,9vw,52px)}
- .lead{font-size:17px}
- .preview-cols{grid-template-columns:1fr}
- .preview-step{min-height:0;padding:20px}
- .preview-step b{margin-bottom:12px}
- .card{padding:24px}.card h2{font-size:25px}.card p,.card ul{font-size:16px}
- .cta{padding:28px 24px}.meta div{padding:17px 20px}
-}
-/* header */
-.top{border-bottom:1px solid var(--line)}
-.top-in{max-width:1200px;margin:0 auto;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
-.logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:22px;letter-spacing:.04em;color:#fff;direction:ltr;text-decoration:none}
-.logo b{color:var(--red)}
-.logo small{font-size:12px;letter-spacing:.22em;font-weight:700;color:#aab6c5}
-.btn{display:inline-block;background:var(--red);color:#fff;text-decoration:none;font-weight:800;border-radius:999px}
-.btn.sm{font-size:14px;padding:12px 22px}
-.btn.lg{font-size:17px;padding:18px 34px}
-
-/* layout */
-main{max-width:1200px;margin:0 auto;padding:64px 32px 24px;display:flex;flex-direction:column;gap:56px}
-.eyebrow{display:flex;align-items:center;gap:14px;justify-content:flex-end;font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;letter-spacing:.22em;color:#aab6c5;direction:ltr}
-.eyebrow i{display:inline-block;width:44px;height:3px;background:var(--red)}
-h1{margin:22px 0;font-weight:900;font-size:clamp(40px,7vw,84px);line-height:1.15;color:#fff}
-h1 span{color:var(--red)}
-.lead{margin:0 0 22px;max-width:720px;font-size:20px;line-height:1.8;color:var(--soft)}
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.chip{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#dbe3ee;font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px}
-.chip.ph{border-style:dashed;border-color:rgba(255,255,255,.28);color:#9fb0c4;background:none}
-
-/* meta strip */
-.meta{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:20px;background:var(--card);overflow:hidden}
-.meta div{flex:1 1 220px;padding:22px 26px;border-inline-start:1px solid rgba(255,255,255,.06)}
-.meta div:last-child{border-inline-start:0}
-.meta small{display:block;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.06em}
-.meta strong{display:block;margin-top:6px;font-size:18px}
-
-/* image */
-.shot{border:2px dashed rgba(255,255,255,.18);border-radius:24px;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:32px;background:linear-gradient(180deg,rgba(255,42,68,.05),rgba(255,255,255,.01))}
-.shot img{max-width:100%;border-radius:16px;display:block}
-.shot .t{font-size:22px;font-weight:700;color:#fff}
-.shot .s{font-size:15px;color:#9fb0c4;max-width:460px;line-height:1.7}
-
-/* cards */
-.row{display:flex;flex-wrap:wrap;gap:24px}
-.card{flex:1 1 360px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:14px}
-.card .tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:.22em;color:var(--red-soft);direction:ltr}
-.card h2{margin:0;font-size:30px;font-weight:900;color:#fff}
-.card p{margin:0;font-size:18px;line-height:1.9;color:var(--soft)}
-.card ul{margin:0;padding-inline-start:22px;font-size:18px;line-height:1.9;color:var(--soft)}
-.card.result{background:linear-gradient(135deg,rgba(255,42,68,.14),rgba(255,42,68,.03));border-color:rgba(255,42,68,.35)}
-.card.result .tag{color:#ff8a98}
-.card.result .big{font-size:22px;line-height:1.7;font-weight:700;color:#fff}
-.card.result .note{font-size:15px;line-height:1.7;color:#d4dce8}
-
-/* CTA */
-.cta{border:1px solid var(--line);border-radius:28px;background:var(--card);padding:48px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
-.cta .tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:.22em;color:#aab6c5;direction:ltr}
-.cta h2{margin:10px 0 0;font-size:clamp(30px,4vw,44px);line-height:1.3;font-weight:900;color:#fff}
-.cta h2 span{color:var(--red)}
-
-footer{max-width:1200px;margin:8px auto 0;padding:32px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--mute)}
+:root{--bg:#06121d;--deep:#091c2b;--panel:#0d2334;--panel2:#112a3e;--line:rgba(222,240,249,.13);--ink:#f7f9fb;--muted:#a4b4c2;--soft:#cbd7df;--accent:#f23851;--accent-soft:#ff7889;--gold:#d6b477;--radius:24px;--max:1200px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:95px}body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.85 'Alexandria',Tahoma,sans-serif;-webkit-font-smoothing:antialiased}button,a{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}button:disabled{opacity:.36;cursor:not-allowed}img{max-width:100%;display:block}p,h1,h2,h3{margin:0}::selection{background:var(--accent);color:#fff}:focus-visible{outline:3px solid #ffc1ca;outline-offset:4px}button{-webkit-tap-highlight-color:transparent}.shell{width:min(var(--max),calc(100% - 64px));margin:auto}.eng{font-family:Montserrat,Arial,sans-serif;direction:ltr;unicode-bidi:isolate;letter-spacing:.09em}.eyebrow{font:800 11px/1.7 Montserrat,sans-serif;letter-spacing:.22em;direction:ltr;color:var(--gold);display:inline-block}.thin{font-weight:500;color:var(--muted)}.muted{color:var(--muted)}
+.site-head{position:sticky;top:0;z-index:30;background:rgba(6,18,29,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.head-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.ats-brand{display:flex;align-items:center;gap:9px}.ats-brand img{width:134px;max-height:52px;object-fit:contain}.head-links{display:flex;align-items:center;gap:24px}.head-links a{font-weight:600;font-size:13px;color:#c5d1db}.head-links a:hover{color:#fff}.nav-cta{display:inline-flex;align-items:center;justify-content:center;border:1px solid #ffffff35;border-radius:100px;padding:10px 18px;white-space:nowrap}.nav-cta:hover{border-color:var(--accent)}
+.hero{overflow:hidden;position:relative;background:radial-gradient(circle at 78% 12%,rgba(242,56,81,.09),transparent 34%),linear-gradient(180deg,#081a29,#06121d)}.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.23;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(90deg,transparent,#000)}.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.03fr .97fr;align-items:center;gap:50px;padding:70px 0 88px}.crumbs{font-size:12px;color:#9fb1bf;margin-bottom:26px}.crumbs a:hover{color:#fff}.hero h1{font-size:clamp(40px,4.65vw,70px);line-height:1.36;letter-spacing:-.045em;font-weight:800;margin:15px 0 19px}.hero h1 span{color:var(--accent-soft)}.hero p{max-width:570px;font-size:17px;line-height:2;color:var(--soft)}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}.btn{min-height:51px;padding:12px 22px;border:1px solid transparent;border-radius:100px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:14px;font-weight:700;transition:transform .18s ease,border .18s ease,background .18s ease}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#ff4e63}.btn-outline{border-color:rgba(255,255,255,.27);background:rgba(255,255,255,.035);color:#fff}.btn-outline:hover{border-color:rgba(255,255,255,.68)}.mini-foot{margin-top:25px;color:#94aab9;font-size:12px}.mini-foot b{color:var(--gold)}
+.hero-stage{border-radius:30px;border:1px solid rgba(232,240,250,.15);padding:15px;background:linear-gradient(145deg,#16384e,#091c2d 65%);box-shadow:0 26px 75px rgba(0,0,0,.35);transform:rotate(-1deg)}.brand-banner{position:relative;min-height:204px;overflow:hidden;border-radius:19px;background:#193143 url('/move-now/assets/property-transition.webp') center 53%/cover no-repeat;display:flex;align-items:flex-end;padding:22px}.brand-banner:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,16,25,.94),rgba(3,16,25,.05) 75%)}.banner-inner{position:relative;z-index:1}.banner-inner img{width:125px;max-height:68px;object-fit:contain;object-position:right;margin-bottom:8px}.banner-inner strong{font:800 11px Montserrat,sans-serif;letter-spacing:.15em;direction:ltr;display:block}.hero-console{padding:21px 8px 6px}.console-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.console-top strong{font-size:14px}.console-top small{font:700 10px Montserrat,sans-serif;direction:ltr;color:var(--muted)}.demo-pill{font-size:10px;white-space:nowrap;border:1px solid rgba(214,180,119,.4);color:#f0cea0;border-radius:50px;padding:4px 11px}.pipeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.pipe{min-height:105px;border:1px solid rgba(255,255,255,.1);padding:15px 12px;border-radius:14px;background:rgba(255,255,255,.035)}.pipe i{font:800 10px Montserrat,sans-serif;direction:ltr;color:var(--accent-soft);font-style:normal}.pipe strong{font-size:13px;display:block;margin-top:15px}.pipe small{font-size:10px;color:#9eb0bc;display:block;margin-top:5px}
+.value-strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#0a1b29}.value-grid{display:grid;grid-template-columns:repeat(3,1fr)}.value{padding:26px 28px;border-inline-start:1px solid var(--line);display:flex;gap:15px;align-items:flex-start}.value:last-child{border:0}.value em{font:800 12px Montserrat,sans-serif;color:var(--accent-soft);font-style:normal;padding-top:4px}.value b{display:block;font-size:14px}.value p{font-size:12px;margin-top:6px;color:var(--muted)}
+.section{padding:96px 0}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:29px}.section-heading h2{margin-top:13px;font-size:clamp(29px,3.2vw,46px);line-height:1.5;letter-spacing:-.025em}.section-heading p{max-width:390px;color:var(--soft);font-size:13px;line-height:2}.experience{background:#071724}.experience-panel{border:1px solid var(--line);background:linear-gradient(145deg,#10293b,#0b1e2d);border-radius:var(--radius);box-shadow:0 22px 65px #0002;overflow:hidden}.switcher{display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:16px 20px;background:rgba(255,255,255,.025)}.switcher button{border:1px solid transparent;border-radius:14px;background:transparent;color:#9fb1bf;padding:13px 19px;font-weight:700;font-size:13px}.switcher button[aria-selected=true]{background:#f5f8fa;color:#0a1b28;box-shadow:0 8px 18px #0002}.switcher small{margin-inline-start:auto;color:#c9b184;font-size:11px;line-height:1.6}.tab-panel[hidden]{display:none!important}.experience-body{padding:32px}.intro-line{display:flex;gap:16px;align-items:start;justify-content:space-between;flex-wrap:wrap;margin-bottom:24px}.intro-line h3{font-size:23px}.intro-line p{font-size:12px;color:var(--soft)}.safety-note{font-size:11px;border:1px solid rgba(214,180,119,.33);color:#efd4a5;padding:9px 13px;border-radius:10px;display:inline-flex;align-items:center;gap:7px;background:#d6b4770c}
+.demo-layout{display:grid;grid-template-columns:minmax(250px,.75fr) minmax(0,1.25fr);gap:21px}.service-box{border:1px solid var(--line);border-radius:17px;padding:23px;background:#081b2b}.service-box h4,.screen-top h4{margin:0;font-size:16px}.service-box p{margin:6px 0 15px;font-size:12px;color:var(--muted)}.service-grid{display:grid;gap:8px}.service-option{width:100%;text-align:right;display:flex;align-items:center;gap:9px;padding:12px 13px;background:#112a3c;color:#dce7ee;border:1px solid #ffffff1a;border-radius:11px;font-size:12px;font-weight:600;line-height:1.5}.service-option:hover{border-color:#ff78898c}.service-option[aria-pressed=true]{border-color:var(--accent);background:rgba(242,56,81,.12);color:#fff}.service-option:before{content:"";width:13px;height:13px;flex:none;border:1px solid #94a6b4;border-radius:50%}.service-option[aria-pressed=true]:before{background:var(--accent);border:4px solid #f7bac2}
+.mock{border-radius:17px;border:1px solid rgba(255,255,255,.13);overflow:hidden;background:#eff3f7;color:#122536;min-width:0}.screen-top{display:flex;align-items:center;gap:14px;justify-content:space-between;border-bottom:1px solid #d9e2e9;padding:17px 23px;background:#fff}.screen-top small{font-size:10px;color:#738593;direction:ltr;display:block;font-family:Montserrat,sans-serif}.screen-top strong{font-size:14px}.screen-brand{display:flex;align-items:center;gap:9px;font:800 12px Montserrat,sans-serif;direction:ltr;color:#102e43}.screen-brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}.screen-content{min-height:285px;padding:23px}.progress{display:flex;gap:10px;align-items:center;margin:0 0 24px}.progress-step{flex:1;height:5px;border-radius:9px;background:#dae2e9;transition:background .2s}.progress-step.is-on{background:var(--accent)}.content-eyebrow{font:800 10px Montserrat,sans-serif;letter-spacing:.17em;direction:ltr;color:#da3851;margin-bottom:10px}.screen-content h4{font-size:23px;line-height:1.65;margin:0 0 9px}.screen-content>p{font-size:13px;line-height:1.9;color:#506475;margin-bottom:20px}.detail-row{padding:13px 15px;border:1px solid #dce4ea;background:white;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:9px;font-size:12px}.detail-row span{color:#687e8d}.detail-row b{font-weight:700;text-align:left}.status-mark{background:#e7eff6;color:#30506c;border-radius:50px;padding:5px 11px;white-space:nowrap;font-size:11px}.status-mark.good{color:#20674c;background:#e3f5ec}.ops-timeline{display:flex;flex-direction:column;gap:12px}.ops-step{position:relative;display:flex;gap:11px;align-items:flex-start;padding:0 0 11px;border-bottom:1px solid #dbe4eb}.ops-step:last-child{border-bottom:0}.ops-step .num{width:29px;height:29px;border-radius:50%;background:#dce7ef;color:#18394d;flex:none;display:grid;place-items:center;font:800 11px Montserrat,sans-serif}.ops-step div>b{font-size:12px}.ops-step p{font-size:11px;color:#687b88;margin:1px 0}.screen-controls{border-top:1px solid #dae2e9;background:white;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 22px}.screen-controls .btn{min-height:42px;padding:7px 15px;font-size:12px}.controls-left{display:flex;gap:8px}.btn-dark{background:#09283b;color:#fff}.btn-quiet{background:#edf2f5;color:#3c5362;border:1px solid #dce5ec}.mini-count{font:800 12px Montserrat,sans-serif;direction:ltr;color:#8596a2}.demo-disclaimer{color:#94abb8;font-size:11px;margin:17px 2px 0;line-height:1.8}
+.deck{padding:0}.deck-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(310px,.9fr);min-height:425px}.deck-story{padding:clamp(28px,4.5vw,55px);display:flex;flex-direction:column;justify-content:center;gap:17px}.deck-story h3{font-size:clamp(30px,3.3vw,48px);line-height:1.5}.deck-story p{font-size:16px;color:#ced9e2;max-width:530px;line-height:2}.deck-art{position:relative;overflow:hidden;min-height:310px;background:radial-gradient(circle at 62% 25%,rgba(242,56,81,.18),transparent 55%),linear-gradient(155deg,#123348,#0b2334 60%);border-right:1px solid var(--line);display:flex;align-items:center;justify-content:center}.deck-art::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;border:1px solid rgba(214,180,119,.15);box-shadow:0 0 0 60px rgba(214,180,119,.025),0 0 0 120px rgba(214,180,119,.025)}.deck-art-inner{width:min(350px,80%);position:relative;z-index:1;display:flex;flex-direction:column;gap:12px}.deck-art-inner>div{background:rgba(7,23,36,.84);border:1px solid rgba(255,255,255,.15);border-radius:15px;padding:16px;display:flex;gap:15px;align-items:center;backdrop-filter:blur(12px);box-shadow:0 10px 20px rgba(0,0,0,.12)}.deck-art-inner>div em{color:var(--accent-soft);font:800 12px Montserrat,sans-serif;font-style:normal}.deck-art-inner>div strong{font-size:14px}.deck-counter{font:800 11px Montserrat,sans-serif;letter-spacing:.2em;color:var(--gold)}.deck-nav{padding:19px 27px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}.deck-nav-actions{display:flex;gap:9px}.nav-arrow{width:44px;height:44px;border:1px solid #ffffff40;background:transparent;color:white;border-radius:50%;font-size:22px;line-height:1}.nav-arrow:hover:not(:disabled){background:rgba(255,255,255,.1)}.deck-dots{display:flex;gap:9px;align-items:center}.deck-dots button{width:10px;height:10px;background:#587081;border:0;border-radius:50%;padding:0;transition:width .2s ease,background .2s ease}.deck-dots button[aria-current=step]{width:33px;border-radius:30px;background:var(--accent)}
+.after{padding-top:90px;padding-bottom:96px}.deliveries{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:25px}.delivery{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:27px;min-height:190px}.delivery i{color:var(--gold);font-style:normal;font:800 11px Montserrat,sans-serif;letter-spacing:.15em}.delivery h3{font-size:17px;margin:20px 0 8px}.delivery p{font-size:12px;color:#afc0cd;line-height:1.9}.result{border-radius:23px;margin-top:27px;padding:32px 38px;background:linear-gradient(100deg,rgba(242,56,81,.14),rgba(214,180,119,.05));border:1px solid rgba(242,56,81,.28);display:flex;justify-content:space-between;align-items:center;gap:25px}.result h3{font-size:23px}.result p{font-size:13px;color:#d4dfe5;margin-top:8px;max-width:720px}.result small{display:block;font-size:11px;color:#c0adb1;margin-top:10px}.close-cta{background:linear-gradient(140deg,#133046,#091c2a);padding:45px 0;border-top:1px solid var(--line)}.close-cta .shell{display:flex;align-items:center;justify-content:space-between;gap:25px}.close-cta h2{font-size:clamp(24px,2.8vw,37px);margin:10px 0 9px}.close-cta p{color:#beced8;font-size:13px}.footer{border-top:1px solid var(--line);padding:25px 0 36px;color:#90a5b4;font-size:12px}.footer .shell{display:flex;justify-content:space-between;flex-wrap:wrap;gap:15px}
+@media(max-width:980px){.hero-inner{grid-template-columns:1fr;gap:32px;padding:52px 0 60px}.hero-copy{max-width:740px}.hero-stage{max-width:700px;transform:none}.section-heading{align-items:start;flex-direction:column}.demo-layout{grid-template-columns:1fr}.service-grid{grid-template-columns:repeat(2,1fr)}.deck-stage{grid-template-columns:1fr}.deck-art{border-right:0;border-top:1px solid var(--line)}.value{padding:22px 15px}.deliveries{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){html{scroll-padding-top:70px}.shell{width:calc(100% - 36px)}.head-inner{min-height:65px}.ats-brand img{width:104px}.head-links{gap:9px}.head-links>a:not(.nav-cta){display:none}.nav-cta{padding:9px 12px;font-size:11px}.hero-inner{padding:32px 0 47px}.crumbs{margin-bottom:17px}.hero h1{font-size:clamp(32px,8.5vw,45px)}.hero p{font-size:14px}.hero-actions{gap:9px}.hero-actions .btn{flex:1;font-size:12px;padding:10px}.hero-stage{padding:8px;border-radius:20px}.brand-banner{min-height:155px}.hero-console{padding:16px 3px 3px}.pipeline{gap:5px}.pipe{padding:10px 7px;min-height:101px}.pipe strong{font-size:10px}.pipe small{font-size:9px}.value-grid{grid-template-columns:1fr}.value{border-bottom:1px solid var(--line);border-inline-start:0;padding:18px 3px}.value:last-child{border:0}.section{padding:62px 0}.section-heading h2{font-size:28px}.experience-body{padding:16px}.switcher{padding:10px}.switcher button{padding:11px 13px;font-size:12px;flex:1}.switcher small{width:100%;text-align:center;margin:0}.intro-line h3{font-size:19px}.service-box{padding:15px}.service-grid{grid-template-columns:1fr}.service-option{min-height:42px}.screen-top{padding:13px 14px}.screen-content{padding:17px;min-height:315px}.screen-content h4{font-size:20px}.screen-controls{padding:12px;flex-wrap:wrap}.screen-controls .btn{padding:8px 12px}.detail-row{gap:7px;flex-wrap:wrap}.deck-story{padding:28px 19px}.deck-story h3{font-size:27px}.deck-story p{font-size:14px}.deck-art{min-height:260px}.deck-nav{padding:16px}.deliveries{grid-template-columns:1fr}.delivery{min-height:0}.result{padding:25px;flex-direction:column;align-items:flex-start}.result h3{font-size:21px}.close-cta .shell{flex-direction:column;align-items:stretch}.close-cta .btn{align-self:flex-start}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media print{.site-head,.hero-actions,.switcher,.screen-controls,.deck-nav,.close-cta{display:none!important}.hero-inner,.demo-layout,.deck-stage{display:block}.section{padding:20px 0}body{background:#fff;color:#111}.experience-panel,.hero-stage,.delivery{box-shadow:none}}
 </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="top-in">
-    <a class="logo" href="/" aria-label="AT Studio — Home"><img src="/assets/at-studio-primary-header.webp?v=2" alt="AT Studio"></a>
-    <a class="btn sm" href="/#contact">ابدأ مشروعك ←</a>
-  </div>
-</header>
-
+<header class="site-head"><div class="shell head-inner">
+  <a class="ats-brand" href="/" aria-label="العودة إلى AT Studio"><img src="/assets/at-studio-primary-header.webp?v=2" alt="AT Studio" width="134" height="52"></a>
+  <nav class="head-links" aria-label="روابط الصفحة"><a href="#experience">التجربة</a><a href="#scope">اللي نفذناه</a><a class="nav-cta" href="/#contact">ابدأ مشروعك ↗</a></nav>
+</div></header>
 <main>
-
-  <section>
-    <nav class="breadcrumb" aria-label="تصفح المشاريع"><a href="/">AT Studio</a><span> / </span><a href="/#work">المشاريع</a><span> / </span><span aria-current="page">Move Now</span></nav>
-    <div class="eyebrow"><span>CLIENT CASE STUDY · 001</span><i></i></div>
-    <h1>نظام طلبات عملاء<br><span>ولوحة تحكم لشركة Move Now.</span></h1>
-    <p class="lead">Move Now تعمل في العقارات والتشطيبات. تعاونّا على بناء نظام رقمي يجمع طلبات العملاء، ينظم متابعتها، ويوضح مسؤولية كل طلب داخل الفريق — من أول تواصل إلى الخطوة التالية.</p>
-    <div class="chips">
-      <span class="chip">إدارة الطلبات</span>
-      <span class="chip">لوحة تحكم</span>
-      <span class="chip">توزيع الموظفين</span>
+<section class="hero" aria-labelledby="hero-title"><div class="shell hero-inner">
+  <div class="hero-copy">
+    <div class="crumbs"><a href="/">AT Studio</a> <span aria-hidden="true">/</span> <a href="/#work">المشاريع</a> <span aria-hidden="true">/</span> Move Now</div>
+    <span class="eyebrow">01 / CLIENT CASE STUDY · DIGITAL SYSTEMS</span>
+    <h1 id="hero-title">كل طلب ليه بداية.<br><span>وكل خطوة ليها متابعة.</span></h1>
+    <p>مع Move Now، حوّلنا استقبال طلبات العقارات والتشطيبات من خطوات منفصلة إلى مسار رقمي يربط العميل بفريق العمل. مش لازم تقرأ تفاصيل كتير: جرّب الفكرة بنفسك.</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="#experience" id="go-demo">جرّب تجربة Move Now <span aria-hidden="true">↙</span></a><a class="btn btn-outline" href="#experience" id="go-deck">شاهد عرض المشروع <span aria-hidden="true">↗</span></a></div>
+    <div class="mini-foot"><b>AT Studio</b> × Move Now <span aria-hidden="true"> · </span> من استقبال الطلب إلى المتابعة</div>
+  </div>
+  <div class="hero-stage" aria-label="رسم يوضح رحلة الطلب داخل النظام">
+    <div class="brand-banner"><div class="banner-inner"><img src="/move-now/assets/move-now-logo.webp" alt="Move Now"><strong>PROPERTY × FINISHING × OPERATIONS</strong></div></div>
+    <div class="hero-console"><div class="console-top"><strong>رحلة الطلب في نظام واحد</strong><span class="demo-pill">WORKFLOW VIEW</span></div>
+      <div class="pipeline"><div class="pipe"><i>01 / INTAKE</i><strong>استقبال</strong><small>نموذج العميل</small></div><div class="pipe"><i>02 / ASSIGN</i><strong>توزيع</strong><small>مسؤول محدد</small></div><div class="pipe"><i>03 / TRACK</i><strong>متابعة</strong><small>حالة وخطوة تالية</small></div></div>
     </div>
-  </section>
-
-  <section class="meta">
-    <div><small>العميل</small><strong>Move Now</strong></div>
-    <div><small>المجال</small><strong>عقارات وتشطيبات</strong></div>
-    <div><small>نوع الشغل</small><strong>Digital</strong></div>
-    <div><small>الاستضافة</small><strong>AT Studio</strong></div>
-  </section>
-
-  <section class="shot preview" aria-label="رسم توضيحي لمسار الطلبات">
-    <div class="preview-header"><strong>MOVE NOW <span style="color:#ff5468">/</span> WORKFLOW</strong><span>INTAKE → ASSIGNMENT → FOLLOW-UP</span></div>
-    <div class="preview-cols">
-      <div class="preview-step"><b>01 / INTAKE</b><strong>استقبال الطلب</strong><span>نموذج مخصص يلتقط نوع الخدمة واحتياجات العميل.</span></div>
-      <div class="preview-step"><b>02 / ASSIGN</b><strong>تنظيم المسؤوليات</strong><span>تجميع الطلبات وربط كل طلب بالشخص المسؤول.</span></div>
-      <div class="preview-step"><b>03 / FOLLOW UP</b><strong>متابعة واضحة</strong><span>حالة الطلب والملاحظات والخطوة التالية في مسار واحد.</span></div>
-    </div>
-    <p class="preview-notice">تصوّر توضيحي لمسار العمل، وليس لقطة فعلية من لوحة الإدارة. لا تُعرض أي بيانات خاصة بالعملاء.</p>
-  </section>
-
-  <section class="row">
-    <div class="card">
-      <div class="tag">01 · PROBLEM</div>
-      <h2>المشكلة</h2>
-      <p>تعدد نقاط استقبال طلبات العملاء كان يتطلب مسارًا موحدًا للتسجيل والتوزيع والمتابعة، بحيث تصبح مسؤولية كل طلب وحالته والخطوة التالية واضحة.</p>
-    </div>
-    <div class="card">
-      <div class="tag">02 · WHAT WE BUILT</div>
-      <h2>اللي عملناه</h2>
-      <ul>
-        <li>فورم طلبات للعميل بيوصل مباشرة للنظام.</li>
-        <li>لوحة تحكم للإدارة بتعرض كل الطلبات وحالتها.</li>
-        <li>قاعدة بيانات منظمة للطلبات والعملاء.</li>
-        <li>توزيع الطلبات على الموظفين من اللوحة.</li>
-        <li>تكامل تشغيل النظام ضمن البنية الرقمية لـ AT Studio، مع فصل صلاحيات الوصول إلى بيانات العمليات.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="row">
-    <div class="card result">
-      <div class="tag">03 · RESULT</div>
-      <h2>القيمة العملية</h2>
-      <p class="big">نقطة استقبال واحدة، رؤية منظمة للطلبات، ومسار واضح لإسناد المسؤوليات والمتابعة.</p>
-      <p class="note">هذه نتائج وظيفية لبنية النظام. لم ننشر أرقام أداء أو وفورات زمنية من دون قياس موثّق.</p>
-    </div>
-    <div class="card">
-      <div class="tag">04 · TOOLS</div>
-      <h2>الأدوات</h2>
-      <div class="chips">
-        <span class="chip en">Supabase</span>
-        <span class="chip en">React</span>
-        <span class="chip en">Vercel</span>
-        <span class="chip en">Role-based Access</span>
+  </div>
+</div></section>
+<section class="value-strip" aria-label="مختصر القيمة"><div class="shell value-grid"><div class="value"><em>01</em><div><b>عميل يطلب بسهولة</b><p>ستة مسارات لخدمات العقارات والتشطيبات</p></div></div><div class="value"><em>02</em><div><b>فريق يشتغل بوضوح</b><p>لوحة طلبات ومسؤوليات وحالات متابعة</p></div></div><div class="value"><em>03</em><div><b>معلومة ما تضيعش</b><p>سجل للمكالمات وبيانات العميل والخطوات القادمة</p></div></div></div></section>
+<section class="experience section" id="experience" aria-labelledby="experience-title"><div class="shell">
+  <div class="section-heading"><div><span class="eyebrow">DON'T JUST READ ABOUT IT</span><h2 id="experience-title">شوف اللي بنيناه. <span style="color:var(--accent-soft)">وجرّبه.</span></h2></div><p>طريقتان لفهم المشروع: محاكاة قصيرة لرحلة الطلب، أو عرض بصري يشرح الخدمات التي نفذتها ATS.</p></div>
+  <div class="experience-panel">
+    <div class="switcher" role="tablist" aria-label="طريقة استعراض المشروع"><button type="button" id="tab-demo" role="tab" aria-controls="panel-demo" aria-selected="true" tabindex="0">01 — جرّب بنفسك</button><button type="button" id="tab-deck" role="tab" aria-controls="panel-deck" aria-selected="false" tabindex="-1">02 — العرض التقديمي</button><small>محتوى تجريبي آمن · بدون حساب</small></div>
+    <div class="tab-panel" id="panel-demo" role="tabpanel" aria-labelledby="tab-demo"><div class="experience-body">
+      <div class="intro-line"><div><h3>تجربة الطلب في 3 خطوات</h3><p>اختار خدمة، وبعدها انتقل بين شاشة العميل والإدارة والمتابعة.</p></div><span class="safety-note">◈ محاكاة توضيحية — لا ترسل أي طلب حقيقي</span></div>
+      <div class="demo-layout">
+        <div class="service-box"><h4>١. العميل محتاج إيه؟</h4><p>اختار واحدًا من مسارات Move Now الفعلية:</p><div class="service-grid" id="services" aria-label="أنواع الخدمات">
+          <button type="button" class="service-option" data-service="0" aria-pressed="true">شراء عقار بالتقسيط</button>
+          <button type="button" class="service-option" data-service="1" aria-pressed="false">شراء عقار كاش</button>
+          <button type="button" class="service-option" data-service="2" aria-pressed="false">تشطيب فقط</button>
+          <button type="button" class="service-option" data-service="3" aria-pressed="false">تشطيب وبيع</button>
+          <button type="button" class="service-option" data-service="4" aria-pressed="false">تشطيب وتأجير</button>
+          <button type="button" class="service-option" data-service="5" aria-pressed="false">تشطيب وفرش وتأجير</button>
+        </div></div>
+        <div class="mock" aria-label="شاشات تفاعلية توضيحية للنظام">
+          <div class="screen-top"><div><small>MOVE NOW / DEMONSTRATION</small><strong id="screen-header">واجهة العميل</strong></div><span class="screen-brand"><span class="dot" aria-hidden="true"></span>MOVE NOW</span></div>
+          <div class="screen-content" id="screen-content" aria-live="polite"><div class="progress" aria-hidden="true"><i class="progress-step is-on"></i><i class="progress-step"></i><i class="progress-step"></i></div><div class="content-eyebrow">STEP 01 — CLIENT INTAKE</div><h4>اختر الخدمة المناسبة</h4><p>هنا يبدأ العميل بطلبه. كل خدمة لها مسارها المناسب في النظام.</p></div>
+          <div class="screen-controls"><div class="controls-left"><button type="button" class="btn btn-quiet" id="demo-prev" disabled>السابق</button><button type="button" class="btn btn-dark" id="demo-next">التالي: لوحة الإدارة ←</button></div><span class="mini-count" id="demo-count">01 / 03</span></div>
+        </div>
       </div>
+      <p class="demo-disclaimer">* هذه محاكاة UI مبنية على مسارات العمل الموجودة بالمشروع وليست نسخة متصلة بقاعدة البيانات أو شاشة الإدارة الحقيقية. تستخدم مثالًا افتراضيًا فقط؛ لن تُحفظ أي معلومات ولن تُرسل أي طلبات.</p>
+    </div></div>
+    <div class="tab-panel deck" id="panel-deck" role="tabpanel" aria-labelledby="tab-deck" hidden>
+      <div class="deck-stage"><div class="deck-story" aria-live="polite"><span class="deck-counter" id="deck-count">01 / 06 · AT STUDIO × MOVE NOW</span><h3 id="deck-title">المشكلة مش في وجود طلبات. المشكلة في رحلة الطلب.</h3><p id="deck-copy">كان المطلوب ربط استقبال العميل بالتنظيم الداخلي والمتابعة، بدون الاعتماد على خطوات مشتتة.</p></div><div class="deck-art"><div class="deck-art-inner" id="deck-art-list"><div><em>01</em><strong>Customer request</strong></div><div><em>02</em><strong>Team workflow</strong></div><div><em>03</em><strong>Next action</strong></div></div></div></div>
+      <div class="deck-nav"><div class="deck-nav-actions"><button class="nav-arrow" type="button" id="deck-prev" aria-label="الشريحة السابقة" disabled>→</button><button class="nav-arrow" type="button" id="deck-next" aria-label="الشريحة التالية">←</button></div><div class="deck-dots" id="deck-dots" aria-label="اختيار شريحة"></div></div>
     </div>
-  </section>
-
-  <section class="cta" id="start">
-    <div>
-      <div class="tag">START WITH THE PROBLEM</div>
-      <h2>عندك مشكلة شبه دي؟ <span>قولنا عليها.</span></h2>
-    </div>
-    <a class="btn lg" href="/#contact">ابدأ من مشكلتك ←</a>
-  </section>
-
+  </div>
+</div></section>
+<section class="after section" id="scope" aria-labelledby="scope-title"><div class="shell">
+  <div class="section-heading"><div><span class="eyebrow">WHAT ATS DELIVERED</span><h2 id="scope-title">مش صفحة فورم. <span style="color:var(--accent-soft)">منظومة متصلة.</span></h2></div><p>هذه المكوّنات مدعومة بالتنفيذ الموجود في مشروع Move Now، وبعض الوظائف الداخلية تتطلب دخول أعضاء الفريق المصرّح لهم.</p></div>
+  <div class="deliveries"><article class="delivery"><i>01 / CLIENT EXPERIENCE</i><h3>استقبال طلبات مخصص</h3><p>نموذج متفرّع حسب نوع الخدمة، مع حقول ملائمة لاحتياج كل عميل.</p></article><article class="delivery"><i>02 / OPERATIONS</i><h3>لوحة إدارة الطلبات</h3><p>قائمة طلبات وحالات وتوزيع المسؤوليات وملاحظات ومتابعات.</p></article><article class="delivery"><i>03 / CRM</i><h3>سجل للمكالمات والعملاء</h3><p>حفظ الملاحظات وتنظيم البيانات والخطوة التالية لكل تواصل.</p></article><article class="delivery"><i>04 / AI ASSIST</i><h3>مساعد لفريق المكالمات</h3><p>مكوّن داخل النظام يساعد في تنظيم ملاحظات الموظف واقتراح أسئلة متابعة؛ وليس روبوتًا يتواصل مع العميل.</p></article><article class="delivery"><i>05 / ENGINEERING</i><h3>قاعدة بيانات وربط عمليات</h3><p>بنية متصلة على Supabase مع واجهات React واستضافة على Vercel.</p></article><article class="delivery"><i>06 / ACCESS CONTROL</i><h3>صلاحيات ووصول محمي</h3><p>مساحات الإدارة والموظفين منفصلة عن الزيارة العامة وتخضع للتحقق من الصلاحيات.</p></article></div>
+  <div class="result"><div><span class="eyebrow">THE PRACTICAL OUTCOME</span><h3>بدل طلب يتوه… <span style="color:var(--accent-soft)">رحلة لها مالك وخطوة قادمة.</span></h3><p>المخرج الذي نعرضه هو بنية واضحة لإدارة الطلبات والمتابعة. أرقام التحويل أو الوقت الموفر لا تُنشر من غير قياس موثّق.</p><small>لا يعرض هذا الموقع بيانات حقيقية تخص عملاء Move Now.</small></div><a href="#experience" class="btn btn-outline">أعد التجربة ↑</a></div>
+</div></section>
+<section class="close-cta"><div class="shell"><div><span class="eyebrow">AT STUDIO · BUILD WHAT WORKS</span><h2>مشكلتك مش لازم تشبه Move Now.</h2><p>قولنا التحدي اللي عندك، ونفكر في الحل المناسب بدل ما نبدأ بقائمة خدمات.</p></div><a class="btn btn-primary" href="/#contact">ابدأ من مشكلتك ↗</a></div></section>
 </main>
-
-<footer>
-  <span>AT Studio · Build what works.</span><a href="/#work">العودة إلى المشاريع</a>
-  <span class="en">atstudioimpact.com</span>
-</footer>
-
+<footer class="footer"><div class="shell"><span>© 2026 AT Studio · Build what works.</span><a href="/#work">← العودة إلى الأعمال</a><span class="eng">atstudioimpact.com</span></div></footer>
+<script>
+(()=>{
+'use strict';
+const services=[
+  {name:'شراء عقار بالتقسيط',detail:'العميل يبحث عن عقار بخيارات تقسيط تناسب احتياجه',next:'مراجعة مواصفات العقار وحدود الميزانية وخطة السداد'},
+  {name:'شراء عقار كاش',detail:'العميل يبحث عن عقار متاح للشراء النقدي',next:'تحديد المنطقة والميزانية والمواصفات المناسبة'},
+  {name:'تشطيب فقط',detail:'العميل لديه وحدة ويحتاج تنفيذ أعمال التشطيب',next:'جمع مساحة الوحدة ومستوى التشطيب وموعد البدء'},
+  {name:'تشطيب وبيع',detail:'العميل يريد تجهيز وحدته ثم عرضها للبيع',next:'مراجعة حالة الوحدة ونطاق التشطيب وخطة العرض'},
+  {name:'تشطيب وتأجير',detail:'العميل يريد تشطيب وحدته وتجهيزها للتأجير',next:'تحديد أعمال التشطيب والفئة الإيجارية المستهدفة'},
+  {name:'تشطيب وفرش وتأجير',detail:'العميل يريد تجهيز الوحدة وتشطيبها وفرشها للتأجير',next:'حصر احتياجات التشطيب والفرش وخطة التأجير'}
+];
+const slides=[
+  {title:'المشكلة مش في وجود طلبات. المشكلة في رحلة الطلب.',copy:'احتجنا ربط استقبال العميل بالتنظيم الداخلي والمتابعة، بدل خطوات متفرقة يصعب الرجوع لها.',nodes:['طلب العميل','المسؤول عن الطلب','خطوة المتابعة التالية']},
+  {title:'01 — تجربة طلب تبدأ من احتياج العميل.',copy:'بنينا نموذجًا فيه ستة مسارات مختلفة للشراء والتشطيب والبيع والتأجير، بدل نموذج واحد لا يفهم نوع الخدمة.',nodes:['6 مسارات للخدمات','حقول مخصصة','طلب منظم']},
+  {title:'02 — إدارة تعرف كل طلب رايح لمين.',copy:'ربطنا الطلبات بلوحة للإدارة، بحالات واضحة وملاحظات وإسناد مسؤول عن المتابعة.',nodes:['قائمة الطلبات','إسناد المسؤول','تحديث الحالة']},
+  {title:'03 — متابعة الموظف تبقى قابلة للاستكمال.',copy:'مسار CRM يحتفظ بملاحظات المكالمة والبيانات المنظمة وما يحتاجه العميل في الخطوة التالية.',nodes:['ملاحظات المكالمة','بيانات CRM','متابعة لاحقة']},
+  {title:'04 — AI يساعد الموظف. لا يستبدله.',copy:'أضفنا مكوّنًا لمساعدة فريق المكالمات على تنظيم المعلومات واقتراح السؤال التالي. العمل اليدوي ما زال متاحًا عند تعذر المساعدة الذكية.',nodes:['فهم الملاحظات','تنظيم الحقول','سؤال مناسب']},
+  {title:'05 — نظام متصل، بصلاحيات واضحة.',copy:'واجهات العميل والفريق مرتبطة بالبنية الخلفية مع حدود وصول مختلفة. القيمة: رحلة منظمة قابلة للمتابعة، وليس رقم أداء لم يتم قياسه.',nodes:['React UI','Supabase Data','Vercel Hosting']}
+];
+let serviceIndex=0,phase=0,slideIndex=0;
+const $=s=>document.querySelector(s);
+const serviceButtons=[...document.querySelectorAll('[data-service]')];
+const screen=$('#screen-content'),count=$('#demo-count'),header=$('#screen-header'),prev=$('#demo-prev'),next=$('#demo-next');
+const make=(tag,cls,txt)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;};
+function detail(label,value,badge=false){const n=make('div','detail-row');n.append(make('span','',label));const k=make('b',badge?'status-mark '+(phase===2?'good':''):'' ,value);n.append(k);return n;}
+function renderDemo(){
+  const s=services[serviceIndex];serviceButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===serviceIndex)));
+  count.textContent=String(phase+1).padStart(2,'0')+' / 03';prev.disabled=phase===0;prev.textContent='السابق';next.textContent=phase===2?'إعادة التجربة ↺':phase===0?'التالي: لوحة الإدارة ←':'التالي: المتابعة ←';header.textContent=['واجهة العميل','لوحة الإدارة','المتابعة'][phase];
+  screen.replaceChildren();const prog=make('div','progress');prog.setAttribute('aria-hidden','true');for(let i=0;i<3;i++)prog.append(make('i','progress-step'+(i<=phase?' is-on':'')));screen.append(prog);
+  screen.append(make('div','content-eyebrow',['STEP 01 — CLIENT INTAKE','STEP 02 — ADMIN VIEW','STEP 03 — FOLLOW-UP'][phase]));
+  screen.append(make('h4','',['العميل يبدأ باختيار احتياجه','الطلب يظهر لمسؤول المتابعة','الرحلة تستمر بخطوة واضحة'][phase]));
+  screen.append(make('p','',[s.detail,'هذه معاينة توضيحية لكيفية تنظيم الطلب داخل لوحة الفريق.','كل متابعة لها حالة وموضوع محدد للخطوة التالية.'][phase]));
+  if(phase===0){screen.append(detail('الخدمة المطلوبة',s.name),detail('صاحب الطلب','عميل تجريبي'),detail('حالة الطلب','نموذج توضيحي',true));}
+  if(phase===1){screen.append(detail('رقم الطلب الافتراضي','DEMO-001'),detail('نوع الخدمة',s.name),detail('المسؤول','فريق المتابعة'),detail('الحالة','جديد — مثال',true));}
+  if(phase===2){const t=make('div','ops-timeline');[['01','استقبال الطلب',s.name],['02','تحديد المسؤول','فريق المتابعة — مثال'],['03','المتابعة القادمة',s.next]].forEach(item=>{let e=make('div','ops-step');e.append(make('span','num',item[0]));let d=make('div');d.append(make('b','',item[1]),make('p','',item[2]));e.append(d);t.append(e)});screen.append(t);screen.append(detail('الحالة النهائية هنا','محاكاة مكتملة',true));}
+}
+serviceButtons.forEach(b=>b.addEventListener('click',()=>{serviceIndex=Number(b.dataset.service);phase=0;renderDemo()}));
+prev.addEventListener('click',()=>{phase=Math.max(0,phase-1);renderDemo()});
+next.addEventListener('click',()=>{phase=phase===2?0:phase+1;renderDemo()});
+const tabs=[$('#tab-demo'),$('#tab-deck')],panels=[$('#panel-demo'),$('#panel-deck')];
+function setTab(which,focus=false){tabs.forEach((t,i)=>{const active=i===which;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;panels[i].hidden=!active;});if(focus)tabs[which].focus({preventScroll:true});}
+tabs.forEach((t,i)=>{t.addEventListener('click',()=>setTab(i));t.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();setTab(1-i,true)}})});
+function renderDeck(){const d=slides[slideIndex];$('#deck-count').textContent=String(slideIndex+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0')+' · AT STUDIO × MOVE NOW';$('#deck-title').textContent=d.title;$('#deck-copy').textContent=d.copy;let art=$('#deck-art-list');art.replaceChildren();d.nodes.forEach((label,i)=>{let row=make('div');row.append(make('em','',String(i+1).padStart(2,'0')),make('strong','',label));art.append(row)});$('#deck-prev').disabled=slideIndex===0;$('#deck-next').disabled=slideIndex===slides.length-1;document.querySelectorAll('.deck-dot').forEach((b,i)=>{if(i===slideIndex)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current')});}
+const dots=$('#deck-dots');slides.forEach((_,i)=>{const b=make('button','deck-dot');b.type='button';b.setAttribute('aria-label','الشريحة '+(i+1));b.addEventListener('click',()=>{slideIndex=i;renderDeck()});dots.append(b)});
+$('#deck-prev').addEventListener('click',()=>{slideIndex=Math.max(0,slideIndex-1);renderDeck()});$('#deck-next').addEventListener('click',()=>{slideIndex=Math.min(slides.length-1,slideIndex+1);renderDeck()});
+$('#panel-deck').addEventListener('keydown',e=>{if(e.target.closest('button'))return;if(e.key==='ArrowLeft'){e.preventDefault();slideIndex=Math.min(slides.length-1,slideIndex+1);renderDeck()}else if(e.key==='ArrowRight'){e.preventDefault();slideIndex=Math.max(0,slideIndex-1);renderDeck()}});
+$('#go-deck').addEventListener('click',()=>setTab(1));$('#go-demo').addEventListener('click',()=>setTab(0));
+if(location.hash==='#presentation')setTab(1);
+renderDemo();renderDeck();
+})();
+</script>
 </body>
 </html>
