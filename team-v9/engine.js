@@ -45,8 +45,22 @@
     const el=$('#team-message',root); if(el){el.textContent=text;el.hidden=!text;el.classList.toggle('error',error);}
   }
   function initRoot() {
-    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${validProjectForReturn?'<a href="/admin/?resume_project='+encodeURIComponent(requestedProject)+'#studio-projects">← Return to this project</a>':''}${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
+    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
     root.addEventListener('click',handleClick);
+  }
+  // The deep-link UUID is only a hint. Render a return link AFTER the
+  // authenticated team refresh confirms this project is in the approved list.
+  function updateReturnLink(){
+    if(!admin||!root)return;
+    const toolbar=root.querySelector('.team-toolbar > .team-actions');
+    if(!toolbar)return;
+    toolbar.querySelector('[data-return-project]')?.remove();
+    if(!validProjectForReturn||!rows.projects.some(p=>p.id===requestedProject))return;
+    const link=document.createElement('a');
+    link.dataset.returnProject='';
+    link.href='/admin/?resume_project='+encodeURIComponent(requestedProject)+'#studio-projects';
+    link.textContent='← Return to this project';
+    toolbar.prepend(link);
   }
   async function refresh() {
     if(loading)return; loading=true;
@@ -62,7 +76,7 @@
       if(admin){const apps=await sb.from('studio_team_applications').select('id,accepted_member_id,policy_version,policy_accepted_at,digital_signature,status');if(apps.error)throw apps.error;intake.splice(0,intake.length,...(apps.data||[]));}
       if(admin){const q=await sb.from('studio_projects').select('id,title,project_code,status').order('created_at',{ascending:false});if(q.error)throw q.error;next.projects=q.data;}
       const ctx=await sb.rpc('studio_team_context');if(ctx.error)throw ctx.error;next.context=ctx.data||[];
-      rows=next; render(); message('');
+      rows=next; render(); updateReturnLink(); message('');
       if(admin&&requestedMember&&!memberLinkOpened&&rows.members.some(m=>m.id===requestedMember)){memberLinkOpened=true;tab='members';render();memberForm(requestedMember);}
       return true;
     } catch(e) {
@@ -73,11 +87,12 @@
     } finally {loading=false;}
   }
   function render() {
-    const tasks=rows.tasks;
+    const tasks=admin&&requestedProject?rows.tasks.filter(t=>t.project_id===requestedProject):rows.tasks;
+    const scopedDomains=admin&&requestedProject?rows.streams.filter(w=>w.project_id===requestedProject):rows.streams;
     const memberTabs=(myDomains().length?[['domains','My domains']]:[]).concat([['available','Available tasks'],['mine','My work'],['reviews','My reviews'],['wallet','Wallet'],['history','History']]);
     $('#team-tabs',root).innerHTML=(admin?[['domains','Domain delivery'],['board','Task board'],['attention','Needs attention'],['tasks','All tasks'],['members','Team load'],['wallet','Token ledger']]:memberTabs).map(([v,l])=>`<button type="button" data-team-tab="${v}" aria-current="${tab===v}">${l}</button>`).join('');
     const own=admin?tasks:tasks.filter(t=>t.owner_id===me);
-    if(admin){const overview=$('#team-overview');if(overview)overview.innerHTML=`<div><p class="overline">TEAM EXECUTION</p><h2>${rows.streams.filter(w=>w.status==='review').length} domain outcomes · ${tasks.filter(t=>t.status==='review'||overdue(t)||escalated(t)||t.rework_reason).length} task exceptions need attention</h2><p>${rows.streams.filter(w=>w.status==='review').length} awaiting founder acceptance · ${tasks.filter(t=>t.status==='available').length} unassigned team tasks · ${tasks.filter(overdue).length} overdue</p></div><a class="button button-primary" href="#team">OPEN DOMAIN DELIVERY</a>`;}
+    if(admin){const overview=$('#team-overview');if(overview)overview.innerHTML=`<div><p class="overline">TEAM EXECUTION</p><h2>${scopedDomains.filter(w=>w.status==='review').length} domain outcomes · ${tasks.filter(t=>t.status==='review'||overdue(t)||escalated(t)||t.rework_reason).length} task exceptions need attention</h2><p>${scopedDomains.filter(w=>w.status==='review').length} awaiting founder acceptance · ${tasks.filter(t=>t.status==='available').length} unassigned team tasks · ${tasks.filter(overdue).length} overdue</p></div><a class="button button-primary" href="#team">OPEN DOMAIN DELIVERY</a>`;}
     $('#team-metrics',root).innerHTML=admin?
       metric('Unassigned',tasks.filter(t=>t.status==='available').length)+metric('Active',tasks.filter(t=>openStates.includes(t.status)).length)+metric('Awaiting review',tasks.filter(t=>t.status==='review').length)+metric('Overdue',tasks.filter(overdue).length)+metric('Open rework',tasks.filter(t=>t.rework_reason).length)+metric('Founder queue',tasks.filter(escalated).length):
       metric('My domains',myDomains().filter(w=>!['accepted'].includes(w.status)).length)+metric('Active / capacity',`${load(me)} / ${rows.members.find(m=>m.id===me)?.capacity??'—'}`)+metric('In review',own.filter(t=>t.status==='review').length)+metric('Accepted',own.filter(t=>['accepted','closed'].includes(t.status)).length)+metric('Overdue',own.filter(overdue).length);
