@@ -100,7 +100,7 @@ function packFounderStageOffline() {
   const styles=['control-v2.css','premium.css','ultra.css',
     'founder-case-rc11.css','founder-staging-rc13.css','founder-shell-rc20.css'];
   let html=fs.readFileSync(path.join(source,'founder-staging-rc13.html'),'utf8');
-  html=replaceExactly(html,'href="/control-v2/clients"','href="./founder-rc14-offline.html"',2);
+  html=replaceExactly(html,'href="/control-v2/clients"','href="./founder-rc14-offline.html"',3);
   html=replaceExactly(html,'src="/control-v2/assets/logo-mark-official.png"','src="'+logoURI+'"');
   for (const filename of styles) {
     html=replaceExactly(html,
