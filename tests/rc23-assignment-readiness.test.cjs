@@ -99,3 +99,55 @@ test('RC23 feature source syntax passes node parser',()=>{
   assert.equal(result.status,0,result.stderr||f);
  }
 });
+
+test('RC24 selects a real assigned, unblocked pilot task even with zero new assignments ready',()=>{
+ const assigned=task('live-first','data / research','worker-content','assigned');
+ assigned.owner_id='worker-ai';
+ const items=[
+   assigned,
+   task('blocked-root','software development','worker-software'),
+   task('blocked-second','ai / automation','worker-ai')
+ ];
+ const r=model({tasks:items,dependencies:[{task_id:'blocked-second',depends_on:'blocked-root'}]});
+ assert.equal(r.canAssign,0,'all new assignments blocked');
+ assert.equal(r.nextStep.kind,'assigned');
+ assert.equal(r.nextStep.taskId,'live-first');
+ assert.equal(r.nextStep.action,'details','never impersonate an employee');
+ assert.match(r.nextStep.instruction,/assigned employee can start/);
+});
+test('RC24 reviewer decision takes precedence, but never auto-accepts or sends notifications',()=>{
+ const inReview={...task('submitted','data / research','worker-content','review'),owner_id:'worker-ai'};
+ const inProgress={...task('underway','ai / automation','worker-content','in_progress'),owner_id:'worker-ai'};
+ const r=model({tasks:[inProgress,inReview]});
+ assert.equal(r.nextStep.kind,'review');
+ assert.equal(r.nextStep.taskId,'submitted');
+ assert.equal(r.nextStep.action,'details');
+});
+test('RC24 highlights the reviewer-separation fix when there is no work in progress',()=>{
+ const r=model({tasks:[task('root-software','software development','worker-software')]});
+ assert.equal(r.nextStep.kind,'reviewer_setup');
+ assert.equal(r.nextStep.action,'task','opens existing founder task editor, not a new RPC');
+});
+test('RC24 never suggests an assigned task whose dependencies are not yet accepted',()=>{
+ const assigned={...task('not-open','ai / automation','worker-content','assigned'),owner_id:'worker-ai'};
+ const prior=task('blocking','software development','worker-software','available');
+ const r=model({tasks:[assigned,prior],dependencies:[{task_id:'not-open',depends_on:'blocking'}]});
+ assert.equal(r.nextStep.kind,'reviewer_setup');
+ assert.equal(r.nextStep.taskId,'blocking');
+});
+test('RC24 renders next action as a safe button delegated to existing Team task UI',()=>{
+ const active={...task('start-1','data / research','worker-content','assigned'),owner_id:'worker-ai'};
+ const m=model({tasks:[active]});
+ const root=new Element('section'),doc={createElement:tag=>new Element(tag)};
+ render(root,m,doc);
+ const all=[];function visit(x){all.push(x);x.children.forEach(visit)}visit(root);
+ const buttons=all.filter(x=>x.tagName==='BUTTON'&&x.dataset.teamAction);
+ assert.equal(buttons.length,1);
+ assert.equal(buttons[0].dataset.teamAction,'details');
+ assert.equal(buttons[0].dataset.id,'start-1');
+ assert.equal(all.filter(x=>x.tagName==='FORM').length,0);
+ const engine=read('team-v9/engine.js');
+ assert.match(engine,/const b=e.target.closest\('\[data-team-action\]'\)/);
+ assert.match(engine,/if\(a==='task'\)return taskForm\(id\)/);
+ assert.match(engine,/taskAction\(a,id\)/);
+});
