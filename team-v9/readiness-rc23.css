@@ -1,0 +1,18 @@
+/* RC23 · ATS project task readiness, existing team operations only */
+.team-engine .ats-readiness{border:1px solid rgba(128,174,199,.26);border-radius:14px;padding:18px 20px;margin:4px 0 20px;background:linear-gradient(130deg,rgba(27,69,85,.16),rgba(5,22,32,.88))}
+.team-engine .ats-readiness[hidden]{display:none!important}
+.ats-readiness-head{display:flex;justify-content:space-between;align-items:start;gap:18px}
+.ats-readiness-kicker{font-size:10px;letter-spacing:.12em;font-weight:800;color:#93b9c6}
+.ats-readiness-head h3{font-size:18px;margin:7px 0 14px;color:#f3f7f9}
+.ats-readiness-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ats-readiness-metric{padding:12px;border-radius:9px;border:1px solid rgba(137,181,201,.17);background:rgba(9,32,45,.65)}
+.ats-readiness-metric strong{display:block;font-size:25px;line-height:1.1}
+.ats-readiness-metric small{display:block;margin-top:6px;color:#aac4d0;font-size:11px;line-height:1.45}
+.ats-readiness-issues{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.ats-readiness-issues h4{grid-column:1/-1;font-size:13px;font-weight:800;margin:0}
+.ats-readiness-item{border-radius:10px;border-inline-start:2px solid #e3a45a;padding:12px 14px;background:rgba(223,161,71,.045)}
+.ats-readiness-item b{display:block;font-size:12px;overflow-wrap:anywhere}
+.ats-readiness-item small{display:block;margin:5px 0;color:#a9c0ce;font-size:10px}
+.ats-readiness-item p{margin:5px 0;font-size:11px;line-height:1.65;color:#d1dce2}
+.ats-readiness-disclaimer,.ats-readiness-quiet{font-size:11px;color:#98adba;line-height:1.7;margin:14px 0 0}
+@media(max-width:760px){.ats-readiness-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ats-readiness-issues{grid-template-columns:1fr}.team-engine .ats-readiness{padding:14px}}
