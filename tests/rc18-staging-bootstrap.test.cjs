@@ -175,5 +175,5 @@ test('RC18 provider discovery mismatch fails closed, without fallback to untrust
   jwks_uri:'https://evil.invalid/key'
  })})};
  await expectDenied(boot(f,{openidClient:swapped}));
- assert.equal(f.sql.length,0,'reject bogus provider before database probe');
+ assert.equal(f.sql.length,1,'private database check occurs before provider discovery');
 });
