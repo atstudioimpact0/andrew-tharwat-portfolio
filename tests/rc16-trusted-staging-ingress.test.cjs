@@ -64,7 +64,7 @@ function harness(){
   return r.setCookie.split(';')[0];};
  const req=(path, cookie='', extra={})=>({requestTarget:path,method:'GET',
    headers:{cookie,...extra}});
- return {staff,sessions,sqlLog,assets,ingress,login,req};
+ return {staff,sessions,sqlLog,assets,ingress,login,req,store,runtime};
 }
 test('RC16 rejects absolute targets, //, ../, encoded traversal, query hash, malicious normalization',()=>{
  for(const path of ['https://evil.invalid/control-v2/clients','//evil.invalid',
@@ -194,4 +194,37 @@ test('RC16 no-external-network local HTTP adapter checks real Cookie header and 
   server.close();
   await once(server,'close');
  }
+});
+
+
+test('RC20 ATS official logo and shared shell assets require verified Founder session',async()=>{
+ const h=harness();
+ for(const pathname of ['/control-v2/assets/logo-mark-official.png',
+   '/control-v2-preview/founder-shell-rc20.css',
+   '/control-v2-preview/founder-shell-rc20.js']){
+  assert.equal((await h.ingress(h.req(pathname))).status,401);
+ }
+ assert.equal(h.assets.length,0);
+ const cookie=await h.login();
+ const css=await h.ingress(h.req('/control-v2-preview/founder-shell-rc20.css',cookie));
+ assert.equal(css.status,200);
+ assert.equal(css.headers['Content-Type'],'text/css; charset=utf-8');
+ const js=await h.ingress(h.req('/control-v2-preview/founder-shell-rc20.js',cookie));
+ assert.equal(js.status,200);
+ assert.equal(js.headers['Content-Type'],'text/javascript; charset=utf-8');
+ const invalid=await h.ingress(h.req('/control-v2/assets/logo-mark-official.png',cookie));
+ assert.equal(invalid.status,503,'a text pretending to be official PNG must be rejected');
+ const logo=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),Buffer.alloc(33)]);
+ const safe=createTrustedIngressRc16({
+  runtime:h.runtime,sessionStore:h.store,
+  lookupStaff:h.store.lookupStaff,
+  readStatic:async file=>file==='logo-mark-official.png'?logo:'SAFE_STATIC'
+ });
+ const valid=await safe(h.req('/control-v2/assets/logo-mark-official.png',cookie));
+ assert.equal(valid.status,200);
+ assert.equal(valid.headers['Content-Type'],'image/png');
+ assert.equal(valid.headers['Cache-Control'],'no-store, max-age=0');
+ assert.ok(Buffer.isBuffer(valid.body));
+ const unknown=await safe(h.req('/control-v2/assets/private.key',cookie));
+ assert.equal(unknown.status,404);
 });
