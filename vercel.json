@@ -43,6 +43,10 @@
       "destination": "/api/share?media=:media"
     },
     {
+      "source": "/projects/move-now",
+      "destination": "/case-studies/move-now.html"
+    },
+    {
       "source": "/projects/:slug",
       "destination": "/project?slug=:slug"
     },

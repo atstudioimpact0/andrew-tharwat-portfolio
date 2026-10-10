@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Move Now — Client Operations Case Study | AT Studio</title>
+<link rel="canonical" href="https://atstudioimpact.com/projects/move-now">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Move Now — Digital Operations by AT Studio">
+<meta property="og:description" content="دراسة حالة: نظام استقبال طلبات العملاء وتنظيم العمليات لشركة Move Now.">
+<meta property="og:image" content="https://atstudioimpact.com/move-now/assets/property-transition.webp">
+<meta name="description" content="نظام طلبات عملاء ولوحة تحكم لشركة عقارات وتشطيبات — AT Studio">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050b14; --card:#0a1420; --line:rgba(255,255,255,.08);
+  --text:#eef2f7; --soft:#c2cddb; --mute:#8a99ad; --red:#ff2a44; --red-soft:#ff5468;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo',system-ui,sans-serif}
+a{color:var(--red-soft)}
+.en{font-family:'Montserrat',sans-serif;direction:ltr}
+
+/* Integrated ATS portfolio case study */
+:focus-visible{outline:2px solid var(--red-soft);outline-offset:3px}
+.logo img{width:170px;height:auto;max-height:50px;object-fit:contain;object-position:left}
+.breadcrumb{display:flex;align-items:center;gap:10px;margin-bottom:26px;font-size:13px;color:#aab6c5}
+.breadcrumb a{text-decoration:none;color:inherit}.breadcrumb a:hover{color:#fff}
+.shot.preview{border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,#10263a,#08121f 65%);align-items:stretch;text-align:start;gap:22px;padding:clamp(22px,4vw,44px);min-height:350px;box-shadow:0 24px 70px rgba(0,0,0,.22)}
+.preview-header{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;direction:ltr;font-family:Montserrat,sans-serif;font-size:12px;letter-spacing:.12em;color:#aab6c5}
+.preview-header strong{color:#fff;font-size:21px;letter-spacing:.02em}
+.preview-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.preview-step{position:relative;min-height:180px;padding:26px 22px;border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.045)}
+.preview-step b{display:block;font:800 12px Montserrat,sans-serif;color:var(--red-soft);margin-bottom:24px}
+.preview-step strong{display:block;font-size:19px;color:#fff;margin-bottom:10px}
+.preview-step span{display:block;font-size:14px;color:#b7c7d8;line-height:1.7}
+.preview-notice{font-size:12px;color:#9eacbd;line-height:1.7;margin:0}
+@media(max-width:700px){
+ .top-in{padding:14px 18px}.logo img{width:124px}
+ main{padding:40px 20px 20px;gap:32px}
+ h1{font-size:clamp(32px,9vw,52px)}
+ .lead{font-size:17px}
+ .preview-cols{grid-template-columns:1fr}
+ .preview-step{min-height:0;padding:20px}
+ .preview-step b{margin-bottom:12px}
+ .card{padding:24px}.card h2{font-size:25px}.card p,.card ul{font-size:16px}
+ .cta{padding:28px 24px}.meta div{padding:17px 20px}
+}
+/* header */
+.top{border-bottom:1px solid var(--line)}
+.top-in{max-width:1200px;margin:0 auto;padding:18px 32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-family:'Montserrat',sans-serif;font-weight:900;font-size:22px;letter-spacing:.04em;color:#fff;direction:ltr;text-decoration:none}
+.logo b{color:var(--red)}
+.logo small{font-size:12px;letter-spacing:.22em;font-weight:700;color:#aab6c5}
+.btn{display:inline-block;background:var(--red);color:#fff;text-decoration:none;font-weight:800;border-radius:999px}
+.btn.sm{font-size:14px;padding:12px 22px}
+.btn.lg{font-size:17px;padding:18px 34px}
+
+/* layout */
+main{max-width:1200px;margin:0 auto;padding:64px 32px 24px;display:flex;flex-direction:column;gap:56px}
+.eyebrow{display:flex;align-items:center;gap:14px;justify-content:flex-end;font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;letter-spacing:.22em;color:#aab6c5;direction:ltr}
+.eyebrow i{display:inline-block;width:44px;height:3px;background:var(--red)}
+h1{margin:22px 0;font-weight:900;font-size:clamp(40px,7vw,84px);line-height:1.15;color:#fff}
+h1 span{color:var(--red)}
+.lead{margin:0 0 22px;max-width:720px;font-size:20px;line-height:1.8;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#dbe3ee;font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px}
+.chip.ph{border-style:dashed;border-color:rgba(255,255,255,.28);color:#9fb0c4;background:none}
+
+/* meta strip */
+.meta{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:20px;background:var(--card);overflow:hidden}
+.meta div{flex:1 1 220px;padding:22px 26px;border-inline-start:1px solid rgba(255,255,255,.06)}
+.meta div:last-child{border-inline-start:0}
+.meta small{display:block;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.06em}
+.meta strong{display:block;margin-top:6px;font-size:18px}
+
+/* image */
+.shot{border:2px dashed rgba(255,255,255,.18);border-radius:24px;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:32px;background:linear-gradient(180deg,rgba(255,42,68,.05),rgba(255,255,255,.01))}
+.shot img{max-width:100%;border-radius:16px;display:block}
+.shot .t{font-size:22px;font-weight:700;color:#fff}
+.shot .s{font-size:15px;color:#9fb0c4;max-width:460px;line-height:1.7}
+
+/* cards */
+.row{display:flex;flex-wrap:wrap;gap:24px}
+.card{flex:1 1 360px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:14px}
+.card .tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:.22em;color:var(--red-soft);direction:ltr}
+.card h2{margin:0;font-size:30px;font-weight:900;color:#fff}
+.card p{margin:0;font-size:18px;line-height:1.9;color:var(--soft)}
+.card ul{margin:0;padding-inline-start:22px;font-size:18px;line-height:1.9;color:var(--soft)}
+.card.result{background:linear-gradient(135deg,rgba(255,42,68,.14),rgba(255,42,68,.03));border-color:rgba(255,42,68,.35)}
+.card.result .tag{color:#ff8a98}
+.card.result .big{font-size:22px;line-height:1.7;font-weight:700;color:#fff}
+.card.result .note{font-size:15px;line-height:1.7;color:#d4dce8}
+
+/* CTA */
+.cta{border:1px solid var(--line);border-radius:28px;background:var(--card);padding:48px 40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px}
+.cta .tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:.22em;color:#aab6c5;direction:ltr}
+.cta h2{margin:10px 0 0;font-size:clamp(30px,4vw,44px);line-height:1.3;font-weight:900;color:#fff}
+.cta h2 span{color:var(--red)}
+
+footer{max-width:1200px;margin:8px auto 0;padding:32px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--mute)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <a class="logo" href="/" aria-label="AT Studio — Home"><img src="/assets/at-studio-primary-header.webp?v=2" alt="AT Studio"></a>
+    <a class="btn sm" href="/#contact">ابدأ مشروعك ←</a>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <nav class="breadcrumb" aria-label="تصفح المشاريع"><a href="/">AT Studio</a><span> / </span><a href="/#work">المشاريع</a><span> / </span><span aria-current="page">Move Now</span></nav>
+    <div class="eyebrow"><span>CLIENT CASE STUDY · 001</span><i></i></div>
+    <h1>نظام طلبات عملاء<br><span>ولوحة تحكم لشركة Move Now.</span></h1>
+    <p class="lead">Move Now تعمل في العقارات والتشطيبات. تعاونّا على بناء نظام رقمي يجمع طلبات العملاء، ينظم متابعتها، ويوضح مسؤولية كل طلب داخل الفريق — من أول تواصل إلى الخطوة التالية.</p>
+    <div class="chips">
+      <span class="chip">إدارة الطلبات</span>
+      <span class="chip">لوحة تحكم</span>
+      <span class="chip">توزيع الموظفين</span>
+    </div>
+  </section>
+
+  <section class="meta">
+    <div><small>العميل</small><strong>Move Now</strong></div>
+    <div><small>المجال</small><strong>عقارات وتشطيبات</strong></div>
+    <div><small>نوع الشغل</small><strong>Digital</strong></div>
+    <div><small>الاستضافة</small><strong>AT Studio</strong></div>
+  </section>
+
+  <section class="shot preview" aria-label="رسم توضيحي لمسار الطلبات">
+    <div class="preview-header"><strong>MOVE NOW <span style="color:#ff5468">/</span> WORKFLOW</strong><span>INTAKE → ASSIGNMENT → FOLLOW-UP</span></div>
+    <div class="preview-cols">
+      <div class="preview-step"><b>01 / INTAKE</b><strong>استقبال الطلب</strong><span>نموذج مخصص يلتقط نوع الخدمة واحتياجات العميل.</span></div>
+      <div class="preview-step"><b>02 / ASSIGN</b><strong>تنظيم المسؤوليات</strong><span>تجميع الطلبات وربط كل طلب بالشخص المسؤول.</span></div>
+      <div class="preview-step"><b>03 / FOLLOW UP</b><strong>متابعة واضحة</strong><span>حالة الطلب والملاحظات والخطوة التالية في مسار واحد.</span></div>
+    </div>
+    <p class="preview-notice">تصوّر توضيحي لمسار العمل، وليس لقطة فعلية من لوحة الإدارة. لا تُعرض أي بيانات خاصة بالعملاء.</p>
+  </section>
+
+  <section class="row">
+    <div class="card">
+      <div class="tag">01 · PROBLEM</div>
+      <h2>المشكلة</h2>
+      <p>تعدد نقاط استقبال طلبات العملاء كان يتطلب مسارًا موحدًا للتسجيل والتوزيع والمتابعة، بحيث تصبح مسؤولية كل طلب وحالته والخطوة التالية واضحة.</p>
+    </div>
+    <div class="card">
+      <div class="tag">02 · WHAT WE BUILT</div>
+      <h2>اللي عملناه</h2>
+      <ul>
+        <li>فورم طلبات للعميل بيوصل مباشرة للنظام.</li>
+        <li>لوحة تحكم للإدارة بتعرض كل الطلبات وحالتها.</li>
+        <li>قاعدة بيانات منظمة للطلبات والعملاء.</li>
+        <li>توزيع الطلبات على الموظفين من اللوحة.</li>
+        <li>تكامل تشغيل النظام ضمن البنية الرقمية لـ AT Studio، مع فصل صلاحيات الوصول إلى بيانات العمليات.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="card result">
+      <div class="tag">03 · RESULT</div>
+      <h2>القيمة العملية</h2>
+      <p class="big">نقطة استقبال واحدة، رؤية منظمة للطلبات، ومسار واضح لإسناد المسؤوليات والمتابعة.</p>
+      <p class="note">هذه نتائج وظيفية لبنية النظام. لم ننشر أرقام أداء أو وفورات زمنية من دون قياس موثّق.</p>
+    </div>
+    <div class="card">
+      <div class="tag">04 · TOOLS</div>
+      <h2>الأدوات</h2>
+      <div class="chips">
+        <span class="chip en">Supabase</span>
+        <span class="chip en">React</span>
+        <span class="chip en">Vercel</span>
+        <span class="chip en">Role-based Access</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="start">
+    <div>
+      <div class="tag">START WITH THE PROBLEM</div>
+      <h2>عندك مشكلة شبه دي؟ <span>قولنا عليها.</span></h2>
+    </div>
+    <a class="btn lg" href="/#contact">ابدأ من مشكلتك ←</a>
+  </section>
+
+</main>
+
+<footer>
+  <span>AT Studio · Build what works.</span><a href="/#work">العودة إلى المشاريع</a>
+  <span class="en">atstudioimpact.com</span>
+</footer>
+
+</body>
+</html>
