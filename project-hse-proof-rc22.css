@@ -1,0 +1,44 @@
+/* RC22 — HSE Awareness Series: concise, evidence-grounded case proof. */
+.ats-hse-proof{--case-accent:#ef233c;}
+.ats-hse-proof .v9-case-study-head{display:block;}
+.ats-hse-proof .v9-case-study-intro{max-width:850px;}
+.ats-hse-proof .ats-hse-proof-grid{
+ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:0; border-top:1px solid rgba(159,205,232,.14);
+}
+.ats-hse-proof .ats-hse-proof-card{
+ position:relative; padding:clamp(24px,3vw,40px);
+ min-width:0; border-bottom:1px solid rgba(159,205,232,.14);
+}
+.ats-hse-proof .ats-hse-proof-card:nth-child(odd){border-inline-end:1px solid rgba(159,205,232,.14);}
+.ats-hse-proof .ats-hse-proof-card>span{
+ display:block;color:#ff5767;font-size:12px;font-weight:900;letter-spacing:.16em;
+}
+.ats-hse-proof .ats-hse-proof-card small{
+ display:block;margin:13px 0 8px;color:#90b1c3;font-weight:800;font-size:11px;
+}
+.ats-hse-proof .ats-hse-proof-card h3{
+ margin:0 0 13px;color:#f1f6f9;font-size:clamp(19px,2vw,27px);line-height:1.35;
+}
+.ats-hse-proof .ats-hse-proof-card p{
+ margin:0;color:#b7cad6;font-size:14px;line-height:1.85;max-width:600px;
+}
+.ats-hse-proof .ats-hse-proof-card a{
+ display:inline-flex;margin-top:16px;min-height:44px;align-items:center;
+ color:#fff;font-size:12px;font-weight:800;border-bottom:1px solid #ef233c;
+}
+.ats-hse-proof [dir="rtl"] .ats-hse-proof-card h3,
+[dir="rtl"] .ats-hse-proof .ats-hse-proof-card h3,
+[dir="rtl"] .ats-hse-proof .ats-hse-proof-card p {
+ font-family:Alexandria,Tahoma,Arial,sans-serif;letter-spacing:0;
+}
+.ats-hse-proof .ats-hse-evidence-note{
+ margin:0;padding:14px clamp(24px,3vw,40px);color:#92aab8;font-size:12px;line-height:1.8;
+}
+#case-visual-evidence{scroll-margin-top:100px;}
+@media(max-width:760px){
+ .ats-hse-proof .ats-hse-proof-grid{grid-template-columns:1fr;}
+ .ats-hse-proof .ats-hse-proof-card{border-inline-end:0!important;}
+ .ats-hse-proof .ats-hse-proof-card p{font-size:13px;}
+}
+@media(prefers-reduced-motion:reduce){.ats-hse-proof *{scroll-behavior:auto!important;}}
