@@ -16,6 +16,7 @@ const {createStagingAuthRuntime}=require('./staging-runtime-rc8.cjs');
 const {createTrustedIngressRc16}=require('./staging-ingress-rc16.cjs');
 const {createPgStaffStore}=require('./pg-staff-store-rc8.cjs');
 const {inspectStageRc17,CALLBACK}=require('./staging-preflight-rc17.cjs');
+const {SUPPORTED_ZOHO_ORIGINS}=require('./rc17-zoho-origins.cjs');
 
 class StageNotReady extends Error {
   constructor(){
@@ -106,7 +107,21 @@ async function createStagingCandidateRc18({
   callbackUrl:configuration.zohoCallback
  });
  const key=canonicalKey(configuration.oidcKeyBase64Url);
- if(settings.callbackUrl!==CALLBACK)deny();
+ if(settings.callbackUrl!==CALLBACK||
+    !SUPPORTED_ZOHO_ORIGINS.includes(settings.issuer)||
+    typeof settings.clientId!=='string'||settings.clientId.trim()!==settings.clientId||
+    settings.clientId.length<3||settings.clientId.length>300||
+    typeof configuration.zohoClientSecret!=='string'||
+    configuration.zohoClientSecret.length<8||
+    configuration.zohoClientSecret.length>1024||
+    !openidClient||!['discovery','ClientSecretPost','randomPKCECodeVerifier',
+      'calculatePKCECodeChallenge','buildAuthorizationUrl',
+      'authorizationCodeGrant'].every(k=>typeof openidClient[k]==='function'))deny();
+
+ // Local/privileged database readiness comes FIRST. Do not make any
+ // external Zoho discovery request if Staging's private index or Founder
+ // assignment is not ready. This is both cheaper and fail-closed.
+ await checkPrivateDatabaseRc18(pool,settings.issuer);
 
  let adapter;
  try{
@@ -123,10 +138,6 @@ async function createStagingCandidateRc18({
   ...approval
  });
  if(!safe.config_shape_ready||!safe.operator_attestations_present)deny();
-
- // Refuse to build ANY live route if the user hasn't explicitly approved
- // a scoped private function and Founder identity on this staging DB.
- await checkPrivateDatabaseRc18(pool,settings.issuer);
  let runtime,ingress;
  try{
   runtime=createStagingAuthRuntime({
