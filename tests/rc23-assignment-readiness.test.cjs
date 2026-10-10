@@ -53,7 +53,7 @@ test('RC23 never counts an inactive or at-capacity specialist as ready',()=>{
  const capacityMembers=members.map(m=>m.id==='worker-ai'?{...m,capacity:0}:m);
  let r=model({members:capacityMembers});
  assert.deepEqual(r.items.find(x=>x.id==='ready-ai').reasons,['capacity']);
- assert.equal(r.capacityBlocked,1);
+ assert.equal(r.capacityBlocked,2,'both ready and dependent AI tasks have capacity constraints');
  const disabled=members.map(m=>m.id==='worker-ai'?{...m,available:false}:m);
  r=model({members:disabled});
  assert.deepEqual(r.items.find(x=>x.id==='ready-ai').reasons,['reviewer']);
