@@ -13,15 +13,41 @@
   <link rel="stylesheet" href="/control-v2-preview/founder-case-rc11.css">
   <link rel="stylesheet" href="/control-v2-preview/founder-staging-rc13.css">
   <link rel="stylesheet" href="/control-v2-preview/founder-clients-rc14.css">
+  <link rel="stylesheet" href="/control-v2-preview/founder-shell-rc20.css">
   <script src="/control-v2-preview/founder-clients-rc14.js" defer></script>
+  <script src="/control-v2-preview/founder-shell-rc20.js" defer></script>
   <script src="/control-v2-preview/founder-clients-rc14-init.js" defer></script>
 </head>
 <body class="rc13-body rc14-body">
+  <div class="rc20-layout" id="rc20-layout">
+  <aside class="rc20-rail" id="rc20-rail" aria-label="Client case navigation">
+    <a class="rc20-brand" href="/control-v2/clients" aria-label="AT Studio - Clients">
+      <img src="/control-v2/assets/logo-mark-official.png" alt="" width="39" height="39">
+      <span><strong>AT STUDIO</strong><small>CONTROL ROOM / FOUNDER</small></span>
+    </a>
+    <button class="rc20-rail-dismiss" id="rc20-dismiss" type="button" aria-label="Close menu">×</button>
+    <div class="rc20-rail-rule"></div>
+    <p class="rc20-rail-kicker" id="rc20-rail-kicker">مساحة المالك</p>
+    <nav class="rc20-nav" aria-label="Client workspace">
+      <a class="rc20-nav-link" href="/control-v2/clients" aria-current="page">
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h8M8 14h6"/></svg>
+        <span id="rc20-nav-clients">العملاء</span><small>01</small>
+      </a>
+      
+    </nav>
+    <div class="rc20-rail-footer">
+      <b>AT STUDIO / PHILOSOPHY</b>
+      <p id="rc20-philosophy">عقول مختلفة. أدوات مختلفة. اتجاه واحد.</p>
+      <small>BUILD WHAT WORKS. · 2026</small>
+    </div>
+  </aside>
+  <div class="rc20-overlay" id="rc20-overlay" hidden></div>
+  <div class="rc20-main">
   <a class="skip" href="#rc14-workspace">تخطَّ إلى ملفات العملاء</a>
   <header class="rc13-header">
-    <div class="rc13-brand">
-      <span class="rc13-emblem" aria-hidden="true">AT</span>
-      <div><strong>AT STUDIO</strong><small>INTELLIGENCE / FOUNDER SPACE</small></div>
+    <div class="rc20-top-context">
+      <button id="rc20-menu" class="rc20-menu" type="button" aria-label="Open menu" aria-controls="rc20-rail" aria-expanded="false">☰</button>
+      <div><strong>ATS / FOUNDER WORKSPACE</strong><small id="rc20-subtitle">من الفهم إلى قرار قابل للتنفيذ</small></div>
     </div>
     <div class="rc13-header-right">
       <span class="rc13-tag">RELEASE A · FOUNDER ONLY · STAGING</span>
@@ -33,6 +59,7 @@
       <p class="eyebrow">ATS / <span id="rc14-kicker">ابدأ من المشكلة</span></p>
       <h1 id="rc14-title">العملاء</h1>
       <p class="rc13-heading-sub">Understand first. Build what works.</p>
+      <p id="rc20-statusline" class="rc20-statusline">نسخة تطوير محمية · قراءة فقط</p>
     </div>
     <div class="rc14-controls">
       <div class="rc14-input-wrap">
@@ -58,5 +85,7 @@
       <span>Protected Staging candidate · No case data cached · No AI generation</span>
     </footer>
   </main>
+  </div>
+  </div>
 </body>
 </html>
