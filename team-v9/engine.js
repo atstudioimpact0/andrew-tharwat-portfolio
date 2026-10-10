@@ -45,7 +45,7 @@
     const el=$('#team-message',root); if(el){el.textContent=text;el.hidden=!text;el.classList.toggle('error',error);}
   }
   function initRoot() {
-    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
+    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><section id="team-readiness" class="ats-readiness" aria-label="Project assignment readiness" hidden></section><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
     root.addEventListener('click',handleClick);
   }
   // The deep-link UUID is only a hint. Render a return link AFTER the
@@ -82,10 +82,23 @@
     } catch(e) {
       Object.keys(rows).forEach(k=>{rows[k]=[];});
       updateReturnLink(); // Never retain a project return link after access refresh fails.
+      $('#team-readiness',root)?.replaceChildren();
+      if($('#team-readiness',root))$('#team-readiness',root).hidden=true;
       $('#team-metrics',root).innerHTML='';
       $('#team-content',root).innerHTML='<div class="team-empty">Workspace could not refresh. Check your access and try again.</div>';
       message(e.message || 'Could not load team workspace',true);
     } finally {loading=false;}
+  }
+  function renderReadiness(){
+    const host=$('#team-readiness',root),bridge=window.ATS_TASK_READINESS;
+    if(!host)return;
+    if(!admin||!requestedProject||!bridge||!rows.projects.some(p=>p.id===requestedProject)){
+      host.hidden=true;host.replaceChildren();return;
+    }
+    const model=bridge.derive({projectId:requestedProject,tasks:rows.tasks,
+      members:rows.members,skills:rows.skills,dependencies:rows.dependencies});
+    host.hidden=!model.ready;
+    bridge.render(host,model,document);
   }
   function render() {
     const tasks=admin&&requestedProject?rows.tasks.filter(t=>t.project_id===requestedProject):rows.tasks;
@@ -97,6 +110,7 @@
     $('#team-metrics',root).innerHTML=admin?
       metric('Unassigned',tasks.filter(t=>t.status==='available').length)+metric('Active',tasks.filter(t=>openStates.includes(t.status)).length)+metric('Awaiting review',tasks.filter(t=>t.status==='review').length)+metric('Overdue',tasks.filter(overdue).length)+metric('Open rework',tasks.filter(t=>t.rework_reason).length)+metric('Founder queue',tasks.filter(escalated).length):
       metric('My domains',myDomains().filter(w=>!['accepted'].includes(w.status)).length)+metric('Active / capacity',`${load(me)} / ${rows.members.find(m=>m.id===me)?.capacity??'—'}`)+metric('In review',own.filter(t=>t.status==='review').length)+metric('Accepted',own.filter(t=>['accepted','closed'].includes(t.status)).length)+metric('Overdue',own.filter(overdue).length);
+    renderReadiness();
     const content=$('#team-content',root);
     if(tab==='domains'){renderDomains(content);return;}
     if(tab==='board'){renderTaskBoard(content);return;}
