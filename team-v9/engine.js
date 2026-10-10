@@ -262,12 +262,23 @@
     return `<article class="team-card ${overdue(t)?'critical':escalated(t)||t.rework_reason?'attention':''}"><div class="team-meta"><span class="team-badge ${t.status}">${esc(label(t.status))}</span><span>${esc(stream(t.workstream_id))}</span>${overdue(t)?'<span>Overdue</span>':''}${escalated(t)?'<span>Founder decision needed</span>':''}</div><h3>${esc(t.title)}</h3><p class="muted">${esc(context(t.id).project_title||project(t.project_id))} · ${esc(t.required_skill)} · Level ${t.required_level}</p><p>${esc(t.expected_output)}</p><div class="team-meta"><span>${t.base_tokens} tokens</span><span>Due ${esc(date(t.due_at))}</span>${blocked?`<span>${blocked} dependencies</span>`:''}</div><small>Owner: ${esc(context(t.id).owner_name||name(t.owner_id))} · ${t.admin_acceptance?'Final acceptance: Admin':'Acceptance: Reviewer'}</small>${t.rework_reason?`<p class="team-message">${esc(label(t.rework_category))}: ${esc(t.rework_reason)}</p>`:''}<div class="team-actions">${actions}</div></article>`;
   }
   function renderWallet(content) {
-    const entries=rows.ledger;
+    // RC25: wallet figures must respect the same authorized project scope as
+    // the Founder task board. Member mode is always restricted to own entries.
+    // Only the existing server ledger is counted; no balance writes or new RPC.
+    const allowedProject=!requestedProject||rows.projects.some(p=>p.id===requestedProject);
+    const entries=rows.ledger.filter(e=>
+      admin
+        ? (allowedProject&&(!requestedProject||e.project_id===requestedProject))
+        : (me!==null&&e.member_id===me)
+    );
     const reserved=entries.reduce((s,e)=>s+(e.event_type==='RESERVED'?e.tokens:e.event_type==='RELEASED'?-e.tokens:0),0);
     const earned=entries.filter(e=>['EARNED','BONUS'].includes(e.event_type)).reduce((s,e)=>s+e.tokens,0);
     const history=rows.tasks.filter(t=>t.owner_id===me&&t.accepted_at);
     const ontime=history.filter(t=>Date.parse(t.submitted_at)<=Date.parse(t.due_at)).length;
-    content.innerHTML=`<div class="team-metrics">${metric('Reserved tokens',reserved)}${metric('Earned / lifetime tokens',earned)}${!admin?metric('On-time accepted work',history.length?`${Math.round(ontime/history.length*100)}%`:'—')+metric('Projects contributed',new Set(history.map(t=>t.project_id)).size):''}</div><p class="wallet-note">Tokens measure contribution. They have no fixed EGP value. Payable and paid balances will become available when project closeout and settlement are enabled.</p>${entries.length?`<div class="team-card">${[...entries].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)).map(e=>`<div class="team-event"><b>${esc(e.event_type)} · ${e.tokens} tokens</b><p>${esc(admin?name(e.member_id)+' · ':'')}${esc(rows.tasks.find(t=>t.id===e.task_id)?.title||'Previous assignment')} · ${esc(date(e.created_at))}</p><small>${esc(e.reason)}</small></div>`).join('')}</div>`:'<div class="team-empty">Your first assignment will create a token reservation here.</div>'}`;
+    const scopeLabel=admin&&requestedProject
+      ? (allowedProject?'Project-scoped wallet · Only events from this project':'Project not available · No events shown')
+      : admin?'All projects · Founder ledger':'My contribution ledger';
+    content.innerHTML=`<p class="wallet-note" role="status">${esc(scopeLabel)}</p><div class="team-metrics">${metric('Reserved tokens',reserved)}${metric('Earned / lifetime tokens',earned)}${!admin?metric('On-time accepted work',history.length?`${Math.round(ontime/history.length*100)}%`:'—')+metric('Projects contributed',new Set(history.map(t=>t.project_id)).size):''}</div><p class="wallet-note">Tokens measure contribution. They have no fixed EGP value. Payable and paid balances will become available when project closeout and settlement are enabled.</p>${entries.length?`<div class="team-card">${[...entries].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)).map(e=>`<div class="team-event"><b>${esc(e.event_type)} · ${e.tokens} tokens</b><p>${esc(admin?name(e.member_id)+' · ':'')}${esc(rows.tasks.find(t=>t.id===e.task_id)?.title||'Previous assignment')} · ${esc(date(e.created_at))}</p><small>${esc(e.reason)}</small></div>`).join('')}</div>`:'<div class="team-empty">Your first assignment will create a token reservation here.</div>'}`;
   }
   function modal(title,body,onSubmit,submitText='Save') {
     const d=$('#team-dialog',root);
