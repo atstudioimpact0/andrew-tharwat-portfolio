@@ -35,7 +35,7 @@ function result(status){
 }
 function domFactory(){
  const ids=[
-  'rc13-state','rc13-case','rc13-retry','rc13-lang','rc13-title','rc13-source',
+  'rc13-status-shell','rc13-state','rc13-case','rc13-retry','rc13-lang','rc13-title','rc13-source',
   'rc13-subtitle','rc13-problem','rc13-known','rc13-missing','rc13-next',
   'rc13-extra','rc13-metrics','rc13-note','rc13-reload',
   'rc13-page-title','rc13-label-problem','rc13-label-known',
@@ -76,6 +76,7 @@ test('RC13 verified 200 shows same RC12 model, one next action, no private field
  assert.deepEqual(options.headers,{Accept:'application/json'});
  assert.equal(h.get('rc13-case').hidden,false);
  assert.equal(h.get('rc13-state').hidden,true);
+ assert.equal(h.get('rc13-status-shell').hidden,true);
  assert.equal(h.get('rc13-problem').textContent,'Customer does not understand the product');
  assert.match(h.get('rc13-missing').textContent,/الدليل/);
  assert.equal(h.get('rc13-next').textContent,'Ask for one real example');
@@ -97,6 +98,7 @@ test('RC13 401/403/404/503 all hide case content and return localized safe error
  for(const [status,word] of [[401,'انتهت الجلسة'],[403,'ليست لديك'],[404,'الملف غير متاح'],[503,'تعذر تحميل']]){
   const h=harness({fetch:async()=>result(status)});await h.instance.load();
   assert.equal(h.get('rc13-case').hidden,true);
+  assert.equal(h.get('rc13-status-shell').hidden,false);
   assert.equal(h.get('rc13-problem').textContent,'');
   assert.match(h.get('rc13-state').textContent,new RegExp(word));
   assert.ok(!h.get('rc13-state').textContent.includes(uuid));
