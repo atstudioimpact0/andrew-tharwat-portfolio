@@ -64,7 +64,7 @@ test('RC25 does not change server RPCs, event schema, or production contribution
  assert.match(source,/studio_token_ledger/);
  assert.match(source,/event_type==='RESERVED'/);
  assert.match(source,/event_type==='RELEASED'/);
- assert.match(source,/\\['EARNED','BONUS'\\]/);
+ assert.ok(source.includes("['EARNED','BONUS']"),'accepted and bonus events count as earned');
  const x=cp.spawnSync(process.execPath,['--check',path.join(root,'team-v9/engine.js')],{encoding:'utf8'});
  assert.equal(x.status,0,x.stderr);
 });
