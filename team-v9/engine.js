@@ -12,6 +12,7 @@
   const params=new URLSearchParams(location.search);
   const requestedMember=params.get('member');
   const requestedProject=params.get('project');
+  const validProjectForReturn=admin&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedProject||'');
   const requestedDomain=params.get('domain');
   const requestedTask=params.get('task');
   const requestedNewTask=params.get('newTask')==='1';
@@ -44,7 +45,7 @@
     const el=$('#team-message',root); if(el){el.textContent=text;el.hidden=!text;el.classList.toggle('error',error);}
   }
   function initRoot() {
-    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
+    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${validProjectForReturn?'<a href="/admin/?resume_project='+encodeURIComponent(requestedProject)+'#studio-projects">← Return to this project</a>':''}${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
     root.addEventListener('click',handleClick);
   }
   async function refresh() {

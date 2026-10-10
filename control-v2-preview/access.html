@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#071b2a">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>AT Studio — Private Access / Experience Preview</title>
+<link rel="icon" href="/assets/logo-mark-official.png?v=24">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/control-v2-preview/access.css">
+<link rel="stylesheet" href="/control-v2-preview/access-premium.css">
+<script src="/control-v2-preview/access.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">تخطّ إلى المحتوى</a>
+<div class="banner" role="status"><span class="banner-dot"></span><strong>ACCESS V2 / DESIGN PROTOTYPE</strong><span data-i18n="banner">لا تسجيل دخول حقيقي · لا إرسال بريد · لا اتصال بقاعدة بيانات</span></div>
+<header class="site-head">
+  <a href="/control-v2-preview" class="brand"><img src="/assets/logo-mark-official.png?v=24" alt="" width="45" height="45"><span><b>AT STUDIO</b><small>BUILD WHAT WORKS</small></span></a>
+  <div class="head-actions"><a class="back" href="/control-v2-preview" data-i18n="back">← غرفة التحكم التجريبية</a><button id="locale" class="lang" type="button" aria-label="Switch language">EN</button></div>
+</header>
+<main id="main">
+  <section class="intro" aria-labelledby="page-heading">
+    <p class="eyebrow">AT STUDIO / PRIVATE ACCESS</p>
+    <h1 id="page-heading" data-i18n="title">دخول أبسط.<br>حماية أقوى.</h1>
+    <p class="intro-desc" data-i18n="intro">كل شخص يدخل للمساحة اللي تخصه. بدون أكواد أجهزة تتبعت في محادثات، وبدون صلاحيات مفتوحة، وبدون تكرار غير ضروري.</p>
+    <div class="status-line"><span class="status-dot"></span><span data-i18n="prototype">دي معاينة للتجربة فقط، وليست خدمة تسجيل دخول جاهزة.</span></div>
+  </section>
+  <section class="main-panel" aria-labelledby="journey-title">
+    <div class="panel-heading"><div><p class="eyebrow">THE RIGHT WAY IN</p><h2 id="journey-title" data-i18n="choose">اختار نوع المستخدم</h2></div><span class="tag">DESIGN STUDY · 02</span></div>
+    <div class="switcher" id="roles" role="tablist" aria-label="Preview access roles">
+      <button role="tab" aria-selected="true" tabindex="0" id="role-founder" aria-controls="role-panel" data-role="founder" type="button"><span class="symbol">◈</span><span data-i18n="founder">المالك</span></button>
+      <button role="tab" aria-selected="false" tabindex="-1" id="role-team" aria-controls="role-panel" data-role="team" type="button"><span class="symbol">◎</span><span data-i18n="team">الفريق</span></button>
+      <button role="tab" aria-selected="false" tabindex="-1" id="role-client" aria-controls="role-panel" data-role="client" type="button"><span class="symbol">◇</span><span data-i18n="client">العميل</span></button>
+    </div>
+    <div id="role-panel" role="tabpanel" tabindex="0" aria-labelledby="role-founder" class="role-panel">
+      <div class="role-overview"><p class="eyebrow" id="role-eyebrow">FOUNDER / CONTROL</p><h3 id="role-heading"></h3><p id="role-description"></p></div>
+      <div class="journey-grid">
+        <div class="steps"><p class="overline" data-i18n="stepsHeading">الرحلة المقترحة</p><ol id="role-steps"></ol></div>
+        <div class="screen" aria-live="polite">
+          <div class="screen-top"><span class="secure-symbol">✦</span><span class="screen-overline">ATS / ACCESS PREVIEW</span></div>
+          <div class="screen-center"><span class="screen-icon" id="preview-icon" aria-hidden="true">◈</span><div class="step-count" id="step-counter"></div><h3 id="preview-title"></h3><p id="preview-detail"></p></div>
+          <div class="screen-actions"><button class="primary" id="continue-demo" type="button" data-i18n="nextStep">الخطوة التالية في المعاينة</button><button class="restart" id="restart-demo" type="button" data-i18n="restart">ابدأ من الأول</button></div>
+          <p class="screen-foot" data-i18n="safe">الأزرار بتغيّر الشرح داخل الصفحة فقط. لا يوجد تحقق حقيقي من الهوية.</p>
+        </div>
+      </div>
+      <div class="permission-box"><div><p class="eyebrow">ACCESS / GOVERNANCE</p><h4 data-i18n="permissions">الصلاحيات لا تتبع شكل الشاشة</h4></div><div id="role-permissions" class="permission-list"></div></div>
+    </div>
+  </section>
+  <section class="principles" aria-label="Security standards">
+    <article><span>01</span><h3 data-i18n="principleA">الخادم هو اللي يقرر</h3><p data-i18n="principleADesc">الواجهة لا تمنح صلاحيات. كل طلب محمي يتراجع منه الدور وملكية البيانات على الخادم.</p></article>
+    <article><span>02</span><h3 data-i18n="principleB">التحقق مش مجرد بريد</h3><p data-i18n="principleBDesc">Zoho Mail للمراسلات، وإثبات الهوية والجلسات لهم نظام مستقل يتم اختباره.</p></article>
+    <article><span>03</span><h3 data-i18n="principleC">بيانات العملاء لا تتحرك</h3><p data-i18n="principleCDesc">قاعدة بيانات Supabase باقية مؤقتًا، لكن الوصول إليها هينتقل تدريجيًا إلى واجهات آمنة.</p></article>
+  </section>
+  <section class="notice"><div class="notice-icon">!</div><div><h3 data-i18n="noticeTitle">قبل أول دخول حقيقي</h3><p data-i18n="noticeText">لازم نختار نظام هوية موثوقًا، ونجهز بيئة اختبار معزولة، ونختبر الصلاحيات وإلغاء الجلسة واسترجاع الحساب والإرسال الآلي قبل التشغيل. لن نجمع أكواد أو كلمات مرور في هذه المعاينة.</p></div></section>
+</main>
+<footer><span>© AT Studio · Build what works.</span><span>UX preview / Not an authentication system</span></footer>
+</body></html>

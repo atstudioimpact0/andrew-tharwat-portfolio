@@ -1,11 +1,16 @@
 
 (() => {
+  // Release A safety lock. This old Admin screen remains legacy; future AI actions
+  // require a separately reviewed, server-authorized, explicit Release B flow.
+  // UI gating is defense-in-depth only; it does NOT replace backend enforcement.
+  const LEGACY_AI_RELEASE_A_LOCK = true;
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
   const esc=(v='')=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
   const money=v=>window.ATS_I18N?.formatNumber?.(v)??new Intl.NumberFormat('en-US').format(Number(v||0));
   const fmt=v=>v?(window.ATS_I18N?.formatDate?.(v,{day:'2-digit',month:'short',year:'numeric'})??new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(v))):'—';
   const state={booted:false,loaded:{},leads:[],clients:[],projects:[],proposals:[],payments:[],portfolio:[],v9:null,currentLead:null,currentProposal:null,currentProject:null,inbox:[],projectMessages:[],projectFiles:[],projectReviews:[],projectRevisions:[],projectDomains:[],projectTasks:[],teamMembers:[],teamSkills:[],leadActivities:[],discoveryCase:null,discoveryAnswers:[],rootCauses:[],solutionTasks:[],diagnosticRun:null,deliveryBlueprint:null,clientAccessCode:null};
   let executionCtx={};
+  let projectWorkspaceSeq=0; // prevents stale project detail data crossing rapid navigation
   let inboxTimer=null;
   const roleNames={hse:'HSE & TECHNICAL',software:'SOFTWARE & AUTOMATION',design:'DESIGN & VISUAL',video:'VIDEO & MOTION',content:'CONTENT & STORYTELLING',ai:'AI PRODUCTION'};
   const briefNames={goal:'CHALLENGE & OUTCOME',type:'STARTING POINT',team:'POSSIBLE EXPERTISE',scope:'SCOPE & TIMING',contact:'CONTACT'};
@@ -34,6 +39,20 @@
     if(state.booted||!sb())return;
     state.booted=true;
     await loadDashboard(true);
+    // Only resume an authorized project after the existing Trusted Device
+    // gate and project list have loaded. URL IDs grant NO permissions.
+    const resume=new URLSearchParams(location.search).get('resume_project');
+    const validResume=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(resume||'');
+    if(validResume){
+      window.ATS_ADMIN?.switchTab?.('studio-projects');
+      await loadProjects(true);
+      const accessible=state.projects.some(p=>p.id===resume);
+      // Consume the deep link so refreshing cannot reopen without consent.
+      history.replaceState(null,'',location.pathname+'#studio-projects');
+      if(accessible){await openStudioProject(resume)}
+      else notify('Project could not be found in your authorized project list.','error');
+      return;
+    }
     const hash=location.hash.replace(/^#/,'');
     if(hash&&['leads','inbox','clients','studio-projects','proposals','payments','v9'].includes(hash)){
       window.ATS_ADMIN?.switchTab?.(hash);
@@ -393,11 +412,16 @@
     const btn=$('#run-diagnostic-engine');
     if(btn){
       const analyzing=stateName==='analyzing';
-      btn.disabled=analyzing;
-      btn.textContent=analyzing?'ANALYZING…':stateName==='ready'?'REFRESH ATS DIAGNOSIS':'RUN ATS DIAGNOSIS';
+      btn.disabled=LEGACY_AI_RELEASE_A_LOCK||analyzing;
+      btn.textContent=LEGACY_AI_RELEASE_A_LOCK?'AI PAUSED · RELEASE A':analyzing?'ANALYZING…':stateName==='ready'?'REFRESH ATS DIAGNOSIS':'RUN ATS DIAGNOSIS';
     }
   }
   async function ensureDeliveryBlueprint(leadId,{force=false,silent=true}={}){
+    // Release A must never call a generating function automatically or manually.
+    if(LEGACY_AI_RELEASE_A_LOCK){
+      if(!silent)notify('Blueprint generation is paused in Release A. Review existing evidence and tasks.','error');
+      return state.currentLead?.id===leadId ? state.deliveryBlueprint : null;
+    }
     if(!leadId||!sb())return null;
     const {data,error}=await sb().functions.invoke('ats-delivery-blueprint',{body:{lead_id:leadId,force}});
     if(error){
@@ -413,6 +437,10 @@
   }
 
   async function runDiagnosticEngine(silent=false){
+    if(LEGACY_AI_RELEASE_A_LOCK){
+      if(!silent)notify('AI diagnosis is paused in Release A. Use the existing client evidence and manual review.','error');
+      return;
+    }
     const lead=state.currentLead;if(!lead||!sb())return;
     const btn=$('#run-diagnostic-engine'),old=btn?.textContent;
     if(btn){btn.disabled=true;btn.textContent='ANALYZING…'}
@@ -420,7 +448,7 @@
     try{
       const {data,error}=await sb().functions.invoke('ats-problem-solver',{body:{lead_id:lead.id}});
       if(error)throw error;
-      await loadLeadDiagnosis(lead.id,{autoAnalyze:false});
+      await loadLeadDiagnosis(lead.id);
       if(String(state.discoveryCase?.analysis_state||'')==='ready'){
         const regenerateBlocked=state.deliveryBlueprint?.status==='needs_evidence'&&String(state.discoveryCase?.decision_stage||'needs_evidence')!=='needs_evidence';
         try{await ensureDeliveryBlueprint(lead.id,{force:!data?.cached||regenerateBlocked,silent:true})}catch(_){}
@@ -549,7 +577,7 @@
     renderLeadExecutionPath(executionCtx);
   }
 
-  async function loadLeadDiagnosis(leadId,{autoAnalyze=true}={}){
+  async function loadLeadDiagnosis(leadId){
     state.discoveryCase=null;state.discoveryAnswers=[];state.rootCauses=[];state.solutionTasks=[];state.diagnosticRun=null;state.deliveryBlueprint=null;
     $('#diagnosis-dimensions').innerHTML='<div class="loading-line">Loading discovery evidence…</div>';
     let cq=await sb().from('studio_discovery_cases').select('*').eq('lead_id',leadId).maybeSingle();
@@ -582,14 +610,8 @@
     const unread=state.discoveryAnswers.filter(x=>x.actor_type==='prospect'&&!x.is_read_by_admin).map(x=>x.id);
     if(unread.length){await sb().from('studio_discovery_answers').update({is_read_by_admin:true}).in('id',unread);state.discoveryAnswers.forEach(x=>{if(unread.includes(x.id))x.is_read_by_admin=true});state.loaded.inbox=false}
     renderLeadDiagnosis();updateLeadWorkspaceState();
-    if(autoAnalyze&&state.currentLead?.id===leadId&&['never_analyzed','stale'].includes(String(state.discoveryCase?.analysis_state||''))){
-      void runDiagnosticEngine(true);
-    }else if(
-      autoAnalyze&&state.currentLead?.id===leadId&&String(state.discoveryCase?.analysis_state||'')==='ready'&&
-      (!state.deliveryBlueprint||(state.deliveryBlueprint.status==='needs_evidence'&&String(state.discoveryCase?.decision_stage||'needs_evidence')!=='needs_evidence'))
-    ){
-      void ensureDeliveryBlueprint(leadId,{force:state.deliveryBlueprint?.status==='needs_evidence',silent:true});
-    }
+    // Passive by design: opening a client cannot invoke AI or rebuild a blueprint.
+    // The existing manual records are rendered above without starting a new run.
   }
   async function syncDiagnosisPhase(){
     const c=state.discoveryCase;if(!c)return;
@@ -640,7 +662,7 @@
     const source=['whatsapp','email','call','portal'].includes(channel)?channel:'admin';
     const ins=await sb().from('studio_discovery_answers').insert({case_id:c.id,question_key:key,answer,actor_type:'admin',source_channel:source,is_read_by_admin:true}).select('*').single();if(ins.error)return notify(ins.error.message,'error');
     const up=await sb().from('studio_discovery_cases').update({[key]:answer}).eq('id',c.id).select('*').single();if(up.error)return notify(up.error.message,'error');
-    state.discoveryCase=up.data;state.discoveryAnswers.unshift(ins.data);await logLeadActivity('discovery_signal_added',{question_key:key,source_channel:source,answer_preview:answer.slice(0,220)});renderLeadDiagnosis();void runDiagnosticEngine(true);
+    state.discoveryCase=up.data;state.discoveryAnswers.unshift(ins.data);await logLeadActivity('discovery_signal_added',{question_key:key,source_channel:source,answer_preview:answer.slice(0,220)});renderLeadDiagnosis(); // No auto-AI on save in Release A.
   }
 
   function setLeadFocusMode(on){
@@ -698,6 +720,7 @@
       if(existing.error)throw existing.error;
       if(existing.data)return existing.data;
     }
+    if(LEGACY_AI_RELEASE_A_LOCK)throw new Error('Playbook generation is paused in Release A. Review existing task evidence.');
     const generated=await sb().functions.invoke('ats-task-playbook',{body:{task_id:taskId,force}});
     if(generated.error)throw generated.error;
     if(!generated.data?.playbook)throw new Error(generated.data?.error||'ATS could not generate a task playbook.');
@@ -827,6 +850,13 @@
   async function openCurrentLeadTaskWorkspace(taskId=null){
     let task=(taskId?state.solutionTasks.find(x=>x.id===taskId):currentInternalLeadTask())||internalLeadTasks().find(x=>x.status==='todo');
     if(!task)return notify('No active ATS task found.','error');
+    // Do not move a task to in_progress if opening it would require
+    // automatic generation of a missing playbook.
+    if(LEGACY_AI_RELEASE_A_LOCK){
+      const existing=await sb().from('studio_task_playbooks').select('id').eq('task_id',task.id).maybeSingle();
+      if(existing.error)return notify(existing.error.message,'error');
+      if(!existing.data)return notify('No existing playbook. Automatic generation is paused in Release A.','error');
+    }
     if(task.status==='todo'){
       const now=new Date().toISOString();
       const r=await sb().from('studio_solution_tasks').update({status:'in_progress',started_at:now,updated_at:now}).eq('id',task.id).eq('status','todo').select('*').single();
@@ -1460,7 +1490,10 @@
 
   const safeName=name=>String(name||'file').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/-+/g,'-').slice(-120);
   async function loadProjectWorkspace(project=state.currentProject){
-    if(!project)return;
+    if(!project||state.currentProject?.id!==project.id)return;
+    const requestId=++projectWorkspaceSeq;
+    const pulseNode=$('#ats-project-pulse');
+    if(pulseNode){pulseNode.textContent='Loading project decision…';pulseNode.setAttribute('aria-busy','true')}
     $('#project-message-thread').innerHTML='<div class="loading-line">Loading messages…</div>';$('#project-file-list').innerHTML='<div class="loading-line">Loading files…</div>';$('#project-review-list').innerHTML='<div class="loading-line">Loading reviews…</div>';
     $('#project-domain-list').innerHTML='<div class="loading-line">Loading domain delivery…</div>';
     const [messages,files,reviews,revisions,domains,tasks,members,skills]=await Promise.all([
@@ -1473,11 +1506,17 @@
       sb().from('studio_team_members').select('id,full_name,email,active,available,capacity').eq('active',true).order('full_name'),
       sb().from('studio_member_skills').select('*')
     ]);
-    const failed=[messages,files,reviews,revisions,domains,tasks,members,skills].find(x=>x.error);if(failed)return notify(failed.error.message,'error');
+    // An older request must not render a different project's data or mark its messages read.
+    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id)return;
+    const failed=[messages,files,reviews,revisions,domains,tasks,members,skills].find(x=>x.error);
+    if(failed){if(pulseNode){pulseNode.textContent='Project decision is unavailable. Refresh the workspace to retry.';pulseNode.setAttribute('aria-busy','false')}return notify(failed.error.message,'error')}
     state.projectMessages=messages.data||[];state.projectFiles=files.data||[];state.projectReviews=reviews.data||[];state.projectRevisions=revisions.data||[];
     state.projectDomains=domains.data||[];state.projectTasks=tasks.data||[];state.teamMembers=members.data||[];state.teamSkills=skills.data||[];
-    const unread=state.projectMessages.filter(x=>x.sender_type==='client'&&!x.is_read_by_admin).map(x=>x.id);if(unread.length)await sb().from('studio_messages').update({is_read_by_admin:true}).in('id',unread);
-    renderProjectWorkspace();state.loaded.inbox=false;state.loaded.dashboard=false;
+    const unread=state.projectMessages.filter(x=>x.sender_type==='client'&&!x.is_read_by_admin).map(x=>x.id);
+    if(unread.length)await sb().from('studio_messages').update({is_read_by_admin:true}).in('id',unread);
+    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id)return;
+    renderProjectWorkspace();
+    if(pulseNode)pulseNode.setAttribute('aria-busy','false');state.loaded.inbox=false;state.loaded.dashboard=false;
   }
   function domainLeadName(id){return state.teamMembers.find(m=>m.id===id)?.full_name||'Unassigned'}
   function domainLeadOptions(domain){
@@ -1558,6 +1597,13 @@
 
   function renderProjectWorkspace(){
     renderProjectDomains();
+    const pulse=document.getElementById('ats-project-pulse');
+    const bridge=window.ATS_PROJECT_CONTINUITY;
+    if(pulse&&bridge){
+      const model=bridge.derive({project:state.currentProject,domains:state.projectDomains,
+        tasks:state.projectTasks,messages:state.projectMessages,reviews:state.projectReviews});
+      bridge.render(pulse,model,document);
+    }
     $('#project-message-thread').innerHTML=state.projectMessages.length?state.projectMessages.map(x=>'<div class="message-bubble '+esc(x.sender_type)+'"><b>'+(x.sender_type==='client'?'CLIENT':'ATS')+'</b><p>'+esc(x.body)+'</p><small>'+esc(fmt(x.created_at))+'</small></div>').join(''):'<div class="ops-empty">No messages in this project yet.</div>';const thread=$('#project-message-thread');if(thread)thread.scrollTop=thread.scrollHeight;
     $('#project-file-list').innerHTML=state.projectFiles.length?state.projectFiles.map(x=>'<div class="collab-row"><div><b>'+esc(x.file_name)+'</b><small>'+esc((x.category||'file').replaceAll('_',' ')+' · '+(x.version||'—')+' · '+(x.visibility||'admin_only'))+'</small></div><div class="row-actions"><button class="row-action" data-admin-file-open="'+esc(x.id)+'" data-file-path="'+esc(x.storage_path||'')+'">OPEN</button>'+(x.category==='review'?'<button class="row-action primary-action" data-publish-file-review="'+esc(x.id)+'">REVIEW →</button>':'')+(x.category==='final_delivery'&&x.visibility!=='client_visible'?'<button class="row-action primary-action" data-release-final="'+esc(x.id)+'">RELEASE →</button>':'')+'</div></div>').join(''):'<div class="ops-empty">No project files yet.</div>';
     const revisionByReview=new Map(state.projectRevisions.map(x=>[x.review_id,x]));$('#project-review-list').innerHTML=state.projectReviews.length?state.projectReviews.map(x=>{const r=revisionByReview.get(x.id);return '<div class="collab-row"><div><b>'+esc(x.title||'Review')+' · '+esc(x.version||'')+'</b><small>'+esc((x.review_code||'—')+' · '+(x.status||'').replaceAll('_',' '))+(r?' · Revision #'+esc(r.revision_number)+' '+esc(r.status):'')+'</small>'+(r?.notes?'<p>'+esc(r.notes)+'</p>':'')+'</div><div class="row-actions">'+(r&&['submitted','in_progress'].includes(r.status)?'<button class="row-action primary-action" data-complete-revision="'+esc(r.id)+'">COMPLETE REVISION</button>':'')+'</div></div>'}).join(''):'<div class="ops-empty">No reviews published yet.</div>';
@@ -1761,6 +1807,25 @@
   $('#refresh-project-workspace')?.addEventListener('click',()=>loadProjectWorkspace());
   $('#build-project-delivery')?.addEventListener('click',buildProjectDelivery);
   $('#open-project-team-tasks')?.addEventListener('click',()=>{if(state.currentProject?.id)location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)});
+  $('#ats-project-pulse')?.addEventListener('click',e=>{
+    const button=e.target.closest('button[data-ats-pulse-target]');
+    if(!button||!state.currentProject)return;
+    const target=button.dataset.atsPulseTarget;
+    if(target==='team'){
+      // Navigate through the canonical existing Team Workspace; do not duplicate task controls.
+      $('#open-project-team-tasks')?.click();return;
+    }
+    const allowed=new Set(['project-domain-list','project-message-input',
+      'project-review-list','open-project-team-tasks']);
+    if(!allowed.has(target))return;
+    const el=document.getElementById(target);
+    if(!el)return;
+    el.scrollIntoView?.({behavior:'smooth',block:'center'});
+    if(typeof el.focus==='function'){
+      if(el.tagName!=='INPUT'&&el.tagName!=='BUTTON'&&el.tagName!=='TEXTAREA')el.tabIndex=-1;
+      el.focus({preventScroll:true});
+    }
+  });
   $('#project-message-input')?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();sendProjectMessage()}});
   $('#save-v9-layout')?.addEventListener('click',saveV9);
   $('#v9-work-columns')?.addEventListener('change',e=>{if(state.v9)state.v9.work.columns=Number(e.target.value)});
