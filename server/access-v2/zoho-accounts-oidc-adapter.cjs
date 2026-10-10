@@ -5,16 +5,7 @@
  * The caller owns a trusted server-side secret manager and HTTPS ingress.
  * Passes a genuine openid-client v6 module via dependency injection.
  */
-const SUPPORTED_ZOHO_ORIGINS = new Set([
-  'https://accounts.zoho.com',
-  'https://accounts.zoho.eu',
-  'https://accounts.zoho.in',
-  'https://accounts.zoho.com.au',
-  'https://accounts.zoho.jp',
-  'https://accounts.zoho.com.cn',
-  'https://accounts.zoho.ca',
-  'https://accounts.zoho.sa',
- ]);
+const {SUPPORTED_ZOHO_ORIGINS}=require('./rc17-zoho-origins.cjs');
 class ZohoOidcConfigDenied extends Error {
   constructor(){super('Zoho OIDC configuration unavailable');this.name='ZohoOidcConfigDenied';this.code='OIDC_CONFIG_DENIED';}
 }
@@ -38,7 +29,7 @@ function requiredText(value,min=1,max=300){
  */
 async function createZohoAccountsOidcAdapter({issuer,clientId,clientSecret,openidClient}){
   const issuerUrl=exactOrigin(issuer);
-  if(!SUPPORTED_ZOHO_ORIGINS.has(issuerUrl.origin))fail();
+  if(!SUPPORTED_ZOHO_ORIGINS.includes(issuerUrl.origin))fail();
   requiredText(clientId,3);requiredText(clientSecret,8,1024);
   const c=openidClient;
   for(const key of ['discovery','ClientSecretPost','randomPKCECodeVerifier',
