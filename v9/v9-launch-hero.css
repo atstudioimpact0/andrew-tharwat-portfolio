@@ -1,0 +1,200 @@
+/* AT STUDIO — Public Launch Hero, v1.
+ * Source of truth: /v9/index.html (the Vercel "/" rewrite target).
+ * Pure public presentation layer. No extra fonts, tracking, APIs, AI or scripts.
+ * All page sections after #home retain the current operating code.
+ */
+.ats-launch-hero{
+  min-height:min(880px,100svh);
+  padding-top:74px;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 76% 16%,rgba(53,115,142,.12),transparent 36%),
+    radial-gradient(ellipse at 17% 84%,rgba(239,35,60,.075),transparent 36%),
+    linear-gradient(155deg,#061622 0%,#03121c 58%,#071e2a 100%);
+}
+.ats-launch-hero:after{border-color:rgba(149,185,198,.09)}
+.ats-launch-grid{
+  grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);
+  gap:clamp(28px,4.2vw,76px);
+  padding-block:clamp(44px,5.5vw,88px);
+}
+.ats-launch-copy{min-width:0}
+.ats-launch-copy>.eyebrow{
+  display:inline-flex;gap:8px;align-items:center;
+  color:#c4d0d6;font-size:10px;letter-spacing:.12em;line-height:1.7;
+}
+.ats-launch-copy>.eyebrow:before{
+  content:"";width:21px;height:2px;display:inline-block;background:var(--red);flex-shrink:0;
+}
+.ats-launch-hero h1{
+  max-width:920px;
+  margin:24px 0 23px;
+  font-size:clamp(51px,5.25vw,84px);
+  line-height:.99;
+  letter-spacing:-.062em;
+  text-wrap:balance;
+}
+.ats-launch-hero h1 span{color:#fff}
+.ats-launch-copy #hero-subtitle{
+  max-width:610px;
+  color:#c0ced4;
+  font-size:clamp(14px,1.2vw,17px);
+  line-height:1.82;
+}
+.ats-launch-copy .hero-actions{margin-top:30px}
+.ats-launch-copy .btn{min-height:52px;padding-inline:22px;letter-spacing:.045em;font-size:11px}
+.ats-launch-copy .ats-launch-cta{background:var(--red);color:#fff;border:1px solid var(--red)}
+.ats-launch-copy .ats-launch-cta:hover{background:#fff;color:#082333;border-color:#fff}
+.ats-launch-copy .btn.ghost{background:transparent;border-color:rgba(213,230,232,.26)}
+.ats-launch-reassurance{
+  margin:16px 0 0!important;
+  color:#8da6b3!important;
+  font-size:12px!important;
+  line-height:1.75!important;
+}
+.ats-launch-method{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:1px;margin-top:36px!important;
+  border-radius:3px;
+  border-color:rgba(188,210,216,.14);
+  background:rgba(147,170,183,.14);
+}
+.ats-launch-method>div{
+  min-height:95px;padding:17px 12px;
+  background:rgba(4,19,29,.9);
+}
+.ats-launch-method>div:before{opacity:1;background:var(--red)}
+.ats-launch-method b{display:block;font-size:10px;letter-spacing:.025em;line-height:1.5;color:#f1f6f6}
+.ats-launch-method small{
+  display:block;margin-top:9px;font-size:9px;line-height:1.55;
+  color:#8ea6b1;letter-spacing:.03em;
+}
+.ats-launch-visual{
+  height:auto;min-height:590px;
+  max-height:none;
+  display:flex;align-items:stretch;
+  border-radius:4px;
+  background:
+    radial-gradient(circle at 69% 12%,rgba(239,35,60,.12),transparent 32%),
+    radial-gradient(circle at 16% 77%,rgba(57,124,151,.14),transparent 43%),
+    repeating-linear-gradient(90deg,transparent 0,transparent 57px,rgba(193,216,221,.022) 58px,transparent 59px),
+    #081c28;
+  border-color:rgba(181,209,216,.18);
+  box-shadow:0 24px 65px rgba(0,0,0,.2);
+}
+.ats-launch-visual:after{
+  background:linear-gradient(140deg,rgba(0,0,0,.025),rgba(0,0,0,.06));
+  pointer-events:none;z-index:1;
+}
+.ats-launch-visual-inner{
+  flex:1;min-width:0;display:flex;flex-direction:column;
+  padding:clamp(20px,2.25vw,34px);
+  position:relative;z-index:2;
+}
+.ats-launch-visual-header{
+  display:flex;align-items:center;gap:11px;justify-content:space-between;
+  min-height:32px;padding-bottom:16px;border-bottom:1px solid rgba(193,212,219,.13);
+  color:#b9cbd3;font-size:9px;font-weight:800;letter-spacing:.105em;
+}
+.ats-launch-corner{
+  width:12px;height:12px;border:2px solid var(--red);transform:rotate(45deg);flex:none;
+}
+.ats-launch-index{margin-inline-start:auto;color:#677e8a;white-space:nowrap}
+.ats-launch-problem{
+  margin-top:42px;padding:20px 18px 23px;
+  border:1px solid rgba(188,208,217,.23);
+  background:linear-gradient(145deg,rgba(19,48,64,.74),rgba(8,27,39,.75));
+  position:relative;overflow:hidden;
+}
+.ats-launch-problem:before{
+  content:"";position:absolute;inset-block:0;inset-inline-start:0;
+  width:3px;background:var(--red);
+}
+.ats-launch-overline{font-size:10px;letter-spacing:.13em;font-weight:800;color:#e15e72}
+.ats-launch-problem p{
+  color:#fff;font-weight:800;letter-spacing:-.045em;
+  font-size:clamp(24px,2.4vw,38px);line-height:1.14;
+  margin:14px 0 12px;max-width:400px;
+}
+.ats-launch-problem-mark{display:flex;gap:5px;align-items:center}
+.ats-launch-problem-mark span{height:3px;width:28px;background:rgba(193,214,222,.16)}
+.ats-launch-problem-mark span:first-child{background:var(--red);width:52px}
+.ats-launch-connector{width:1px;height:45px;background:rgba(209,224,228,.32);align-self:center;position:relative}
+.ats-launch-connector i{
+  width:8px;height:8px;position:absolute;bottom:-5px;left:-4px;
+  border-inline-end:1px solid #d8e6e7;border-bottom:1px solid #d8e6e7;transform:rotate(45deg);
+}
+.ats-launch-building{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  border:1px solid rgba(191,212,218,.18);background:rgba(9,32,44,.67);
+}
+.ats-launch-building-step{
+  padding:17px 11px 18px;display:flex;flex-direction:column;gap:8px;
+  border-inline-end:1px solid rgba(191,212,218,.14);
+  min-width:0;
+}
+.ats-launch-building-step:last-child{border-inline-end:none}
+.ats-launch-building-step>span{color:#de6071;font-size:11px;font-weight:900}
+.ats-launch-building-step strong{color:#fff;font-size:11px;letter-spacing:.05em;overflow-wrap:anywhere}
+.ats-launch-building-step small{color:#92abb6;font-size:10px;line-height:1.5}
+.ats-launch-result{
+  display:flex;align-items:center;gap:17px;
+  margin-top:23px;padding:17px 18px;
+  border:1px solid rgba(195,216,222,.19);
+  background:rgba(236,246,245,.065);
+}
+.ats-launch-result-icon{
+  display:grid;place-items:center;
+  border:1px solid rgba(224,104,116,.6);background:rgba(239,35,60,.1);
+  width:46px;height:46px;color:#f07b89;font-size:24px;flex:none;
+}
+.ats-launch-result strong{display:block;margin-top:6px;font-size:clamp(17px,1.8vw,23px);line-height:1.2;color:#fff;letter-spacing:-.025em}
+.ats-launch-visual-foot{
+  display:flex;justify-content:space-between;gap:16px;align-items:end;
+  color:#75919e;font-size:9px;letter-spacing:.12em;
+  margin-top:auto;padding-top:32px;line-height:1.6;
+}
+.ats-launch-visual-foot span:first-child{color:#ecf1f1;font-size:11px;font-weight:800}
+body[data-lang=ar] .ats-launch-copy,body[data-lang=ar] .ats-launch-visual{text-align:right}
+body[data-lang=ar] .ats-launch-copy h1{letter-spacing:0;line-height:1.2;font-size:clamp(43px,5.25vw,71px)}
+body[data-lang=ar] .ats-launch-copy>.eyebrow{letter-spacing:0}
+body[data-lang=ar] .ats-launch-method b,body[data-lang=ar] .ats-launch-method small{letter-spacing:0}
+body[data-lang=ar] .ats-launch-overline,body[data-lang=ar] .ats-launch-visual-header{letter-spacing:0}
+body[data-lang=ar] .ats-launch-building-step strong{letter-spacing:0}
+body[data-lang=ar] .ats-launch-visual-foot{letter-spacing:0}
+@media(max-width:1180px){
+ .ats-launch-hero{min-height:auto}
+ .ats-launch-grid{grid-template-columns:1fr;gap:30px}
+ .ats-launch-hero h1{max-width:880px}
+ .ats-launch-copy #hero-subtitle{max-width:750px}
+ .ats-launch-visual{width:100%;height:auto;min-height:490px}
+ .ats-launch-problem{margin-top:23px}
+}
+@media(max-width:760px){
+ .ats-launch-hero{padding-top:76px}
+ .ats-launch-grid{padding-block:24px 62px;gap:29px}
+ .ats-launch-hero h1{font-size:clamp(39px,10.7vw,61px);margin:20px 0 20px}
+ body[data-lang=ar] .ats-launch-hero h1{font-size:clamp(35px,8.7vw,49px)}
+ .ats-launch-copy>.eyebrow{font-size:9px;letter-spacing:.045em}
+ .ats-launch-copy .hero-actions{gap:10px;align-items:stretch}
+ .ats-launch-copy .hero-actions .btn{min-height:51px}
+ .ats-launch-method{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:25px!important}
+ .ats-launch-method>div{min-height:83px;padding:13px}
+ .ats-launch-visual{min-height:520px}
+ .ats-launch-visual-inner{padding:17px}
+ .ats-launch-visual-header{font-size:8px;gap:8px}
+ .ats-launch-problem p{font-size:clamp(23px,5.7vw,30px)}
+ .ats-launch-result strong{font-size:18px}
+ .ats-launch-building-step{padding:13px 8px}
+ .ats-launch-building-step strong{font-size:10px}
+ .ats-launch-visual-foot{font-size:8px}
+}
+@media(max-width:370px){
+ .ats-launch-copy .hero-actions .btn{width:100%}
+ .ats-launch-visual-header>.ats-launch-index{display:none}
+ .ats-launch-building-step small{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .ats-launch-copy,.ats-launch-visual{animation:none!important}
+}
