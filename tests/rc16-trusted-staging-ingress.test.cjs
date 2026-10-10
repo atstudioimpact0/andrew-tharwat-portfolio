@@ -45,7 +45,8 @@ function harness(){
     review_pending_count:0,active_work_count:0
    }:null}]};
   }
-  if(sql.includes('FROM ats_core.studio_case_tenant_scope sc')){
+  if(sql.includes('FROM ats_core.ats_list_scoped_case_index_v1(')){
+   assert.deepEqual(args.slice(1),[null,null]);
    assert.equal(args[0],staff.tenantId);
    return {rows:[{case_id:caseId,cursor_updated:'2026-10-10T08:01:07.000001Z',
     label:'FAKE Demo Client',service:'Digital',project_goal:'Clarify request',analysis_state:'collecting'}]};
@@ -131,8 +132,8 @@ test('RC16 ignores spoofed Host/Forwarded/role/tenant and enforces session-deriv
    'x-role':'founder','x-tenant-id':'victim','authorization':'Bearer forged'};
  const r=await t.ingress(t.req('/api/v2/founder/cases',cookie,headers));
  assert.equal(r.status,200);
- const sql=t.sqlLog.find(q=>q.sql.includes('FROM ats_core.studio_case_tenant_scope sc'));
- assert.deepEqual(sql.args,['rc16-private-tenant']);
+ const sql=t.sqlLog.find(q=>q.sql.includes('FROM ats_core.ats_list_scoped_case_index_v1('));
+ assert.deepEqual(sql.args,['rc16-private-tenant',null,null]);
 });
 test('RC16 staff downgrade or offboarding removes access on the NEXT web request',async()=>{
  const t=harness(),cookie=await t.login();
