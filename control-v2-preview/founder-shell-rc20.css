@@ -64,3 +64,7 @@ html[dir=rtl] .rc20-nav-link[aria-current="page"]{box-shadow:inset -3px 0 #c0a47
 }
 @media(max-width:430px){.rc20-top-context strong{font-size:9px}.rc20-top-context small{font-size:8px}.rc20-main .rc13-container{width:calc(100% - 24px)}.rc20-main .rc13-header{gap:6px}}
 @media(prefers-reduced-motion:reduce){.rc20-rail{transition:none}}
+
+/* Keyboard accessibility: skip link must not obstruct the layout until focused. */
+.rc20-main > a.skip{position:fixed;inset-inline-start:16px;top:-1000px;z-index:40;background:#102d3b;color:#fff;padding:10px 14px;text-decoration:none;border:2px solid #c9b18a;font-weight:700}
+.rc20-main > a.skip:focus-visible{top:12px;outline:2px solid #c9b18a;outline-offset:2px}
