@@ -39,6 +39,20 @@
     if(state.booted||!sb())return;
     state.booted=true;
     await loadDashboard(true);
+    // Only resume an authorized project after the existing Trusted Device
+    // gate and project list have loaded. URL IDs grant NO permissions.
+    const resume=new URLSearchParams(location.search).get('resume_project');
+    const validResume=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(resume||'');
+    if(validResume){
+      window.ATS_ADMIN?.switchTab?.('studio-projects');
+      await loadProjects(true);
+      const accessible=state.projects.some(p=>p.id===resume);
+      // Consume the deep link so refreshing cannot reopen without consent.
+      history.replaceState(null,'',location.pathname+'#studio-projects');
+      if(accessible){await openStudioProject(resume)}
+      else notify('Project could not be found in your authorized project list.','error');
+      return;
+    }
     const hash=location.hash.replace(/^#/,'');
     if(hash&&['leads','inbox','clients','studio-projects','proposals','payments','v9'].includes(hash)){
       window.ATS_ADMIN?.switchTab?.(hash);
