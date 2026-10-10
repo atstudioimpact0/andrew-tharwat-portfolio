@@ -82,8 +82,8 @@ test('RC23 uses textContent, never parses client or task titles as HTML',()=>{
 });
 test('RC23 is wired only to existing Trusted Device founder Team, not member login',()=>{
  const html=read('admin/team-tasks.html'),member=read('team-v9/index.html'),engine=read('team-v9/engine.js');
- assert.match(html,/readiness-rc23\.css\?v=1/);
- assert.ok(html.indexOf('readiness-rc23.js')>=0&&html.indexOf('readiness-rc23.js')<html.indexOf('engine.js?v=3'));
+ assert.match(html,/readiness-rc23\.css\?v=25/);
+ assert.ok(html.indexOf('readiness-rc23.js')>=0&&html.indexOf('readiness-rc23.js')<html.indexOf('engine.js?v=25'));
  assert.doesNotMatch(member,/readiness-rc23\.js/);
  assert.match(engine,/id="team-readiness"/);
  assert.match(engine,/function renderReadiness\(\)/);
