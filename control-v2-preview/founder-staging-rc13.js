@@ -59,7 +59,7 @@
        typeof bridge?.fromResponse!=='function'||!documentRef||
        typeof AbortControllerImpl!=='function') throw new Error('RC13 runtime dependencies missing');
     const dom=id=>documentRef.getElementById(id);
-    const required=['rc13-state','rc13-case','rc13-retry','rc13-lang',
+    const required=['rc13-status-shell','rc13-state','rc13-case','rc13-retry','rc13-lang',
       'rc13-title','rc13-source','rc13-subtitle','rc13-problem',
       'rc13-known','rc13-missing','rc13-next','rc13-extra','rc13-metrics',
       'rc13-note','rc13-reload'];
@@ -69,6 +69,7 @@
     function label(key){return L[lang][key]||key}
     function setText(id,value){dom(id).textContent=typeof value==='string'?value:''}
     function showStatus(key){
+      dom('rc13-status-shell').hidden=false;
       dom('rc13-case').hidden=true;
       dom('rc13-state').hidden=false;
       setText('rc13-state',label(key));
@@ -100,6 +101,7 @@
     function render(){
       if(!model||!raw)return;
       translate();
+      dom('rc13-status-shell').hidden=true;
       dom('rc13-state').hidden=true;dom('rc13-case').hidden=false;
       dom('rc13-reload').disabled=false;dom('rc13-retry').hidden=true;
       setText('rc13-title',model.name[lang]);
@@ -125,7 +127,8 @@
       // Invalidate previous workspace immediately: changing language or a failed
       // refresh must never re-display a stale authorized case.
       model=null;raw=null;
-      clearCase();dom('rc13-case').hidden=true;dom('rc13-state').hidden=false;
+      clearCase();dom('rc13-case').hidden=true;
+      dom('rc13-status-shell').hidden=false;dom('rc13-state').hidden=false;
       dom('rc13-retry').hidden=true;dom('rc13-reload').disabled=true;
       setText('rc13-state',label('loading'));
       dom('rc13-state').dataset.stateKey='loading';
@@ -177,7 +180,9 @@
       return load();
     }
     function dispose(){
-      disposed=true;seq++;if(abort)abort.abort();abort=null;model=null;raw=null;clearCase();
+      disposed=true;seq++;if(abort)abort.abort();abort=null;model=null;raw=null;
+      dom('rc13-case').hidden=true;dom('rc13-status-shell').hidden=true;
+      clearCase();
     }
     dom('rc13-lang').addEventListener('click',toggle);
     dom('rc13-reload').addEventListener('click',statusLoad);
