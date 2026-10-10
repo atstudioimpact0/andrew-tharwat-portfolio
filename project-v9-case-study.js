@@ -438,7 +438,73 @@
     </section>`;
   }
 
+
+  // RC22: public proof uses the confirmed six-episode gallery, not unverified impact claims.
+  // The image evidence stays in the existing gallery; no duplicate poster is manufactured.
+  function hseProofMarkup() {
+    const arabic = isAr();
+    const c = copy(); // preserve existing CTA copy and destination
+    const proof = arabic ? {
+      kicker:'HSE AWARENESS SERIES · دراسة حالة',
+      title:'من مخاطر الموقع إلى',
+      emphasis:'محتوى توعوي مفهوم.',
+      intro:'ملخص واضح للتحدي وطريقة التنفيذ والمخرجات الموجودة بالفعل. لا توجد هنا أرقام تدّعي قياس أثر لم يتم توثيقه.',
+      cards:[
+        ['المشكلة','إيصال السلامة بلغة قريبة من الميدان',
+          'كان الهدف تقديم مخاطر وتعليمات السلامة في بيئة عمل الميناء بصيغة أوضح وأقرب للعامل وطبيعة عمله اليومي. لا نفترض وجود قياس موثق للنسيان أو الاستيعاب قبل المشروع.'],
+        ['اللي اتعمل','سلسلة بصرية مستمدة من الواقع',
+          'تم تطوير محتوى توعية عربي يستند إلى مخاطر عمل الميناء، ومبادئ السلامة المرتبطة بـNEBOSH، ومواقف وقصص مستوحاة من واقع العمال، عبر فيديوهات بصرية بهوية سينمائية وبوسترات.'],
+        ['النتيجة','محتوى قابل للمشاهدة والمشاركة',
+          'المخرجات المعروضة في مكتبة المشروع: ست حلقات توعوية مترابطة، بالإضافة إلى هوية السلسلة. لا ننسبها إلى جهة مستخدمة أو نتيجة أداء غير موثقة.'],
+        ['الصورة','الملصق والوسائط الأصلية',
+          'البوستر الظاهر في الصفحة ومعرض الحلقات هما الدليل البصري الحالي. يمكن مشاهدة الوسائط مباشرة دون صور بديلة أو أرقام افتراضية.']
+      ],
+      media:'شاهد بوستر المشروع والحلقات ←',
+      note:'الأثر على سلوك العمال أو معدل الاستيعاب يحتاج إلى أدلة ميدانية مستقلة قبل عرضه كنتيجة.'
+    } : {
+      kicker:'HSE AWARENESS SERIES · CASE STUDY',
+      title:'FROM REAL SITE RISKS TO',
+      emphasis:'CLEARER SAFETY COMMUNICATION.',
+      intro:'A concise record of the challenge, execution and documented outputs. No unverified impact metrics are presented.',
+      cards:[
+        ['THE PROBLEM','Make site safety easier to communicate',
+          'The aim was to present port-site hazards and safety guidance in a clearer format that connects with workers and everyday operations. No measured baseline for retention is claimed.'],
+        ['WHAT WE BUILT','Field-informed visual awareness',
+          'Arabic awareness content drawing on real port-site risks, NEBOSH-aligned safety principles, and worker-focused scenarios. The work combines cinematic visual episodes and posters.'],
+        ['THE RESULT','Watchable, shareable awareness assets',
+          'The project gallery presents six connected awareness episodes alongside the series identity. No unverified client adoption or field-performance outcome is claimed.'],
+        ['THE IMAGE','The original poster and gallery',
+          'The poster already displayed on this page and the episode gallery are the visual evidence. Explore the original media rather than duplicate the artwork.']
+      ],
+      media:'VIEW THE ORIGINAL POSTER AND EPISODES →',
+      note:'Changes in worker understanding or behavior need independent field evidence before they can be reported as outcomes.'
+    };
+    return `<section class="v9-case-study ats-hse-proof" data-v9-case-study style="--case-accent:#ef233c">
+      <div class="v9-case-study-shell">
+        <header class="v9-case-study-head"><div class="v9-case-study-intro">
+          <p class="v9-case-kicker">${esc(proof.kicker)}</p>
+          <h2>${esc(proof.title)}<br><span>${esc(proof.emphasis)}</span></h2>
+          <p>${esc(proof.intro)}</p>
+        </div></header>
+        <div class="ats-hse-proof-grid">
+          ${proof.cards.map(([label,title,body],index)=>`
+            <article class="ats-hse-proof-card"><span>${String(index+1).padStart(2,'0')}</span>
+              <small>${esc(label)}</small><h3>${esc(title)}</h3><p>${esc(body)}</p>
+              ${index===3? `<a href="#case-visual-evidence">${esc(proof.media)}</a>`:''}
+            </article>`).join('')}
+        </div>
+        <p class="ats-hse-evidence-note">${esc(proof.note)}</p>
+        ${capabilityMarkup()}
+        <div class="v9-case-cta">
+          <div><small>${esc(c.ctaLabel)}</small><strong>${esc(c.ctaText)}</strong></div>
+          <a href="/v9/#contact">${esc(c.cta)}</a>
+        </div>
+      </div>
+    </section>`;
+  }
+
   function markup() {
+    if (slug === 'hse-awareness-series') return hseProofMarkup();
     if (slug === 'do-personalized-stories') return doMarkup();
     const color = project?.portfolio_categories?.color || '#e10613';
     const challenge = local(caseStudy, 'challenge');
@@ -490,6 +556,7 @@
     host.innerHTML = markup();
     const section = host.firstElementChild;
     const gallery = root.querySelector('.gallery');
+    if (slug === 'hse-awareness-series' && gallery) gallery.id = 'case-visual-evidence';
     if (slug === 'do-personalized-stories') {
       document.body.classList.add('do-expanded-case');
       if (!gallery) document.body.classList.add('do-case-no-gallery');
