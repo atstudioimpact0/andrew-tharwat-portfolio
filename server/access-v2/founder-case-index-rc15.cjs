@@ -97,18 +97,15 @@ function createFounderCaseIndexRc15({pool,sessionStore,lookupStaff,cursorKey,now
    boundary=decodeCursor(secret,url.searchParams.get('cursor'),principal,current);
    if(!boundary)return fail(400);
   }
-  const sql='SELECT c.id AS case_id, '+
-    "to_char(c.updated_at AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS cursor_updated, "+
-    'c.analysis_state, '+
-    "COALESCE(NULLIF(btrim(l.company_name),''), NULLIF(btrim(l.full_name),''), 'Case') AS label, "+
-    'l.service, l.project_goal '+
-    'FROM ats_core.studio_case_tenant_scope sc '+
-    'JOIN ats_core.studio_discovery_cases c ON c.id=sc.case_id '+
-    'JOIN ats_core.studio_leads l ON l.id=c.lead_id '+
-    'WHERE sc.tenant_id=$1 '+
-    (boundary?'AND (c.updated_at,c.id)<($2::timestamptz,$3::uuid) ':'')+
-    'ORDER BY c.updated_at DESC,c.id DESC LIMIT 26';
-  const values=boundary?[principal.tenantId,boundary.ts,boundary.id]:[principal.tenantId];
+  // Required BEFORE real integration:
+  // ats_core.ats_list_scoped_case_index_v1 must be separately reviewed,
+  // created in Staging private schema, and granted EXECUTE only to the
+  // server's service_role. Direct SELECT on client tables is forbidden.
+  // See RC16_PRIVATE_CASE_INDEX_PROPOSAL.sql (NOT auto-applied).
+  const sql='SELECT case_id,cursor_updated,analysis_state,label,service,project_goal '+
+    'FROM ats_core.ats_list_scoped_case_index_v1('+
+    '$1::text,$2::timestamptz,$3::uuid)';
+  const values=[principal.tenantId,boundary?.ts||null,boundary?.id||null];
   try{
    const result=await pool.query(sql,values);
    if(!Array.isArray(result?.rows)||result.rows.length>26)throw Error('bad pg result');
