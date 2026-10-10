@@ -1492,16 +1492,22 @@
       sb().from('studio_member_skills').select('*')
     ]);
     // An older request must not render a different project's data or mark its messages read.
-    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id)return;
+    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id||($('#studio-project-dialog')?.open===false))return;
     const failed=[messages,files,reviews,revisions,domains,tasks,members,skills].find(x=>x.error);
     if(failed){if(pulseNode){pulseNode.textContent='Project decision is unavailable. Refresh the workspace to retry.';pulseNode.setAttribute('aria-busy','false')}return notify(failed.error.message,'error')}
     state.projectMessages=messages.data||[];state.projectFiles=files.data||[];state.projectReviews=reviews.data||[];state.projectRevisions=revisions.data||[];
     state.projectDomains=domains.data||[];state.projectTasks=tasks.data||[];state.teamMembers=members.data||[];state.teamSkills=skills.data||[];
+    // Mark replies read only after showing them in the authorized open project.
+    // Rapid switching or closing mid-load must not consume unseen messages.
+    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id||($('#studio-project-dialog')?.open===false))return;
     const unread=state.projectMessages.filter(x=>x.sender_type==='client'&&!x.is_read_by_admin).map(x=>x.id);
-    if(unread.length)await sb().from('studio_messages').update({is_read_by_admin:true}).in('id',unread);
-    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id)return;
     renderProjectWorkspace();
     if(pulseNode)pulseNode.setAttribute('aria-busy','false');state.loaded.inbox=false;state.loaded.dashboard=false;
+    if(unread.length&&requestId===projectWorkspaceSeq&&state.currentProject?.id===project.id){
+      const acknowledged=await sb().from('studio_messages').update({is_read_by_admin:true}).in('id',unread);
+      if(acknowledged.error&&requestId===projectWorkspaceSeq&&state.currentProject?.id===project.id)
+        notify('Project messages loaded, but the read status could not be updated.','error');
+    }
   }
   function domainLeadName(id){return state.teamMembers.find(m=>m.id===id)?.full_name||'Unassigned'}
   function domainLeadOptions(domain){
@@ -1687,7 +1693,7 @@
     const domainAssign=e.target.closest('[data-domain-assign]');if(domainAssign){void assignDomainLead(domainAssign.dataset.domainAssign);return}
     const domainAccept=e.target.closest('[data-domain-accept]');if(domainAccept){void acceptDomain(domainAccept.dataset.domainAccept);return}
     const domainRework=e.target.closest('[data-domain-rework]');if(domainRework){void reworkDomain(domainRework.dataset.domainRework);return}
-    const domainTeam=e.target.closest('[data-domain-open-team]');if(domainTeam&&state.currentProject?.id){location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)+'&domain='+encodeURIComponent(domainTeam.dataset.domainOpenTeam);return}
+    const domainTeam=e.target.closest('[data-domain-open-team]');if(domainTeam&&state.currentProject?.id){location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)+'&domain='+encodeURIComponent(domainTeam.dataset.domainOpenTeam)+'#team';return}
     const jump=e.target.closest('[data-jump]');if(jump){window.ATS_ADMIN?.switchTab?.(jump.dataset.jump);loadPanel(jump.dataset.jump);return}
     const refresh=e.target.closest('[data-ops-refresh]');if(refresh){loadPanel(refresh.dataset.opsRefresh,true);return}
     const priorityLead=e.target.closest('[data-priority-lead]');if(priorityLead){void (async()=>{window.ATS_ADMIN?.switchTab?.('leads');await loadLeads();await openLead(priorityLead.dataset.priorityLead)})();return}
@@ -1791,7 +1797,7 @@
   $('#upload-project-file')?.addEventListener('click',uploadProjectFile);
   $('#refresh-project-workspace')?.addEventListener('click',()=>loadProjectWorkspace());
   $('#build-project-delivery')?.addEventListener('click',buildProjectDelivery);
-  $('#open-project-team-tasks')?.addEventListener('click',()=>{if(state.currentProject?.id)location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)});
+  $('#open-project-team-tasks')?.addEventListener('click',()=>{if(state.currentProject?.id)location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)+'#team'});
   $('#ats-project-pulse')?.addEventListener('click',e=>{
     const button=e.target.closest('button[data-ats-pulse-target]');
     if(!button||!state.currentProject)return;
