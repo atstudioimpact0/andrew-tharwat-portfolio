@@ -15,6 +15,8 @@ Complete the established **Founder → Client Project → Domain Lead → Team T
 - [x] Fetch failure does not produce a false healthy decision panel or a database write.
 - [x] Founder deep-link resumes a valid project only after the existing Trusted Device gate and authorized list load; an unauthorized or malformed ID cannot open a project.
 - [x] The existing /admin/team-tasks UI and #team activation are reused; Employee workspace is not given Founder return controls.
+- [x] Founder Team / Board / Attention / task metrics stay scoped when entering from an authorized project. Return link appears only after an approved project list is loaded and is removed when an access refresh fails.
+- [x] Isolated synthetic tests cover project-scoped task lists, global team view, valid/invalid return links and no duplicate link on refresh: https://github.com/atstudioimpact0/andrew-tharwat-portfolio/actions/runs/38065868198
 - [x] Established HSE, diagnosis/solution vs execution task, team command, evidence, review/rework, wallet and token-ledger objects are not overwritten by RC21.
 - [x] Native JS regression tests passed in GitHub Actions: https://github.com/atstudioimpact0/andrew-tharwat-portfolio/actions/runs/38064790334
 
@@ -35,7 +37,7 @@ All counts below represent the existing database at the audit time, NOT end-to-e
 | Task-to-workstream cross-project inconsistencies | 0 |
 | Contribution token ledger events | 3 |
 
-**Important:** A past deadline is a factual date comparison, not proof that real work was delayed. Before assigning, rescheduling, or closing anything, the Founder must determine whether these are pilot/test records or real deliverables. No database records, token balances, assignment, deadline, or read statuses were modified by the read-only SQL audit.
+**Pilot confirmed by the owner:** The existing project and all 10 tasks are experimental fixtures, not live customer deliverables. Past due dates are test dates (2026-10-03 through 2026-10-08), not evidence of client-service delays. The shared Production-connected Supabase project still hosts these fixtures, so no real database mutations, employee claims, token settlements, client messages, or task rescheduling are performed without a separate, controlled test plan.
 
 ## Real-browser / authorized acceptance remains REQUIRED
 These are intentionally **not claimed as passed**:
@@ -51,10 +53,10 @@ These are intentionally **not claimed as passed**:
 10. Confirm backup/rollback and production-release approval; only then consider merging PR #22, never PR #16 wholesale.
 
 ## Next safe decision
-- **First:** clarify whether the 10 past-due task records belong to the pilot; do not silently mutate them.
+- **First:** pilot status is confirmed. Preserve the 10 existing tasks as repeatable acceptance fixtures, and separately document any intentional test writes.
 - **Second:** authorized browser E2E test with real roles or segregated test fixtures.
 - **Third:** only approved, minimal production promotion after all user-facing gates pass.
 
-**Rules:** No unapproved deployment; no Supabase data writes, schema migration, role changes, token transfers, paid AI calls, billing, SMTP/Zoho switches, or actual client notifications.
+**Rules:** No unapproved deployment; no Supabase data writes, schema migration, role changes, token transfers, paid AI calls, billing, SMTP/Zoho switches, or actual client notifications. The separate **ATS Intelligence Staging** Supabase project is not automatically a safe RC21 test environment: do not assume tables, policies, users, or external integrations match Production.
 
 AT Studio — Build what works.
