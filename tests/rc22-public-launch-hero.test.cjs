@@ -53,7 +53,8 @@ test('Homepage remains fully integrated with existing pages, nav, client intake 
  assert.match(html,/src="\/v9\/v9-polish\.js\?v=16"/);
 });
 test('Launch illustration is accessible text, not a fake screenshot of client data',()=>{
- assert.match(home,/class="hero-visual ats-launch-visual" role="group" aria-label=/);
+ assert.match(home,/class="hero-visual ats-launch-visual" role="group" aria-labelledby="ats-launch-method-label"/);
+ assert.match(home,/id="ats-launch-method-label" data-en=/);
  assert.match(home,/data-en="WHAT NEEDS TO CHANGE\?"/);
  assert.match(home,/data-ar="إيه اللي محتاج يتغيّر؟"/);
  assert.match(home,/data-en="A SYSTEM FOR MAKING THINGS WORK"/);
