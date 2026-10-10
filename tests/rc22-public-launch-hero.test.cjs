@@ -61,3 +61,24 @@ test('Launch illustration is accessible text, not a fake screenshot of client da
  assert.match(home,/data-en="START HERE"/);
  assert.doesNotMatch(home,/image\/|<img|<canvas/);
 });
+
+test('Social previews, canonical metadata and launch-oriented title use existing official artwork',()=>{
+ assert.match(html,/<meta name="robots" content="index,follow,max-image-preview:large"/);
+ assert.match(html,/<link rel="canonical" href="https:\/\/atstudioimpact\.com\/"/);
+ assert.match(html,/<meta property="og:site_name" content="AT Studio"/);
+ assert.match(html,/<meta property="og:image" content="https:\/\/atstudioimpact\.com\/assets\/logo-mark-official\.png"/);
+ assert.match(html,/<meta name="twitter:card" content="summary"/);
+ const runtime=read('v9/v9.js');
+ assert.match(runtime,/Different minds, different tools, one direction/);
+ assert.match(runtime,/استوديو متعدد التخصصات لحل المشكلات/);
+});
+test('Launch SEO files do not list private Studio OS or employee portals for discovery',()=>{
+ const robots=read('robots.txt'),site=read('sitemap.xml');
+ assert.match(robots,/Disallow: \/admin\//);
+ assert.match(robots,/Disallow: \/team-v9\//);
+ assert.match(robots,/Disallow: \/client-access\//);
+ assert.match(robots,/Disallow: \/ats-control-test\//);
+ assert.match(robots,/Sitemap: https:\/\/atstudioimpact\.com\/sitemap\.xml/);
+ assert.match(site,/<loc>https:\/\/atstudioimpact\.com\/<\/loc>/);
+ assert.doesNotMatch(site,/admin|team-v9|ats-control-test|client-access/);
+});
