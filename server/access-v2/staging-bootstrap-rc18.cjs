@@ -32,7 +32,9 @@ const ASSETS=Object.freeze(new Set([
  'founder-staging-rc13.css','founder-clients-rc14.css',
  'founder-case-contract-rc12.js','founder-staging-rc13.js',
  'founder-staging-rc13-init.js','founder-clients-rc14.js',
- 'founder-clients-rc14-init.js'
+ 'founder-clients-rc14-init.js',
+ 'founder-shell-rc20.css','founder-shell-rc20.js',
+ 'logo-mark-official.png'
 ]));
 
 function canonicalKey(value){
@@ -149,7 +151,11 @@ async function createStagingCandidateRc18({
    if(!ASSETS.has(name))deny();
    // The hosting adapter can only be given a finite, literal filename.
    const result=await readAsset(name);
-   if(typeof result!=='string'||result.length===0||result.length>300000)deny();
+   if(name==='logo-mark-official.png'){
+    const sig=Buffer.from([137,80,78,71,13,10,26,10]);
+    if(!Buffer.isBuffer(result)||result.length<24||result.length>300000||
+       !result.subarray(0,8).equals(sig))deny();
+   }else if(typeof result!=='string'||result.length===0||result.length>300000)deny();
    return result;
   };
   ingress=createTrustedIngressRc16({
