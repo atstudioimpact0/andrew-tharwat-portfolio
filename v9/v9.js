@@ -63,8 +63,8 @@
     document.title=isAr?'ATS — حل المشكلات من خلال الإبداع':'ATS — Problem Solving Through Creativity';
     const meta=$('meta[name="description"]');
     if(meta)meta.content=isAr
-      ?'ATS استوديو متعدد التخصصات يجمع خبرات HSE والأنظمة الرقمية والهوية والمحتوى والذكاء الاصطناعي لبناء حلول عملية لمشكلات حقيقية.'
-      :'ATS is a multidisciplinary problem-solving studio combining HSE, digital systems, brand, content and AI to build practical solutions for real problems.';
+      ?'AT Studio استوديو متعدد التخصصات لحل المشكلات. نفهم التحدي، ونجمع الخبرات والأدوات المناسبة، ونبني حلولًا تشتغل في الواقع.'
+      :'AT Studio is a multidisciplinary problem-solving studio. Different minds, different tools, one direction. Understand the challenge. Build what works.';
 
     const toggle=$('#lang-toggle');
     if(toggle){
