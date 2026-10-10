@@ -6,6 +6,7 @@
   const fmt=v=>v?(window.ATS_I18N?.formatDate?.(v,{day:'2-digit',month:'short',year:'numeric'})??new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(v))):'—';
   const state={booted:false,loaded:{},leads:[],clients:[],projects:[],proposals:[],payments:[],portfolio:[],v9:null,currentLead:null,currentProposal:null,currentProject:null,inbox:[],projectMessages:[],projectFiles:[],projectReviews:[],projectRevisions:[],projectDomains:[],projectTasks:[],teamMembers:[],teamSkills:[],leadActivities:[],discoveryCase:null,discoveryAnswers:[],rootCauses:[],solutionTasks:[],diagnosticRun:null,deliveryBlueprint:null,clientAccessCode:null};
   let executionCtx={};
+  let projectWorkspaceSeq=0; // Keep async details from crossing between projects.
   let inboxTimer=null;
   const roleNames={hse:'HSE & TECHNICAL',software:'SOFTWARE & AUTOMATION',design:'DESIGN & VISUAL',video:'VIDEO & MOTION',content:'CONTENT & STORYTELLING',ai:'AI PRODUCTION'};
   const briefNames={goal:'CHALLENGE & OUTCOME',type:'STARTING POINT',team:'POSSIBLE EXPERTISE',scope:'SCOPE & TIMING',contact:'CONTACT'};
@@ -34,6 +35,20 @@
     if(state.booted||!sb())return;
     state.booted=true;
     await loadDashboard(true);
+    // Only resume an authorized project after the existing Trusted Device
+    // gate and project list have loaded. URL IDs grant NO permissions.
+    const resume=new URLSearchParams(location.search).get('resume_project');
+    const validResume=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(resume||'');
+    if(validResume){
+      window.ATS_ADMIN?.switchTab?.('studio-projects');
+      await loadProjects(true);
+      const accessible=state.projects.some(p=>p.id===resume);
+      // Consume the deep link so refreshing cannot reopen without consent.
+      history.replaceState(null,'',location.pathname+'#studio-projects');
+      if(accessible){await openStudioProject(resume)}
+      else notify('Project could not be found in your authorized project list.','error');
+      return;
+    }
     const hash=location.hash.replace(/^#/,'');
     if(hash&&['leads','inbox','clients','studio-projects','proposals','payments','v9'].includes(hash)){
       window.ATS_ADMIN?.switchTab?.(hash);
@@ -1460,7 +1475,10 @@
 
   const safeName=name=>String(name||'file').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/-+/g,'-').slice(-120);
   async function loadProjectWorkspace(project=state.currentProject){
-    if(!project)return;
+    if(!project||state.currentProject?.id!==project.id)return;
+    const requestId=++projectWorkspaceSeq;
+    const pulseNode=$('#ats-project-pulse');
+    if(pulseNode){pulseNode.textContent='Loading project decision…';pulseNode.setAttribute('aria-busy','true')}
     $('#project-message-thread').innerHTML='<div class="loading-line">Loading messages…</div>';$('#project-file-list').innerHTML='<div class="loading-line">Loading files…</div>';$('#project-review-list').innerHTML='<div class="loading-line">Loading reviews…</div>';
     $('#project-domain-list').innerHTML='<div class="loading-line">Loading domain delivery…</div>';
     const [messages,files,reviews,revisions,domains,tasks,members,skills]=await Promise.all([
@@ -1473,11 +1491,23 @@
       sb().from('studio_team_members').select('id,full_name,email,active,available,capacity').eq('active',true).order('full_name'),
       sb().from('studio_member_skills').select('*')
     ]);
-    const failed=[messages,files,reviews,revisions,domains,tasks,members,skills].find(x=>x.error);if(failed)return notify(failed.error.message,'error');
+    // An older request must not render a different project's data or mark its messages read.
+    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id||($('#studio-project-dialog')?.open===false))return;
+    const failed=[messages,files,reviews,revisions,domains,tasks,members,skills].find(x=>x.error);
+    if(failed){if(pulseNode){pulseNode.textContent='Project decision is unavailable. Refresh the workspace to retry.';pulseNode.setAttribute('aria-busy','false')}return notify(failed.error.message,'error')}
     state.projectMessages=messages.data||[];state.projectFiles=files.data||[];state.projectReviews=reviews.data||[];state.projectRevisions=revisions.data||[];
     state.projectDomains=domains.data||[];state.projectTasks=tasks.data||[];state.teamMembers=members.data||[];state.teamSkills=skills.data||[];
-    const unread=state.projectMessages.filter(x=>x.sender_type==='client'&&!x.is_read_by_admin).map(x=>x.id);if(unread.length)await sb().from('studio_messages').update({is_read_by_admin:true}).in('id',unread);
-    renderProjectWorkspace();state.loaded.inbox=false;state.loaded.dashboard=false;
+    // Mark replies read only after showing them in the authorized open project.
+    // Rapid switching or closing mid-load must not consume unseen messages.
+    if(requestId!==projectWorkspaceSeq||state.currentProject?.id!==project.id||($('#studio-project-dialog')?.open===false))return;
+    const unread=state.projectMessages.filter(x=>x.sender_type==='client'&&!x.is_read_by_admin).map(x=>x.id);
+    renderProjectWorkspace();
+    if(pulseNode)pulseNode.setAttribute('aria-busy','false');state.loaded.inbox=false;state.loaded.dashboard=false;
+    if(unread.length&&requestId===projectWorkspaceSeq&&state.currentProject?.id===project.id){
+      const acknowledged=await sb().from('studio_messages').update({is_read_by_admin:true}).in('id',unread);
+      if(acknowledged.error&&requestId===projectWorkspaceSeq&&state.currentProject?.id===project.id)
+        notify('Project messages loaded, but the read status could not be updated.','error');
+    }
   }
   function domainLeadName(id){return state.teamMembers.find(m=>m.id===id)?.full_name||'Unassigned'}
   function domainLeadOptions(domain){
@@ -1558,6 +1588,13 @@
 
   function renderProjectWorkspace(){
     renderProjectDomains();
+    const pulse=document.getElementById('ats-project-pulse');
+    const bridge=window.ATS_PROJECT_CONTINUITY;
+    if(pulse&&bridge){
+      const model=bridge.derive({project:state.currentProject,domains:state.projectDomains,
+        tasks:state.projectTasks,messages:state.projectMessages,reviews:state.projectReviews});
+      bridge.render(pulse,model,document);
+    }
     $('#project-message-thread').innerHTML=state.projectMessages.length?state.projectMessages.map(x=>'<div class="message-bubble '+esc(x.sender_type)+'"><b>'+(x.sender_type==='client'?'CLIENT':'ATS')+'</b><p>'+esc(x.body)+'</p><small>'+esc(fmt(x.created_at))+'</small></div>').join(''):'<div class="ops-empty">No messages in this project yet.</div>';const thread=$('#project-message-thread');if(thread)thread.scrollTop=thread.scrollHeight;
     $('#project-file-list').innerHTML=state.projectFiles.length?state.projectFiles.map(x=>'<div class="collab-row"><div><b>'+esc(x.file_name)+'</b><small>'+esc((x.category||'file').replaceAll('_',' ')+' · '+(x.version||'—')+' · '+(x.visibility||'admin_only'))+'</small></div><div class="row-actions"><button class="row-action" data-admin-file-open="'+esc(x.id)+'" data-file-path="'+esc(x.storage_path||'')+'">OPEN</button>'+(x.category==='review'?'<button class="row-action primary-action" data-publish-file-review="'+esc(x.id)+'">REVIEW →</button>':'')+(x.category==='final_delivery'&&x.visibility!=='client_visible'?'<button class="row-action primary-action" data-release-final="'+esc(x.id)+'">RELEASE →</button>':'')+'</div></div>').join(''):'<div class="ops-empty">No project files yet.</div>';
     const revisionByReview=new Map(state.projectRevisions.map(x=>[x.review_id,x]));$('#project-review-list').innerHTML=state.projectReviews.length?state.projectReviews.map(x=>{const r=revisionByReview.get(x.id);return '<div class="collab-row"><div><b>'+esc(x.title||'Review')+' · '+esc(x.version||'')+'</b><small>'+esc((x.review_code||'—')+' · '+(x.status||'').replaceAll('_',' '))+(r?' · Revision #'+esc(r.revision_number)+' '+esc(r.status):'')+'</small>'+(r?.notes?'<p>'+esc(r.notes)+'</p>':'')+'</div><div class="row-actions">'+(r&&['submitted','in_progress'].includes(r.status)?'<button class="row-action primary-action" data-complete-revision="'+esc(r.id)+'">COMPLETE REVISION</button>':'')+'</div></div>'}).join(''):'<div class="ops-empty">No reviews published yet.</div>';
@@ -1656,7 +1693,7 @@
     const domainAssign=e.target.closest('[data-domain-assign]');if(domainAssign){void assignDomainLead(domainAssign.dataset.domainAssign);return}
     const domainAccept=e.target.closest('[data-domain-accept]');if(domainAccept){void acceptDomain(domainAccept.dataset.domainAccept);return}
     const domainRework=e.target.closest('[data-domain-rework]');if(domainRework){void reworkDomain(domainRework.dataset.domainRework);return}
-    const domainTeam=e.target.closest('[data-domain-open-team]');if(domainTeam&&state.currentProject?.id){location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)+'&domain='+encodeURIComponent(domainTeam.dataset.domainOpenTeam);return}
+    const domainTeam=e.target.closest('[data-domain-open-team]');if(domainTeam&&state.currentProject?.id){location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)+'&domain='+encodeURIComponent(domainTeam.dataset.domainOpenTeam)+'#team';return}
     const jump=e.target.closest('[data-jump]');if(jump){window.ATS_ADMIN?.switchTab?.(jump.dataset.jump);loadPanel(jump.dataset.jump);return}
     const refresh=e.target.closest('[data-ops-refresh]');if(refresh){loadPanel(refresh.dataset.opsRefresh,true);return}
     const priorityLead=e.target.closest('[data-priority-lead]');if(priorityLead){void (async()=>{window.ATS_ADMIN?.switchTab?.('leads');await loadLeads();await openLead(priorityLead.dataset.priorityLead)})();return}
@@ -1760,7 +1797,26 @@
   $('#upload-project-file')?.addEventListener('click',uploadProjectFile);
   $('#refresh-project-workspace')?.addEventListener('click',()=>loadProjectWorkspace());
   $('#build-project-delivery')?.addEventListener('click',buildProjectDelivery);
-  $('#open-project-team-tasks')?.addEventListener('click',()=>{if(state.currentProject?.id)location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)});
+  $('#open-project-team-tasks')?.addEventListener('click',()=>{if(state.currentProject?.id)location.href='/admin/team-tasks?project='+encodeURIComponent(state.currentProject.id)+'#team'});
+  $('#ats-project-pulse')?.addEventListener('click',e=>{
+    const button=e.target.closest('button[data-ats-pulse-target]');
+    if(!button||!state.currentProject)return;
+    const target=button.dataset.atsPulseTarget;
+    if(target==='team'){
+      // Navigate through the canonical existing Team Workspace; do not duplicate task controls.
+      $('#open-project-team-tasks')?.click();return;
+    }
+    const allowed=new Set(['project-domain-list','project-message-input',
+      'project-review-list','open-project-team-tasks']);
+    if(!allowed.has(target))return;
+    const el=document.getElementById(target);
+    if(!el)return;
+    el.scrollIntoView?.({behavior:'smooth',block:'center'});
+    if(typeof el.focus==='function'){
+      if(el.tagName!=='INPUT'&&el.tagName!=='BUTTON'&&el.tagName!=='TEXTAREA')el.tabIndex=-1;
+      el.focus({preventScroll:true});
+    }
+  });
   $('#project-message-input')?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();sendProjectMessage()}});
   $('#save-v9-layout')?.addEventListener('click',saveV9);
   $('#v9-work-columns')?.addEventListener('change',e=>{if(state.v9)state.v9.work.columns=Number(e.target.value)});

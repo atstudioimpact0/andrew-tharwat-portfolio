@@ -12,6 +12,7 @@
   const params=new URLSearchParams(location.search);
   const requestedMember=params.get('member');
   const requestedProject=params.get('project');
+  const validProjectForReturn=admin&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedProject||'');
   const requestedDomain=params.get('domain');
   const requestedTask=params.get('task');
   const requestedNewTask=params.get('newTask')==='1';
@@ -44,8 +45,22 @@
     const el=$('#team-message',root); if(el){el.textContent=text;el.hidden=!text;el.classList.toggle('error',error);}
   }
   function initRoot() {
-    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
+    root.innerHTML=`<div class="team-toolbar"><div><p class="overline">ATS OPERATING SYSTEM</p><h2>${admin?'Team & Tasks':'My workspace'}</h2></div><div class="team-actions">${admin?'<a href="/admin/team-applications">Applications</a><a href="/join">Join form</a><a href="/team-policy/">Policy</a>'+button('+ Member','member')+button('+ Task','task','','primary'):''}${button('Refresh','refresh')}</div></div><div id="team-message" class="team-message" role="status" aria-live="polite" hidden></div><div id="team-metrics" class="team-metrics"></div><section id="team-readiness" class="ats-readiness" aria-label="Project assignment readiness" hidden></section><nav id="team-tabs" class="team-tabs" aria-label="Team workspace"></nav><div id="team-content"></div><dialog id="team-dialog" aria-labelledby="team-dialog-title"></dialog>`;
     root.addEventListener('click',handleClick);
+  }
+  // The deep-link UUID is only a hint. Render a return link AFTER the
+  // authenticated team refresh confirms this project is in the approved list.
+  function updateReturnLink(){
+    if(!admin||!root)return;
+    const toolbar=root.querySelector('.team-toolbar > .team-actions');
+    if(!toolbar)return;
+    toolbar.querySelector('[data-return-project]')?.remove();
+    if(!validProjectForReturn||!rows.projects.some(p=>p.id===requestedProject))return;
+    const link=document.createElement('a');
+    link.dataset.returnProject='';
+    link.href='/admin/?resume_project='+encodeURIComponent(requestedProject)+'#studio-projects';
+    link.textContent='← Return to this project';
+    toolbar.prepend(link);
   }
   async function refresh() {
     if(loading)return; loading=true;
@@ -61,25 +76,41 @@
       if(admin){const apps=await sb.from('studio_team_applications').select('id,accepted_member_id,policy_version,policy_accepted_at,digital_signature,status');if(apps.error)throw apps.error;intake.splice(0,intake.length,...(apps.data||[]));}
       if(admin){const q=await sb.from('studio_projects').select('id,title,project_code,status').order('created_at',{ascending:false});if(q.error)throw q.error;next.projects=q.data;}
       const ctx=await sb.rpc('studio_team_context');if(ctx.error)throw ctx.error;next.context=ctx.data||[];
-      rows=next; render(); message('');
+      rows=next; render(); updateReturnLink(); message('');
       if(admin&&requestedMember&&!memberLinkOpened&&rows.members.some(m=>m.id===requestedMember)){memberLinkOpened=true;tab='members';render();memberForm(requestedMember);}
       return true;
     } catch(e) {
       Object.keys(rows).forEach(k=>{rows[k]=[];});
+      updateReturnLink(); // Never retain a project return link after access refresh fails.
+      $('#team-readiness',root)?.replaceChildren();
+      if($('#team-readiness',root))$('#team-readiness',root).hidden=true;
       $('#team-metrics',root).innerHTML='';
       $('#team-content',root).innerHTML='<div class="team-empty">Workspace could not refresh. Check your access and try again.</div>';
       message(e.message || 'Could not load team workspace',true);
     } finally {loading=false;}
   }
+  function renderReadiness(){
+    const host=$('#team-readiness',root),bridge=window.ATS_TASK_READINESS;
+    if(!host)return;
+    if(!admin||!requestedProject||!bridge||!rows.projects.some(p=>p.id===requestedProject)){
+      host.hidden=true;host.replaceChildren();return;
+    }
+    const model=bridge.derive({projectId:requestedProject,tasks:rows.tasks,
+      members:rows.members,skills:rows.skills,dependencies:rows.dependencies});
+    host.hidden=!model.ready;
+    bridge.render(host,model,document);
+  }
   function render() {
-    const tasks=rows.tasks;
+    const tasks=admin&&requestedProject?rows.tasks.filter(t=>t.project_id===requestedProject):rows.tasks;
+    const scopedDomains=admin&&requestedProject?rows.streams.filter(w=>w.project_id===requestedProject):rows.streams;
     const memberTabs=(myDomains().length?[['domains','My domains']]:[]).concat([['available','Available tasks'],['mine','My work'],['reviews','My reviews'],['wallet','Wallet'],['history','History']]);
     $('#team-tabs',root).innerHTML=(admin?[['domains','Domain delivery'],['board','Task board'],['attention','Needs attention'],['tasks','All tasks'],['members','Team load'],['wallet','Token ledger']]:memberTabs).map(([v,l])=>`<button type="button" data-team-tab="${v}" aria-current="${tab===v}">${l}</button>`).join('');
     const own=admin?tasks:tasks.filter(t=>t.owner_id===me);
-    if(admin){const overview=$('#team-overview');if(overview)overview.innerHTML=`<div><p class="overline">TEAM EXECUTION</p><h2>${rows.streams.filter(w=>w.status==='review').length} domain outcomes · ${tasks.filter(t=>t.status==='review'||overdue(t)||escalated(t)||t.rework_reason).length} task exceptions need attention</h2><p>${rows.streams.filter(w=>w.status==='review').length} awaiting founder acceptance · ${tasks.filter(t=>t.status==='available').length} unassigned team tasks · ${tasks.filter(overdue).length} overdue</p></div><a class="button button-primary" href="#team">OPEN DOMAIN DELIVERY</a>`;}
+    if(admin){const overview=$('#team-overview');if(overview)overview.innerHTML=`<div><p class="overline">TEAM EXECUTION</p><h2>${scopedDomains.filter(w=>w.status==='review').length} domain outcomes · ${tasks.filter(t=>t.status==='review'||overdue(t)||escalated(t)||t.rework_reason).length} task exceptions need attention</h2><p>${scopedDomains.filter(w=>w.status==='review').length} awaiting founder acceptance · ${tasks.filter(t=>t.status==='available').length} unassigned team tasks · ${tasks.filter(overdue).length} overdue</p></div><a class="button button-primary" href="#team">OPEN DOMAIN DELIVERY</a>`;}
     $('#team-metrics',root).innerHTML=admin?
       metric('Unassigned',tasks.filter(t=>t.status==='available').length)+metric('Active',tasks.filter(t=>openStates.includes(t.status)).length)+metric('Awaiting review',tasks.filter(t=>t.status==='review').length)+metric('Overdue',tasks.filter(overdue).length)+metric('Open rework',tasks.filter(t=>t.rework_reason).length)+metric('Founder queue',tasks.filter(escalated).length):
       metric('My domains',myDomains().filter(w=>!['accepted'].includes(w.status)).length)+metric('Active / capacity',`${load(me)} / ${rows.members.find(m=>m.id===me)?.capacity??'—'}`)+metric('In review',own.filter(t=>t.status==='review').length)+metric('Accepted',own.filter(t=>['accepted','closed'].includes(t.status)).length)+metric('Overdue',own.filter(overdue).length);
+    renderReadiness();
     const content=$('#team-content',root);
     if(tab==='domains'){renderDomains(content);return;}
     if(tab==='board'){renderTaskBoard(content);return;}
@@ -231,12 +262,23 @@
     return `<article class="team-card ${overdue(t)?'critical':escalated(t)||t.rework_reason?'attention':''}"><div class="team-meta"><span class="team-badge ${t.status}">${esc(label(t.status))}</span><span>${esc(stream(t.workstream_id))}</span>${overdue(t)?'<span>Overdue</span>':''}${escalated(t)?'<span>Founder decision needed</span>':''}</div><h3>${esc(t.title)}</h3><p class="muted">${esc(context(t.id).project_title||project(t.project_id))} · ${esc(t.required_skill)} · Level ${t.required_level}</p><p>${esc(t.expected_output)}</p><div class="team-meta"><span>${t.base_tokens} tokens</span><span>Due ${esc(date(t.due_at))}</span>${blocked?`<span>${blocked} dependencies</span>`:''}</div><small>Owner: ${esc(context(t.id).owner_name||name(t.owner_id))} · ${t.admin_acceptance?'Final acceptance: Admin':'Acceptance: Reviewer'}</small>${t.rework_reason?`<p class="team-message">${esc(label(t.rework_category))}: ${esc(t.rework_reason)}</p>`:''}<div class="team-actions">${actions}</div></article>`;
   }
   function renderWallet(content) {
-    const entries=rows.ledger;
+    // RC25: wallet figures must respect the same authorized project scope as
+    // the Founder task board. Member mode is always restricted to own entries.
+    // Only the existing server ledger is counted; no balance writes or new RPC.
+    const allowedProject=!requestedProject||rows.projects.some(p=>p.id===requestedProject);
+    const entries=rows.ledger.filter(e=>
+      admin
+        ? (allowedProject&&(!requestedProject||e.project_id===requestedProject))
+        : (me!==null&&e.member_id===me)
+    );
     const reserved=entries.reduce((s,e)=>s+(e.event_type==='RESERVED'?e.tokens:e.event_type==='RELEASED'?-e.tokens:0),0);
     const earned=entries.filter(e=>['EARNED','BONUS'].includes(e.event_type)).reduce((s,e)=>s+e.tokens,0);
     const history=rows.tasks.filter(t=>t.owner_id===me&&t.accepted_at);
     const ontime=history.filter(t=>Date.parse(t.submitted_at)<=Date.parse(t.due_at)).length;
-    content.innerHTML=`<div class="team-metrics">${metric('Reserved tokens',reserved)}${metric('Earned / lifetime tokens',earned)}${!admin?metric('On-time accepted work',history.length?`${Math.round(ontime/history.length*100)}%`:'—')+metric('Projects contributed',new Set(history.map(t=>t.project_id)).size):''}</div><p class="wallet-note">Tokens measure contribution. They have no fixed EGP value. Payable and paid balances will become available when project closeout and settlement are enabled.</p>${entries.length?`<div class="team-card">${[...entries].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)).map(e=>`<div class="team-event"><b>${esc(e.event_type)} · ${e.tokens} tokens</b><p>${esc(admin?name(e.member_id)+' · ':'')}${esc(rows.tasks.find(t=>t.id===e.task_id)?.title||'Previous assignment')} · ${esc(date(e.created_at))}</p><small>${esc(e.reason)}</small></div>`).join('')}</div>`:'<div class="team-empty">Your first assignment will create a token reservation here.</div>'}`;
+    const scopeLabel=admin&&requestedProject
+      ? (allowedProject?'Project-scoped wallet · Only events from this project':'Project not available · No events shown')
+      : admin?'All projects · Founder ledger':'My contribution ledger';
+    content.innerHTML=`<p class="wallet-note" role="status">${esc(scopeLabel)}</p><div class="team-metrics">${metric('Reserved tokens',reserved)}${metric('Earned / lifetime tokens',earned)}${!admin?metric('On-time accepted work',history.length?`${Math.round(ontime/history.length*100)}%`:'—')+metric('Projects contributed',new Set(history.map(t=>t.project_id)).size):''}</div><p class="wallet-note">Tokens measure contribution. They have no fixed EGP value. Payable and paid balances will become available when project closeout and settlement are enabled.</p>${entries.length?`<div class="team-card">${[...entries].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at)).map(e=>`<div class="team-event"><b>${esc(e.event_type)} · ${e.tokens} tokens</b><p>${esc(admin?name(e.member_id)+' · ':'')}${esc(rows.tasks.find(t=>t.id===e.task_id)?.title||'Previous assignment')} · ${esc(date(e.created_at))}</p><small>${esc(e.reason)}</small></div>`).join('')}</div>`:'<div class="team-empty">Your first assignment will create a token reservation here.</div>'}`;
   }
   function modal(title,body,onSubmit,submitText='Save') {
     const d=$('#team-dialog',root);
