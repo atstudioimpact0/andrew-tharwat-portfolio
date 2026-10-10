@@ -7,6 +7,8 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const crypto=require('node:crypto');
 const {createStagingAuthRuntime}=require('../server/access-v2/staging-runtime-rc8.cjs');
+const {createTrustedIngressRc16}=require('../server/access-v2/staging-ingress-rc16.cjs');
+const {createPgStaffStore}=require('../server/access-v2/pg-staff-store-rc8.cjs');
 const host='https://staging.atstudioimpact.com';
 const provider='https://accounts.zoho.com';
 const callbackUrl=host+'/api/v2/auth/zoho/callback';
@@ -53,6 +55,11 @@ function createFixture(){
    }
    if(sql.startsWith('DELETE FROM ats_access_v2.sessions')){
      sessions.delete(values[0]);return {rowCount:1,rows:[]};
+   }
+   if(sql.includes('ats_core.ats_list_scoped_case_index_v1')){
+     if(values[0]!=='ats-tenant-01')return {rows:[]};
+     return {rows:[{case_id:caseId,cursor_updated:'2026-10-10T08:41:03.000001Z',
+       label:'Fictional RC17 Client',service:'Design',project_goal:'Need help',analysis_state:'collecting'}]};
    }
    if(sql.includes('ats_core.ats_read_scoped_workspace_v1')){
      return {rows:[{workspace:values[0]===caseId&&values[1]==='ats-tenant-01'?data:null}]};
@@ -130,4 +137,68 @@ test('RC8 refuses other callback domain and missing critical configuration at co
    settings:{...settings,callbackUrl:'https://atstudioimpact.com/api/v2/auth/zoho/callback'},
    oidc,oidcConfig:cfg}));
  assert.throws(()=>createStagingAuthRuntime({pool,encryptionKey:Buffer.alloc(0),settings,oidc,oidcConfig:cfg}));
+});
+
+
+test('RC17 full synthetic ingress: Zoho-style start → callback → Founder list → case → logout',async()=>{
+ const f=createFixture();
+ const staffStore=createPgStaffStore({pool:f.pool});
+ const assets=[];
+ const ingress=createTrustedIngressRc16({
+  runtime:f.runtime,sessionStore:staffStore,lookupStaff:staffStore.lookupStaff,
+  readStatic:async name=>{assets.push(name);return 'FAKE_ASSET:'+name}
+ });
+ const request=(target,method='GET',headers={})=>ingress({
+  requestTarget:target,method,headers
+ });
+ assert.equal((await request('/control-v2/clients')).status,401);
+ const start=await request('/api/v2/auth/zoho/start');
+ assert.equal(start.status,302);
+ assert.equal(new URL(start.headers.Location).origin,provider);
+ assert.match(start.headers['Set-Cookie'][0],/HttpOnly; SameSite=Lax/);
+ const state=new URL(start.headers.Location).searchParams.get('state');
+ const browser=start.headers['Set-Cookie'][0].split(';')[0];
+ const callback=await request('/api/v2/auth/zoho/callback?code=SYNTHETIC&state='+state,
+  'GET',{cookie:browser});
+ assert.equal(callback.status,302);
+ assert.equal(callback.headers.Location,'/control-v2/');
+ const cookies=callback.headers['Set-Cookie'];
+ assert.equal(cookies.length,2);
+ assert.match(cookies[0],/HttpOnly; Secure; SameSite=Lax/);
+ const session=cookies[0].split(';')[0];
+ assert.equal((await request('/control-v2/clients','GET',{cookie:session})).status,200);
+ assert.equal((await request('/control-v2/','GET',{cookie:session})).headers.Location,
+  '/control-v2/clients');
+ const list=await request('/api/v2/founder/cases','GET',{cookie:session});
+ assert.equal(list.status,200);
+ assert.equal(list.body.cases.length,1);
+ assert.equal(list.body.cases[0].label,'Fictional RC17 Client');
+ const found=await request('/api/v2/founder/cases/'+caseId+'/workspace','GET',{cookie:session});
+ assert.equal(found.status,200);assert.equal(found.body.case_id,caseId);
+ assert.equal(f.pending.size,0);assert.equal(f.sessions.size,1);
+ assert.ok(assets.includes('founder-clients-rc14.html'));
+ const logout=await request('/api/v2/auth/logout','POST',{cookie:session,origin:host});
+ assert.equal(logout.status,204);
+ assert.equal((await request('/control-v2/clients','GET',{cookie:session})).status,401);
+ assert.equal((await request('/api/v2/founder/cases','GET',{cookie:session})).status,401);
+ assert.equal(f.sessions.size,0);
+ const replay=await request('/api/v2/auth/zoho/callback?code=AGAIN&state='+state,
+  'GET',{cookie:browser});
+ assert.equal(replay.status,401);
+});
+test('RC17 bound browser anti-CSRF blocks cross-browser callback before session issuance',async()=>{
+ const f=createFixture();
+ const store=createPgStaffStore({pool:f.pool});
+ const ingress=createTrustedIngressRc16({runtime:f.runtime,
+  sessionStore:store,lookupStaff:store.lookupStaff,
+  readStatic:async()=>'<synthetic />'});
+ const req=(requestTarget,headers={})=>ingress({requestTarget,method:'GET',headers});
+ const a=await req('/api/v2/auth/zoho/start');
+ const b=await req('/api/v2/auth/zoho/start');
+ const state=new URL(a.headers.Location).searchParams.get('state');
+ const foreign=b.headers['Set-Cookie'][0].split(';')[0];
+ const bad=await req('/api/v2/auth/zoho/callback?code=synthetic&state='+state,{cookie:foreign});
+ assert.equal(bad.status,401);
+ assert.equal(f.sessions.size,0);
+ assert.equal(f.pending.size,1,'other browser state remains isolated');
 });
